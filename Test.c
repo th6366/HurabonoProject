@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int mina(){
+int main(){
 
 printf("hello");
 
