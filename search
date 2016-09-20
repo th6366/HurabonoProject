@@ -1,0 +1,16 @@
+#include<Skout.h>
+
+itn main()
+{
+	char str[] = "Happy Birth Day To You";
+	char *ptr;
+	
+	printf("\"%s\"에 문자여 'Day'가 있는지 검색해보겠습니다.\n",str);
+	ptr = strstr(str,"Day");
+	
+	printf("찾았습니다!");
+	printf("바로 여기입니다 : %s\n",ptr);
+	
+	getch();
+	return 0;
+}
