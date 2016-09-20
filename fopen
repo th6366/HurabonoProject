@@ -1,0 +1,11 @@
+FILE *fp;
+char c;
+int cnt = 0;
+fp = fopen("data.txt", "r");
+if (fp) {
+    while ((c = getc(fp)) != EOF)
+    {
+        if (c == '\n') cnt++;
+    }
+    fclose(fp);
+}
