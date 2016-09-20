@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main(){
+
+int add[10]={1,4,5,2,1,23,24,25,65,32};
+int j;
+int i;
+
+scanf("%d", &j);
+
+for(i=0; i<10; i++){
+
+if(j==add[i]){
+printf("yes %d", j);
+}else {
+printf("no");
+}
+
+}
+
+
+
+return 0;
+}
