@@ -1,0 +1,21 @@
+#include "stdio.h"
+
+void main()
+{
+  int data[] = {3, 6, 1, 7, 8, 12, 9, 5, 2, 96, 65, 43, 23, 56};
+  int n = sizeof(data) / sizeof(int);
+  
+  for(int i = 1; i < n; i++) {
+    int temp = data[i];
+    int j = i;
+    while(j > 0 && data[j - 1] > temp) {
+      data[j] = data[j - 1];
+      j--;
+    }
+    data[j] = temp;
+  }
+  
+  for(int i = 0; i < n; i++) {
+    cout << data[i] << " ";
+  }
+}
