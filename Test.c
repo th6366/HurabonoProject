@@ -2,7 +2,13 @@
 
 int main(){
 
-printf("Hello");
+char a[10];
+
+printf("what's your name? : ");
+
+scanf("%s",a);
+
+printf("Hello %s",a);
 
 return 0;
 }
