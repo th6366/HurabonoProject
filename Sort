@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+int main(void)
+{
+  int rnk[10]={77,62,85,70,75,60,95,100,98,67};
+  int i, j, k;
+ 
+   // for(i=0;i<10;i++) scanf("%d",&rnk[i]);
+
+  printf("input ");
+  for(i=0;i<10;++i)
+    printf("%d ",rnk[i]);
+  printf("\n");
+
+  for(i=0;i<9;++i)
+    for(j=0;j<9-i;++j)
+      if(rnk[j]<rnk[j+1])
+      {
+        k=rnk[j];
+        rnk[j]=rnk[j+1];
+        rnk[j+1]=k;
+      }
+
+  printf("ouput ");
+  for(i=0;i<10;++i)
+    printf("%d ",rnk[i]);
+  printf("\n");
+
+  return 0;
+}
