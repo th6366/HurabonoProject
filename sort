@@ -16,7 +16,7 @@ int main()
     {
         sort(a, a+n);
         cout<<a[i]<<" ";
-    }
+    } 
     getch();
     return 0;
 }
