@@ -8,4 +8,4 @@ if (fp) {
         if (c == '\n') cnt++;
     }
     fclose(fp);
-}
+} 
