@@ -32,7 +32,7 @@ int main()
         { 
 
             if(num[j] > num[j+1]) 
-
+ 
             { 
 
                 temp=num[j];//뒷자리의 수가 더 크면 교체 
