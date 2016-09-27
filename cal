@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int multiply(int a, int b);
+int add(int a, int b);
+int main()
+{
+  int result;
+	int x = 20;
+	int y = 10;
+
+	result = add(x, y);
+	printf("add : %d\n", result);
+
+	result = multiply(x, y);
+	printf("mul : %d\n", result);
+    return 0;
+   
+
+}
+int multiply(int a, int b){
+	int result;
+	result = a * b;	
+	return result;
+}
+
+int add(int a, int b){
+	int result;
+	result = a + b;
+	return result;
+}
