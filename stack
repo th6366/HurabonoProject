@@ -38,7 +38,7 @@ int main() {
 	printf("%d", pop());
 
 
-
+ 
 
 	return 0;
 }
