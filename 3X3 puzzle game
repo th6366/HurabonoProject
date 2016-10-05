@@ -29,7 +29,7 @@ void print_puzzle(int puzzle[][3])
             }
             else//거짓(0)이면
             {
-                printf("   ");//공백 출력
+                printf("   ");//공백 출력 
             }
  
         }
