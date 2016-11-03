@@ -1,0 +1,29 @@
+//정사각형 출력
+// 입력
+// 5
+
+//출력
+// *****
+// *****
+// *****
+// *****
+// *****
+
+#include <stdio.h>
+int main(void)
+{
+    int n;
+    int i, j;
+
+    printf("출력할 라인 수:");
+    scanf_s("%d", &n);//입력
+    for (i = 0; i < n; i++)//n개 라인
+    {
+        for (j = 0; j < n; j++)//n개의 *출력
+        {
+            putchar('*');
+        }
+        putchar('\n');//개행
+    }
+    return 0;
+}
