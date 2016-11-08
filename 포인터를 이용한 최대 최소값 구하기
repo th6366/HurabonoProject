@@ -1,0 +1,41 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <time.h> 
+#define SIZE 10 
+void max_min(int*array, int size); 
+int main() 
+{ 
+     int i; 
+     int array[SIZE]; 
+     //int *p_array = NULL; 
+     srand(time(NULL)); 
+     for (i = 0; i < SIZE; i++) 
+     { 
+            array[i] = rand() % 100; 
+            printf("%3d", array[i]); 
+     } 
+     printf("\n"); 
+      
+     max_min(array, SIZE); 
+      
+     return 0; 
+} 
+void max_min(int *array, int size) 
+{ 
+     int i; 
+     int max = *array; 
+     int min = *array; 
+     for (i = 1; i < SIZE; i++){ 
+            if (max < *(array + i)){ 
+                   max = *(array + i); 
+            } 
+     } 
+      
+     for (i = 1; i < SIZE; i++){ 
+            if (min > *(array + i)){ 
+                   min = *(array + i); 
+            } 
+     } 
+      
+     printf("Max=%d\nMin=%d\n", max, min); 
+} 
