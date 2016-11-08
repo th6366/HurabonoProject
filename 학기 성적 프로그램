@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+struct semester {
+ char lecture[100]; // 강의
+ int score; // 학점
+ char grade[5]; // 등급
+};
+double get_level(char *p); // 등급을 받아서 평균 내기
+int main(){
+ int i; // 반복문
+ double total = 0.0, avg; // 평균 평점, total 초기화해주자
+ int lecture = 5; // 강의 개수
+ struct semester s1[] = {
+  { "프로그래밍기초2  ", 3, "A0" },
+  { "대   학   수   학", 3, "C+" },
+  { "발표토론과 글쓰기",3, "A+" },
+  { "디 지 털 논 리 회 로", 3 , "B+" },
+  { "World Wide English ",2 , "D+" }
+ }; //구조체 배열 초기화
+ lecture = sizeof(s1) / sizeof(s1[0]); // 평균을 구할 강의 수를 알려줌
+ printf("강좌명\t\t\t학점\t등급 \n-----------------------------------------\n");
+ for (i = 0; i < lecture; i++) // 구조체 배열을 출력하기
+  printf("%10s\t%d\t%s\n", s1[i].lecture, s1[i].score, s1[i].grade);
+ for (i = 0; i < lecture; i++) { // 구조체에서 등급을 넣기
+  total += get_level(s1[i].grade); // 반환값을 총점에 대입
+ }
+ avg = total / lecture; // 평점 구함
+ printf("평점:%lf", avg);
+ return 0;
+}
+double get_level(char *p) // 포인터로 사용한 인자를 가르킨다. *p=s1[i].grade;
+{ // *p가 아닌 p를 사용하는 이유는?
+ if (strcmp(p, "A+") == 0) // switch문은 case 'A+' 이런 식으로
+  return 4.5;
+ else if (strcmp(p, "A0") == 0)
+  return 4.0;
+ else if (strcmp(p, "B+") == 0)
+  return 3.5;
+ else if (strcmp(p, "B0") == 0)
+  return 3.0;
+ else if (strcmp(p, "C+") == 0)
+  return 2.5;
+ else if (strcmp(p, "C0") == 0)
+  return 2.0;
+ else if (strcmp(p, "D+") == 0)
+  return 1.5;
+ else if (strcmp(p, "D0") == 0)
+  return 1.0;
+ return 0; // 디폴트 값으로 사용했다.
+}
