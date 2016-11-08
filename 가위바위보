@@ -1,0 +1,76 @@
+include <stdio.h> 
+#include <stdlib.h> 
+#include <time.h> 
+#include <string.h> 
+#define MAXSIZE 100 
+#define TIE 0 
+#define WIN 1 
+#define LOSE 2 
+#define SCISSORS 0 
+#define ROCK 1 
+#define PAPER 2 
+int disRSP(int ai, int user); 
+int main(void) { 
+   int numWin; // Status 
+   int cnt = 0, pcnt = 0, aicnt = 0; // Count rounds, user wins, user loses 
+   int randN; // Random number 
+   int user, ai; // Hand of user and pc 
+   char str[MAXSIZE]; // Save user input 
+   printf("세 판 짜리 가위바위보 게임을 진행합니다."); 
+   while (cnt < 3) { 
+      printf("\n\n가위바위보! : "); 
+      scanf("%s", str); // Get input 
+      if (!strcmp(str, "가위")) { 
+         user = SCISSORS; 
+         } else if (!strcmp(str, "바위")) { 
+         user = ROCK; 
+         } else if (!strcmp(str, "보")) { 
+         user = PAPER; 
+         } else { // For invalid input, print out a warning message and terminate the program 
+         printf("Error: Invalid input.\n"); 
+         return EXIT_FAILURE; 
+      } 
+      srand(time(NULL)); // Set seed 
+      randN = rand() % 3; // Generate random number which is one of 0, 1, 2. 
+      if (randN == 0) { 
+         ai = SCISSORS; 
+         } else if (randN == 1) { 
+         ai = ROCK; 
+         } else if (randN == 2) { 
+         ai = PAPER; 
+      } 
+      numWin = disRSP(ai, user); // distinguish Rock Scissors Paper 
+      if (numWin == TIE) { // If tied, 
+         printf("비겼습니다. 이번 판을 다시 시작합니다."); 
+         continue; 
+         } else if (numWin == WIN) { // If user win, 
+         printf("YOU WIN!"); 
+         pcnt++; // Update win counter by 1 
+         } else if (numWin == LOSE) { // If user lose, 
+         printf("YOU LOSE"); 
+         aicnt++; // Update lose counter by 1 
+      } 
+      cnt++; // Update round counter by 1 
+   } 
+   // Print out the result 
+   if (pcnt > aicnt) { 
+      printf("\n%d회 최종승리!\n", pcnt); 
+      } else { 
+      printf("\n%d회 당신의 패배\n", aicnt); 
+   } 
+   return EXIT_SUCCESS; 
+} 
+int disRSP (int ai, int user) { 
+   switch (ai - user) { 
+      case 0 : 
+      return TIE;  
+      case 2 : 
+      case -1 : 
+      return WIN; 
+      case 1 : 
+      case -2 : 
+      return LOSE; 
+      default : 
+      return 0; 
+   } 
+} 
