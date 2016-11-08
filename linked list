@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define ElemType int
+
+/...ADT Linked List.../
+
+/*数据集的定义 */
+typedef struct Lnode{
+ElemType data;
+struct Lnode *next;
+}Lnode;
+
+/Attribution 定义/
+//...linked list 初始化 带头结点
+void Init(Lnode *l){
+l->next=NULL;
+}
+
+//...search an elem in the list
+Lnode * SearchList(Lnode *l,ElemType e){
+Lnode *iter=l->next;//iter point to the first node of list
+while(iter && iter->data!=e)
+iter=iter->next;
+return iter;
+}
+
+//...insert an elem in the front of list
+void InsertList(Lnode *l,ElemType e){
+Lnode p;
+p=(Lnode)malloc(sizeof(Lnode));//important
+p->data=e;
+p->next=l->next;
+l->next=p;
+}
+
+//...find predecessor of an elem,used in delete an elem
+Lnode *Predecessor(Lnode *l,ElemType e){
+Lnode *iter=l;//iter points to head node
+while(iter->next && (iter->next)->data!=e)
+iter=iter->next;
+return (iter->next==NULL)?NULL:iter;
+}
+
+//...delete an elem
+void DeleteList(Lnode *l,ElemType e){
+Lnode *pre=Predecessor(l,e);
+if(pre){
+pre->next=pre->next->next;
+free(pre->next);
+}
+}
+
+//...get an elem in the i-th position
+ElemType GetElem(Lnode *l,int i){
+Lnode *iter=l->next;
+int j=1;
+while(iter && j!=i){
+iter=iter->next;
+j++;
+}
+return (iter)?iter->data:NULL;
+}
+
+int main(){
+Lnode l;//alloc memory named l
+Init(&l);
+
+}
