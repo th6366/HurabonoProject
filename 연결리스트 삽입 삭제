@@ -1,0 +1,217 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+
+#define size 10
+
+#define success 1
+#define fail 0
+
+typedef struct _node {
+	int num;
+	struct _node* nextp;
+}_node;
+
+
+_node *freelistp;
+_node *headptr;
+_node node[size];
+_node addnode;
+
+int dsp_list(_node *headptr)
+{
+	if (headptr == NULL)
+	{
+		printf("노드가 없습니다 !!\n");
+		return fail;
+	}
+
+	while (headptr)
+	{
+		printf("[%d]", headptr->num);
+		if (headptr->nextp != NULL)
+			printf(" ");
+		headptr = headptr->nextp;
+	}
+
+	printf("\n");
+
+	return success;
+}
+
+_node* get_free_node()
+{
+	_node* freenode = NULL;
+
+	if (freelistp == NULL)
+	{
+		printf("...Error!!\n");
+		return NULL;
+	}
+
+	freenode = freelistp;
+	freelistp = freelistp->nextp;
+
+	
+	return freenode;
+}
+
+
+_node* put_free_node(_node *freenode)
+{
+	_node *ptr;
+
+	if (!freenode)
+	{
+		return NULL;
+	}
+
+	freenode->num = 99;
+	ptr = freelistp;
+	freelistp = freenode;
+	freenode->nextp = ptr;
+
+
+	return freenode;
+}
+
+int insert_node(int value)
+{
+	if (headptr == NULL)
+	{
+		headptr = get_free_node();
+		if (headptr == NULL)
+			return fail;
+
+		headptr->num = value;
+		headptr->nextp = NULL;
+
+		return success;
+	}
+
+	for (_node* pNode = headptr; pNode != NULL; pNode = pNode->nextp)
+	{
+		if (pNode->num == value)
+			return fail;
+	}
+
+	_node* const pNewNode = get_free_node();
+	if (pNewNode == NULL)
+		return fail;
+
+	pNewNode->num = value;
+
+	if (headptr->num > value)
+	{
+		pNewNode->nextp = headptr;
+		headptr->nextp = NULL;
+		headptr = pNewNode;
+		return success;
+	}
+
+	for (_node* pNode = headptr; pNode != NULL; pNode = pNode->nextp)
+	{
+		if (pNode->nextp == NULL ||
+			pNode->num < value && pNode->nextp->num > value)
+		{
+			pNewNode->nextp = pNode->nextp;
+			pNode->nextp = pNewNode;
+			return success;
+		}
+	}
+
+	return fail;
+}
+
+_node* delete_node(int delvalue)
+{
+	if (headptr == NULL)
+		return NULL;
+
+	if (headptr->num == delvalue)
+	{
+		_node* const pDeleteNode = headptr;
+		headptr = headptr->nextp;
+		return pDeleteNode;
+	}
+
+	for (_node* pNode = headptr; pNode != NULL && pNode->nextp != NULL; pNode = pNode->nextp)
+	{
+		if (pNode->nextp->num == delvalue)
+		{
+			_node* const pDeleteNode = pNode->nextp;
+			pNode->nextp = pDeleteNode->nextp;
+			return pDeleteNode;
+		}
+	}
+
+	return NULL;
+}
+
+
+int main(void)
+{
+	int i = 0;
+	_node *ptr;
+	int num = 0;
+	char selmenu = '0';
+
+	for (i = 0; i <= size; i++)
+	{
+		node[i].num = 99;
+		if (i + 1 != size)
+			node[i].nextp = &node[i + 1];
+	}
+	node[i].nextp = NULL;
+	freelistp = &node[0];
+	headptr = NULL;
+
+	printf("초기 FreeList => ");
+	dsp_list(freelistp);
+
+
+
+	while (1)
+	{
+		printf("*** 선택(삽입:1 삭제:2 종료:3) >> ");
+		selmenu = getch();
+		printf("%c\n", selmenu);
+
+		switch (selmenu) {
+		case '1':
+			printf(" - 삽입할 숫자 >> ");
+			scanf("%d", &num);
+			fflush(stdin);
+
+			if (insert_node(num) == fail) {
+				printf("...삽입 실패 !!\n");
+			}
+
+			printf("\List => ");
+			dsp_list(headptr);
+			printf("\tFreeList => ");
+			dsp_list(freelistp);
+			break;
+		case '2':
+			printf(" - 삭제할 숫자 >> ");
+			scanf("%d", &num);
+			fflush(stdin);
+
+			ptr = delete_node(num);
+			if (ptr == NULL) {
+				printf("...삭제 실패 !!\n");
+			}
+
+			put_free_node(ptr);
+			printf("\List => ");
+			dsp_list(headptr);
+			printf("\tFreeList => ");
+			dsp_list(freelistp);
+			break;
+		case '3':
+			printf("프로그램 종료");
+			exit(1);
+			break;
+		}
+	}
+}
