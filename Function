@@ -1,0 +1,40 @@
+#include <stdlib.h>
+#include <stdio.h>
+
+//Functions
+void randoms(int *a, int size); 
+void printOutArray(int *a, int size);
+//both take two perameters, the 'a' is declared as a pointer
+
+
+
+//Main
+int main() {
+
+int numbers[5];
+randoms(numbers, 5);
+//call randoms() passing numbers and 5 as arguments. 
+
+printOutArray(numbers, 5);
+
+
+return 0;
+}
+
+
+//'randoms' declaration
+void randoms(int *a, int size) {
+//fuction fills int  array passed to it with random numbers.
+	for (int i=0; i<size;i++) {   
+	//Counting through 'i' from 0 to size-1. As in count through the index numbers of array.
+		*(a+i) = rand();
+		// in the case of this program *(a+i) == numbers[i]. Therefore, assaigning rand() to each index in the array. 
+	}
+}
+
+
+void  printOutArray(int *a, int size) {
+	for (int i=0;i<size;i++) {
+		printf("Index '%d' has been assigned %d\n",i, *(a + i));
+	}
+}
