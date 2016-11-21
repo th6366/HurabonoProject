@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <time.h> //clock(), time_t변수
+
+int main()
+{
+    int i;
+    float gap;
+    time_t startTime=0, endTime=0;
+
+    printf("측정을 시작합니다...\n") ;
+    //측정 시작
+    startTime=clock();
+
+    for(i=1;i<=1000000000;i++){     }
+
+    //측정 끝
+    endTime=clock();
+    printf("측정이 끝났습니다...\n") ;
+
+    // 시간 계산
+    gap=(float)(endTime-startTime)/(CLOCKS_PER_SEC); //계산
+
+    // 측정 시간 출력
+    printf("측정 시간 : %f 초\n", gap);
+
+    return 0;
+}
