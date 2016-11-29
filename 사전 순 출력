@@ -1,0 +1,11 @@
+#include <stdio.h> 
+#include <string.h> 
+int main(void) 
+{ 
+   int  i, k; 
+   char str[3][80]; 
+   for(i=0; i < 3; i++) scanf("%s",str[i]); 
+   for(k=0,i=1; i < 3; i++) if (strcmp(str[k],str[i]) > 0) k=i; 
+   printf("%s",str[k]); 
+   return 0; 
+} 
