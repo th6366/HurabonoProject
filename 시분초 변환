@@ -1,0 +1,36 @@
+프로그램 주제 : 이용자로부터 초(second)를 입력받는다. 이를 [시,분,초]의 형태로 출력하는 프로그램을 작성해보자.
+구현방법:
+Hour(시)는 입력받은 초 값으로부터 3600을 나누어준 몫이고
+Minte(분)은 입력받은 초 값으로부터 3600을 나눈 나머지에 다시 60으로 나누어준 몫이고
+Second(초)는 입력받은 초 값으로부터 3600과 나눈 나머지에 다시 60을 나눈 나머지로 값으로 입력시켰습니다.
+*/
+#include<stdio.h>
+ 
+int Hour (int sec);   // 시를 구하는 함수
+int Minute(int sec);  // 분을 구하는 함수
+int Second(int sec);  // 초를 구하는 함수
+ 
+int main()
+{
+    int hour = 0, minute = 0, second = 0; // 기본은 0으로 초기화
+    printf("초(second) 입력 : "); // 초 입력
+    scanf("%d",&second);
+    hour = Hour(second);      //시 - 함수실행
+    minute = Minute(second);  //분 - 함수실행
+    second = Second(second);  //초 - 함수실행
+    printf("[h:%d, m:%d, s:%d]\n",hour, minute, second); // 결과값 출력
+    return 0;
+}
+ 
+int Hour (int sec)
+{
+    return sec/3600; // Hour(시)는 입력받은 초 값으로부터 3600을 나누어준 몫
+}
+int Minute(int sec)
+{   
+    return (sec%3600)/60; //입력받은 초 값으로부터 3600을 나눈 나머지에 다시 60으로 나누어준 몫
+}
+int Second(int sec)
+{
+    return sec%3600%60; // 입력받은 초 값으로부터 3600과 나눈 나머지에 다시 60을 나눈 나머지
+}
