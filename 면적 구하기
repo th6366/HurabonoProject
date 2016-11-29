@@ -1,0 +1,13 @@
+#include <stdio.h> 
+int main() 
+{ 
+   float a=1; 
+   int   i=0; 
+   while (a > 0.01) 
+   { 
+      a/=2; 
+      i++; 
+   }    
+   printf("%d번 접으면 원래의 1/100면적으로 줄어듭니다.\n",i); 
+   return 0; 
+} 
