@@ -1,0 +1,168 @@
+//서버 GUI
+package GUI_Chatting;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+public class Server extends Frame implements ActionListener {
+
+	String nickname = "";
+	Panel p = new Panel();
+	TextArea ta = new TextArea();
+	TextField tf = new TextField();
+	DataInputStream in;
+	DataOutputStream out;
+	Server(String nickname)
+	{
+		super(nickname);
+		this.nickname = nickname;
+		p.setLayout(new BorderLayout());
+		p.add(ta, "Center");
+		p.add(tf, "South");
+		tf.addActionListener(this);
+		tf.addFocusListener(new FocusAdapter()
+		{
+			public void focusGained(FocusEvent fe)
+		{
+			tf.requestFocus();
+		}
+
+		});
+		ta.setEditable(false);
+		this.add(p);
+		this.setBounds(200, 200, 300, 300);
+		this.setResizable(false);
+		this.setVisible(true);
+		tf.requestFocus();
+		this.addWindowListener(new MyWindowHandler());
+		serverStart();
+	}
+	public void actionPerformed(ActionEvent e)
+	{
+		String msg = tf.getText();
+		if ("".equals(msg))return;
+		if (out != null)
+		{
+			try {
+				out.writeUTF(nickname + ">" + msg);
+			}
+			catch (IOException e1)
+			{
+				e1.printStackTrace();
+			}
+		}
+		ta.append("\n" + nickname + " > " + msg);
+		tf.setText("");
+	}
+	public void serverStart()
+	{
+		try {
+			ServerSocket S_socket = new ServerSocket(7777);
+			ta.setText("서버가 준비되었습니다.\n");
+			Socket socket = S_socket.accept();
+			ta.append("상대방과 연결되었습니다.\n");
+			in = new DataInputStream(socket.getInputStream());
+			out = new DataOutputStream(socket.getOutputStream());
+			while (in != null)
+			{
+				String msg = in.readUTF();
+				ta.append("\n" + msg);
+			}
+
+		}
+		catch (IOException e)
+		{
+			ta.setText("서버소켓 설정 실패\n");
+		}
+
+	}
+	public static void main(String[] args)
+	{
+		Server server = new Server("Server");
+	}
+
+}
+
+//클라이언트 GUI
+package GUI_Chatting;
+
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+public class ChatClient extends Frame implements ActionListener
+{
+	String nickname = "";
+	String serverIP = "127.0.0.1";
+	int serverPort = 7777;
+	DataInputStream in;
+	DataOutputStream out;
+
+	Panel p = new Panel(new BorderLayout());
+	TextArea ta = new TextArea();
+	TextField tf = new TextField();
+	ChatClient(String nickname)
+	{
+		this.nickname = nickname;
+		p.add(ta, "Center");
+		p.add(tf, "South");
+
+		ta.setEditable(false);
+		tf.addActionListener(this);
+		this.add(p);
+		this.addWindowListener(new MyWindowHandler());
+		this.setBounds(600, 200, 300, 300);
+		this.setVisible(true);
+		tf.requestFocus();
+
+	}
+	public static void main(String[] args)
+	{
+		try {
+			ChatClient client = new ChatClient("Client");
+			client.startClient();
+		}
+		catch (UnknownHostException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	public void startClient() throws UnknownHostException, IOException
+	{
+		Socket socket = new Socket(serverIP,serverPort);
+	ta.setText("서버에 연결되었습니다.");
+	in = new DataInputStream(socket.getInputStream());
+	out = new DataOutputStream(socket.getOutputStream());
+	while (in != null)
+	{
+		String msg = in.readUTF();
+		System.out.println("받은 메세지 : " + msg);
+		ta.append("\n" + msg);
+	}
+	}
+		@Override
+		public void actionPerformed(ActionEvent e)
+	{
+		// TODO Auto-generated method stub
+		String msg = tf.getText();
+		if ("".equals(msg))return;
+		if (out != null)
+		{
+			try {
+				out.writeUTF(nickname + " > " + msg);
+			}
+			catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		ta.append("\n" + nickname + " > " + msg);
+		tf.setText("");
+	}
+}
