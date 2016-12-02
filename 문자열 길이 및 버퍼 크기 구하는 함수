@@ -1,0 +1,21 @@
+#include <stdio.h>    //printf
+#include <iostream>   //cout
+#include <string.h>   //strlen
+ 
+#define print(nLen) printf( "%d\n", nLen )
+#define PrintOut(nLen) std::cout<<nLen<<std::endl
+ 
+int main( )
+{
+    char string[50] = "This is a simple string";
+    int nStrLen(0);
+    int nStrSize(0);
+ 
+    nStrLen = strlen( string );
+    print(nStrLen);
+ 
+    nStrSize = sizeof( string );
+    PrintOut( nStrSize );
+ 
+    return 0;
+}
