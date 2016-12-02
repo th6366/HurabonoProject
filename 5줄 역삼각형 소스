@@ -1,0 +1,14 @@
+#include<stdio.h>
+
+void main()
+{
+	int fa,fb;
+	for(fa=0;fa<5;fa++)
+	{
+		for(fb=fa;fb<5;fb++)
+		{
+			printf("*");
+		}
+		printf("\n");
+	}
+}
