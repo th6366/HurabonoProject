@@ -1,0 +1,51 @@
+#include<stdio.h>
+void main()
+{
+	int fa,fb,c,a[10],num;
+	
+	printf("수를 입력해 주세요:");
+	for(fa=0;fa<10;fa++)
+	{
+		scanf("%d",&a[fa]);
+	}
+	printf("차수 선택 1.오름차순 2.내림차순:");
+	scanf("%d",&num);
+	if(num==1)
+	{
+	for(fa=0;fa<10;fa++)
+	{
+		for(fb=fa+1;fb<10;fb++)
+		{
+			if(a[fa]>a[fb])
+			{
+				c=a[fa];
+				a[fa]=a[fb];
+				a[fb]=c;
+			}
+		}
+	}
+	}
+	else if(num==2)
+	{
+	for(fa=0;fa<10;fa++)
+	{
+		for(fb=fa+1;fb<10;fb++)
+		{
+			if(a[fa]<a[fb])
+			{
+				c=a[fa];
+				a[fa]=a[fb];
+				a[fb]=c;
+			}
+		}
+	}
+	}
+	else
+	{
+		printf("잘못 선택 하셨습니다.");
+	}
+	for(fa=0;fa<10;fa++)
+	{
+		printf("[%2d]",a[fa]);
+	}
+}
