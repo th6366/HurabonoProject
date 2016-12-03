@@ -1,0 +1,20 @@
+int Remove( TCHAR chRemove );
+//chRemove : 제거할 문자
+//반환값 : 제거한 문자의 수
+
+
+#include <atlstr.h>       //CString
+ 
+#define print( str ) printf( "%s\n", str )
+ 
+int main( )
+{
+    CString strText = "+V+i+s+u+a+l St+u+d+i+o C++ 20+13";
+ 
+    print( strText );
+ 
+    strText.Remove( '+' );
+    print( strText );
+ 
+    return 0;
+}
