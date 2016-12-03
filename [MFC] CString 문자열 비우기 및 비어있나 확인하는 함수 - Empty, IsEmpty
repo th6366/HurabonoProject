@@ -1,0 +1,28 @@
+?
+1
+2
+3
+void Empty( );
+BOOL IsEmpty( ) const;
+//반환값 : 문자열이 비어있으면 TRUE, 비어 있지 않으면 FALSE를 반환
+
+
+#include <atlstr.h>       //CString
+ 
+#define print( str ) printf( "%s\n", str )
+ 
+int main( )
+{
+    CString strText;
+ 
+    strText = "abcd13579";
+    print( strText );
+ 
+    if( strText.IsEmpty( ) != TRUE )    //strText에 문자열이 있나 확인한다.
+    {
+        strText.Empty( );               //strText에 문자열이 있으면 지운다.
+        print( strText );
+    }
+ 
+    return 0;
+}
