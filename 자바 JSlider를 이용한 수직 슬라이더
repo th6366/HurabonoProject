@@ -1,0 +1,25 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class VerticalSliderEx extends JFrame{
+    VerticalSliderEx(){
+        this.setTitle("수직 슬라이더 만들기 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JSlider js = new JSlider(JSlider.VERTICAL, 0, 200, 100);
+        js.setPaintLabels(true);
+        js.setPaintTicks(true);
+        js.setPaintTrack(true);
+        js.setMajorTickSpacing(50);
+        js.setMinorTickSpacing(10);
+        this.add(js, BorderLayout.CENTER);
+        this.setSize(300,300);
+        this.setVisible(true);
+    }
+} 
+public class JavaApplication2 {
+    public static void main(String[] args) {
+        new VerticalSliderEx();
+    }
+}
