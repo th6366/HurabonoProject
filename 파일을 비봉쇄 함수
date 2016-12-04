@@ -1,0 +1,15 @@
+int nonblock(int sockfd)
+{
+    int opts;
+    opts = fcntl(sockfd, F_GETFL);
+    if(opts < 0)
+    {
+        return -1;
+    }
+    opts = (opts | O_NONBLOCK);
+    if(fcntl(sockfd, F_SETFL, opts) < 0)
+    {
+        return -1;
+    }
+    return 1;
+}
