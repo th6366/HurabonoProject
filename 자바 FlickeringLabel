@@ -1,0 +1,64 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class FlickeringLabelEx extends JFrame{
+    FlickeringLabelEx(){
+        this.setTitle("FlickeringLabel 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+        
+        FlickeringLabel fl = new FlickeringLabel("깜빡");//깜빡이는 레이블 생성
+        JLabel la = new JLabel("안깜빡");//그냥 레이블 생성
+        FlickeringLabel fl1 = new FlickeringLabel("여기도 깜빡");//깜빡 레이블
+        
+        //프레임에 레이블 추가
+        this.add(fl);
+        this.add(la);
+        this.add(fl1);
+        
+        this.setLocationRelativeTo(null);
+        this.setSize(300,150);
+        this.setVisible(true);
+    }
+}
+class FlickeringLabel extends JLabel implements Runnable{
+    FlickeringLabel(String text){
+        super(text);//JLabel 생성자 호출
+        this.setOpaque(true);//배경색 변경 가능하도록 설정
+        
+        Thread th = new Thread(this);
+        th.start();
+    }
+    public void run(){
+        boolean n=true;//현재 상태를 표현하기 위한 변수
+        while(true){//배경색 바꾸기
+            if(n){
+                this.setBackground(Color.yellow);
+            }
+            else{
+                this.setBackground(Color.green);
+            }
+            //전환을 위해 참, 거짓 변경
+            if(n){
+                n=false;
+            }
+            else{
+                n=true;
+            }
+            //0.5초마다 깜빡
+            try{
+                Thread.sleep(500);
+            }
+            catch(Exception e){
+                return;
+            }
+        }
+    }
+}
+public class JavaApplication22 {
+    public static void main(String[] args) {
+        new FlickeringLabelEx();
+    }
+}
