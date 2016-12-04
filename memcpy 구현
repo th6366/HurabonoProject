@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
+void mymemcpy(void *dst, void *src, unsigned int size)
+{
+  int i;
+  char *a = (char *)src;
+  int pad = size%sizeof(int);
+  for(i = 0; i < size/sizeof(int); i++)
+  {
+    *(int *)dst = *(int *)src;
+    dst +=4;
+    src +=4;
+  }
+  for (i = 0; i < pad; i++)
+  {
+    *(char *)dst = *(char *)src;
+    dst++;
+    src++;
+  }
+}
+struct data
+{
+  int age;
+  char name[24];
+  char a;
+};
+
+int main(int argc, char **argv)
+{
+  int i = 0;
+  struct data src, dst;
+  clock_t stime, etime;
+
+  memset((void *)&dst, 0x00, sizeof(src));
+  src.age = 10;
+  src.a = 'a';
+  sprintf(src.name, "%s", "yundream");
+
+  stime = clock();
+  for (i = 0; i < 10000000; i++)
+  {
+    mymemcpy((void *)&dst, (void *)&src, sizeof(src));
+  }
+  etime = clock();
+  printf("Time : %.3fs\n",(double)(etime - stime)/CLOCKS_PER_SEC);
+  printf("%d\n", dst.age);
+  printf("%c\n", dst.a);
+  printf("%s\n", dst.name);
+}
