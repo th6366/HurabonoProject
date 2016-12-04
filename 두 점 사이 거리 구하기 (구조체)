@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <math.h>//sqrt - 제곱근
+ 
+typedef struct Coordi//좌표 형식 정의
+{
+    double x;
+    double y;
+}Coordi;
+ 
+double GetDistanc(Coordi c1, Coordi c2);
+int main(void)
+{
+    Coordi c1, c2;
+ 
+    printf("첫 번째 점의 x,y : ");
+    scanf_s("%lf %lf", &c1.x, &c1.y);
+ 
+    printf("두 번째 점의 x,y : ");
+    scanf_s("%lf %lf", &c2.x, &c2.y);
+ 
+    printf("거리: %f\n", GetDistanc(c1, c2));
+    return 0;
+}
+double GetDistanc(Coordi c1, Coordi c2)
+{
+    return sqrt((c2.x - c1.x)*(c2.x - c1.x) + (c2.y - c1.y)*(c2.y - c1.y));
+}
