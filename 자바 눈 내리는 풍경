@@ -1,0 +1,79 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.util.*;
+
+class Ex10 extends JFrame{
+    Thread snow;
+    SnowPanel sp;
+    Ex10(){
+        this.setTitle("눈 내리는 풍경");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        sp=new SnowPanel();
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        this.add(sp);
+        this.setSize(500,500);
+        this.setVisible(true);
+        
+        snow=new Thread(sp);
+        snow.start();
+    }
+    
+    class SnowPanel extends JPanel implements Runnable{
+        Vector<Point> v =new Vector<Point>();//눈덩이 50개의 위치를 저장
+        SnowPanel(){
+            this.setLayout(null);
+            for(int i=0; i<50; i++){
+                int x=(int)(Math.random()*500);
+                int y=(int)(Math.random()*500);
+                v.add(new Point(x,y));
+            }
+        }
+        
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            ImageIcon icon=new ImageIcon("back.jpg");
+            Image img=icon.getImage();
+            g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);//배경
+            g.setColor(Color.WHITE);
+            for(int i=0; i<v.size(); i++){//10x10 눈덩이를 그린다.
+                Point p=v.get(i);
+                g.fillOval((int)p.getX(), (int)p.getY(), 10, 10);
+            }
+        }
+        
+        public void changeSnowPoaition(){
+            for(int i=0; i<v.size(); i++){
+                Point p=v.get(i);
+                p.x+=(int)(Math.random()*20);
+                p.y+=(int)(Math.random()*5);
+                //눈덩이가 프레임 밖으로 나가게 되면 나간 좌표를 0으로 초기화
+                if(p.x>500)
+                    p.x=0;
+                if(p.y>500)
+                    p.y=0;
+                v.set(i, p);
+            }
+        }
+        
+        public void run(){
+            while(true){
+                try{
+                    Thread.sleep(50);
+                }
+                catch(Exception e){
+                    return;
+                }
+                changeSnowPoaition();
+                repaint();//계속 업데이트
+            }
+        }
+    }
+}
+public class JavaApplication36 {
+    public static void main(String[] args) {
+        new Ex10();
+    }
+}
