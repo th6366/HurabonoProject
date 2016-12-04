@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+int strnicmp(char *str,char *needle,int len){
+
+  int count=0;
+
+  while(count!=len){
+
+    if(tolower(*(str+count))==tolower(*(needle+count))){
+
+      ++count;
+
+    }else{
+
+      return 1;
+
+    }
+
+  }
+
+  return 0;
+
+}
+
+int main(int argc,char **argv){
+
+  char *name="iAM ^^";
+
+  if(strnicmp(name,"iam",3)==0){
+
+    printf("yes\n");
+
+  }else{
+
+    printf("no\n");
+
+  }
+
+  return 0;
+
+}
