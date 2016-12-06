@@ -1,0 +1,17 @@
+ 
+
+import java.net.InetSocketAddress;
+import java.nio.channels.ServerSocketChannel;
+
+public class Main {
+  public static void main(String[] argv) throws Exception {
+
+    ServerSocketChannel ssChannel = ServerSocketChannel.open();
+    ssChannel.configureBlocking(false);
+    int port = 80;
+    ssChannel.socket().bind(new InetSocketAddress(port));
+
+  }
+}
+[출처] [Java Source] Creating a Non-Blocking Server Socket (자바/Java/C/C++ 개발자모임 [Code人/코드인]) |작성자 에디터
+
