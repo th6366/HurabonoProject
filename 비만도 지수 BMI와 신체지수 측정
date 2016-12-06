@@ -1,0 +1,73 @@
+#include <stdio.h>
+#define MAX_NAME_LEN    20
+typedef struct _Student Student; //Student 타입 이름 정의
+struct _Student//구조체 정의
+{
+    int num;
+    char name[MAX_NAME_LEN];
+    double height;//키
+    double weight;//몸무게
+};
+ 
+#define MAX_STUDENT 10
+Student stues[MAX_STUDENT];
+ 
+void InputDatas();
+void PrintDatas();
+int main()
+{
+    InputDatas();
+    PrintDatas();
+    return 0;
+}
+void InputDatas()
+{
+    int i = 0;
+    printf("%d명의 학생 데이터를 입력하세요.\n",MAX_STUDENT);
+    printf("입력 포멧: 번호 이름 키 몸무게\n");
+    printf("예) 01 홍길동 120.8 30.9\n");
+    for (i = 0; i < MAX_STUDENT; i++)
+    {        
+        scanf_s("%d %s %lf %lf", &stues[i].num,
+            stues[i].name,MAX_NAME_LEN, &stues[i].height, &stues[i].weight);
+    }
+}
+void PrintDatas()
+{
+    int i = 0;
+    double BMI = 0;
+    int h=0, o=0, n=0, l=0;
+    printf("%-4s %-10s %-10s %-10s %-10s %s\n", 
+        "번호", "이름", "키(cm)", "체중(kg)", "BMI", "비만정도");
+    printf("******************************************************************\n");
+    for (i = 0; i < MAX_STUDENT; i++)
+    {
+        //키는 m단위이고 제곱을 취했으므로 10000을 곱해주어야 합니다.
+        BMI = stues[i].weight / (stues[i].height * stues[i].height)*10000;
+ 
+        printf("%-04d %-10s %-10.1f %-10.1f %-10.f ", i, stues[i].name, 
+            stues[i].height, stues[i].weight, BMI);
+        if (BMI > 30)
+        {
+            h++;
+            printf("비만\n");
+        }
+        else if (BMI >= 25)
+        {
+            o++;
+            printf("과체중\n");
+        }
+        else if (BMI >= 19)
+        {
+            n++;
+            printf("정상\n");
+        }
+        else
+        {
+            l++;
+            printf("저체중\n");
+        }        
+    }
+    printf("******************************************************************\n");
+    printf("    비만 : %d   과체중 : %d   정상 : %d   저체중 : %d\n", h, o, n, l);
+}
