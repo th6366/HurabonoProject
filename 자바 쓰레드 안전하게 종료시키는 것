@@ -1,0 +1,28 @@
+class AdvancedStopThread implements Runnable {
+    public void run() {
+        try{
+           while(!Thread.currentThread().isInterrupted()){
+               System.out.println("Thread is alive..");
+               Thread.sleep(250);
+           }
+        }catch(InterruptedException e){
+            //e.printStackTrace()'; 예상했던 예외이므로 넘긴다. 
+        }finally{     //마무리할 작업(소켓,스트림,DB커넷션 등)이 있다면 이곳에서 정리. 
+            System.out.println("Thread is dead..");
+        }
+    }
+}
+public class ThreadTest {
+
+    public static void main(String[] args) {
+        AdvancedStopThread tt = new AdvancedStopThread();
+        Thread test = new Thread(tt);
+        test.start();
+        try{
+            Thread.sleep(1000);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+        test.interrupt();
+    }
+}
