@@ -1,0 +1,42 @@
+#include <openssl/md5.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/types.h>
+
+int getmd5(char *filename, char *md5str)
+{
+    MD5_CTX lctx;
+    unsigned int i;
+    int fd;
+    struct stat status;
+    char *data;
+    unsigned char digest[16];
+
+    // 파일의 내용을 읽기 위해서 연다.
+    fd = open(filename, O_RDONLY);
+    if (fd < 0)
+    {
+        return fd;
+    }
+    // 파일의 크기를 얻어온 후 
+    // 파일의 크기만큼 내용을 담을 공간을 확보한다.
+    fstat(fd, &status);
+    data = (char *)malloc(status.st_size);
+    read(fd, data, status.st_size);
+
+    MD5_Init(&lctx);
+    MD5_Update(&lctx, data, status.st_size);
+    MD5_Final(digest, &lctx);
+
+    // md5 문자열을 복사한다.
+    for (i = 0; i < sizeof(digest); ++i)
+    {
+        sprintf(md5str+(i*2), "%02x", digest[i]);
+    }
+    free(data);
+    close(fd);
+    return 1;
+}
