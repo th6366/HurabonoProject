@@ -1,0 +1,8 @@
+int main(int argc, char **argv)
+{
+    int a[5][10];
+
+    printf("rows : %d\n",sizeof(a)/sizeof(a[0]));
+    printf("cols : %d\n", sizeof(a[0])/sizeof(int));
+    return 0;
+}
