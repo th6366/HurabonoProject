@@ -1,0 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+ 
+#define COMMAND_SIZE 256
+ 
+int main(int argc, char* argv[]){
+    char command[COMMAND_SIZE] = { '\0', };
+    int lines = 40;
+    int cols = 20;
+    sprintf(command, "mode con: lines=%d cols=%d", lines, cols);
+    system(command);
+    return 0;
+}
