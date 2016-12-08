@@ -1,0 +1,39 @@
+void f()
+{
+        int *p = new int[3000000];
+        register int *p2 = p; //store the address in a register
+        for (register int j = 0; j<3000000; j++)
+        {
+                *p2++ = 0;
+        }
+        //...use  p    
+        delete [] p;
+}
+
+#include <iostream>
+using namespace std;
+class V 
+{
+public:  
+        virtual void show() const { cout<<"I'm V"<<endl; }
+};
+class W : public V 
+{
+public:
+        void show() const { cout<<"I'm W"<<endl; }
+};
+void f(V & v, V *pV) 
+{
+        v.show();   
+        pV->show();  
+}
+void g()
+{
+        V v;
+        f(v, &v);
+}
+int main()
+{
+        g();
+        return 0;
+}
