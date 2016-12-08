@@ -1,0 +1,18 @@
+/*
+
+이 예제는
+http://www.cplusplus.com/reference/iostream/ios/operatornot/
+에서 가져왔습니다.
+
+*/
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main () {
+    ifstream is;
+    is.open ("test.txt");
+    if (!is)
+        cerr << "Error opening 'test.txt'\n";
+    return 0;
+}
