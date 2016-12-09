@@ -1,0 +1,58 @@
+#include<iostream>
+using namespace std;
+
+class X {
+protected:
+    int m_data;
+
+public:
+    void Print();
+    void Set(int data);
+    bool IsEquivalent(const X& object);
+    bool IsSame(const X& object);
+};
+
+void X::Print() {   //출력을 위한 함수
+    cout << "this= " << this << ", data=  " << m_data << "\n";
+}
+
+void X::Set(int m_data) {   //protected 변수에 값을 집어넣기 위한 함수
+    this->m_data = m_data;
+}
+
+bool X::IsEquivalent(const X& object){  //클래스 객체의 값과 같은지 검사하는 함수
+    return (m_data == object.m_data);
+}
+
+bool X::IsSame(const X& object) {
+    return (this == &object);
+}
+
+int main() {
+
+    X obj;
+    obj.Set(100);
+    X obj2 = obj;
+
+    if (obj.IsEquivalent(obj2))
+        cout << "값이 같습니다.";
+    else
+        cout << "값이 다릅니다.";
+    cout << "\n";
+
+    if (obj.IsSame(obj2))
+        cout << "객체가 서로 같습니다.";
+    else
+        cout << "객체가 서로 다릅니다.";
+    cout << "\n";
+
+    X& obj3 = obj;
+
+    if (obj.IsSame(obj3))
+        cout << "객체가 서로 같습니다.";
+    else
+        cout << "객체가 서로 다릅니다.";
+    cout << "\n";
+
+    return 0;
+}

@@ -1,0 +1,28 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class GraphicsDrawLineEx extends JFrame{
+    GraphicsDrawLineEx(){
+        this.setTitle("drawLine 사용 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        MyPanel panel = new MyPanel();
+        this.add(panel, BorderLayout.CENTER);
+        this.setLocationRelativeTo(null);
+        this.setSize(300,200);
+        this.setVisible(true);
+    }
+    class MyPanel extends JPanel{
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.setColor(Color.RED);
+            g.drawLine(20, 20, 100, 100);
+        }
+    }
+}
+public class JavaApplication8 {
+    public static void main(String[] args) {
+        new GraphicsDrawLineEx();
+    }
+}

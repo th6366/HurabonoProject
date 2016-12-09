@@ -1,0 +1,11 @@
+콘솔창의 크기 조절.
+system("mode con:cols=100 lines=20");
+
+* 콘솔창 전체 내용 지우기
+system( "cls" );
+
+* 콘솔창 타이틀 변경
+SetConsoleTitle("문자열");
+
+* 콘솔창 글자색 변경 (컬러는 0~15)
+SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_NANDLE ), i )

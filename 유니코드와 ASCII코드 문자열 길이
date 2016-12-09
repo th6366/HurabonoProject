@@ -1,0 +1,15 @@
+#include <locale.h>
+#include <stdio.h>
+#include <string.h>
+int main()
+{
+    char c ='a';
+    wchar_t wc = L'홍';
+    char name[10]="홍길동";
+    wchar_t wname[10]=L"홍길동";    
+    setlocale(LC_ALL,"Korean"); //로케일 설정(지역 설정)
+    printf("c:%c wc:%lc\n",c,wc);
+    printf("name:%s wname:%ls\n",name,wname);    
+    printf("name 길이:%d wname 길이:%d\n",strlen(name), wcslen(wname));
+    return 0;
+}

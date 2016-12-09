@@ -1,0 +1,76 @@
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Label;
+import java.awt.Panel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.geom.Line2D;
+ 
+public class AwtCanvasControl {
+    private Frame mainFrame;
+    private Label headerLabel;
+    private Panel controlPanel;
+ 
+    public AwtCanvasControl() {
+        prepareGUI();
+    }
+ 
+    public static void main(String[] args) {
+        AwtCanvasControl awtControlDemo = new AwtCanvasControl();
+        awtControlDemo.showControl();
+    }
+ 
+    private void prepareGUI() {
+        // Frame 에 대한 셋팅
+        mainFrame = new Frame("Java AWT 샘플");
+        mainFrame.setSize(400, 400);
+        mainFrame.setLayout(new GridLayout(2, 1));
+        mainFrame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent) {
+                System.exit(0);
+            }
+        });
+ 
+        // 상단에 있는 라벨
+        headerLabel = new Label();
+        headerLabel.setAlignment(Label.CENTER);
+        headerLabel.setText("Control Test : Choice Control");
+ 
+        controlPanel = new Panel();
+ 
+        mainFrame.add(headerLabel);
+        mainFrame.add(controlPanel);
+        mainFrame.setVisible(true);
+    }
+ 
+    private void showControl() {
+        controlPanel.setLayout(new GridLayout(1, 1, 0, 0));
+ 
+        controlPanel.add(new MyCanvas());
+        mainFrame.setVisible(true);
+    }
+ 
+    class MyCanvas extends Canvas {
+ 
+        public MyCanvas() {
+            setBackground(Color.BLUE);
+        }
+ 
+        public void paint(Graphics g) {
+            Graphics2D g2;
+            g2 = (Graphics2D) g;
+            g2.setColor(Color.WHITE);
+            Font font = new Font("Serif", Font.PLAIN, 13);
+            g2.setFont(font);
+            g2.drawString("Canvas 컨트롤에 텍스트 넣기", 10, 20);
+             
+            g2.setColor(Color.RED);
+            g2.draw(new Line2D.Double(30, 30, 60, 100));
+        }
+    }
+}

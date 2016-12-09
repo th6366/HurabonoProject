@@ -1,0 +1,26 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <linux/fs.h>
+#include <sys/time.h>
+#include <sys/ioctl.h>
+
+int getdevsize(char *devname)
+{
+  int fd;
+  int blcks;
+  int sects;
+  fd = open(devname, O_RDONLY);
+  if (fd < 0)
+  {
+    perror("error");
+    return -1;
+  }
+
+  ioctl(fd, BLKGETSIZE, &blcks);
+  ioctl(fd, BLKSSZGET, &sects);
+
+  close(fd);
+  return (blcks/1024) * sects;
+}

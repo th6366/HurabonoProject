@@ -1,0 +1,27 @@
+public enum Day
+{
+    SUNDAY, MONDAY, TUESDAY, WEDNESDAY, 
+    THURSDAY, FRIDAY, SATURDAY,
+    NOVALUE;
+
+    public static Day toDay(String str)
+    {
+        try {
+            return valueOf(str);
+        } 
+        catch (Exception ex) {
+            return NOVALUE;
+        }
+    }   
+}
+
+
+switch (Day.toDay(str))
+{
+    case SUNDAY:                
+    case MONDAY:
+    case TUESDAY:
+        // etc ...
+    default:
+        // any non-Day value
+}

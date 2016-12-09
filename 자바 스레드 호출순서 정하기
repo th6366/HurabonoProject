@@ -1,0 +1,28 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class TimerThread extends Thread{
+    int n=0;
+    boolean flag = false;//false로 초기화
+    public void finish() { flag=true;}//finish함수가 호출되면 종료
+    public void run(){
+        while(true){
+        System.out.print(n++);//화면에 카운트 값 출력
+        try{
+            sleep(1000);
+            if(flag==true)
+                return;//스레드 종료
+        }
+        catch(Exception e){return;}
+        }
+    }
+}
+public class JavaApplication25 {
+    public static void main(String[] args) {
+        TimerThread tt = new TimerThread();
+        tt.start();
+        tt.finish();//스레드 강제 종료
+    }
+}

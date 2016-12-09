@@ -1,0 +1,192 @@
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.net.*;
+
+class Ex5 extends JFrame{
+    Ex5(){
+        this.setTitle("사격 게임");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        GamePanel p = new GamePanel();
+        this.add(p);
+        
+        this.setLocationRelativeTo(null);
+        this.setSize(300,300);
+        this.setResizable(false);
+        this.setVisible(true);
+        p.startGame();
+    }
+}
+
+class GamePanel extends JPanel{
+    TargetThread targetThread;
+    JLabel base = new JLabel();
+    JLabel bullet = new JLabel();
+    JLabel target;
+    //AudioClip sound;
+    GamePanel(){
+        this.setLayout(null);
+        base.setSize(40,40);
+        base.setOpaque(true);
+        base.setBackground(Color.black);
+        
+        ImageIcon img = new ImageIcon("chicken.jpg");
+        target = new JLabel(img);
+        //이미지 크기만큼 레이블 크기 설정
+        target.setSize(img.getIconWidth(),img.getIconHeight());
+        
+        bullet.setSize(10,10);
+        bullet.setOpaque(true);
+        bullet.setBackground(Color.red);
+        this.add(base);
+        this.add(target);
+        this.add(bullet);
+        
+        //URL url = Ex5.class.getResource("LASER.wav");
+        //sound = Applet.newAudioClip(url);
+    }
+    public void startGame(){
+        base.setLocation(this.getWidth()/2-20, this.getHeight()-40);
+        bullet.setLocation(this.getWidth()/2-5, this.getHeight()-50);
+        target.setLocation(0, 0);
+        
+        //타겟을 움직이는 스레드
+        targetThread = new TargetThread(target);
+        targetThread.start();
+        
+        //베이스에 초점을 두고 엔터키 입력에 따라 bullet스레드 실행
+        base.requestFocus();
+        base.addKeyListener(new KeyListener(){
+            BulletThread bulletThread = null;
+            @Override
+            public void keyTyped(KeyEvent ke) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent ke) {
+                if(ke.getKeyChar()==KeyEvent.VK_ENTER){
+                    //스레드가 죽어있는 상태인지 확인
+                    if(bulletThread==null || !bulletThread.isAlive()){
+                        //sound.play();
+                        //총알로 타겟을 맞췄는지 확인하기 위해 2개의 레이블과 타겟스레드를 넘겨준다.
+                        bulletThread = new BulletThread(bullet,target,targetThread);
+                        bulletThread.start();
+                    }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent ke) {
+            }
+            
+        });
+    }
+    
+    class TargetThread extends Thread{
+        JLabel target;
+        TargetThread(JLabel target){
+            this.target=target;
+            target.setLocation(0, 0);
+        }
+        public void run(){
+            while(true){
+                int x=target.getX()+5;//5픽셀씩 이동
+                int y=target.getY();
+                
+                //프레임 밖으로 나갈경우
+                if(x>GamePanel.this.getWidth())
+                    target.setLocation(0, 0);
+                //프레임 안에 있을경우 5픽셀씩 이동
+                else
+                    target.setLocation(x, y);
+                
+                //0.02초마다 이동
+                try{
+                    sleep(20);
+                }
+                //스레드가 죽게되면 초기 위치에 위치하고, 0.5초를 기다린다.
+                catch(Exception e){
+                    target.setLocation(0, 0);
+                    try{
+                        sleep(500);
+                    }
+                    catch(Exception e2){}
+                }
+            }
+        }
+    }
+    
+    class BulletThread extends Thread{
+        JLabel bullet,target;
+        Thread targetThread;
+        
+        public BulletThread(JLabel bullet, JLabel target, Thread targetThread){
+            this.bullet=bullet;
+            this.target=target;
+            this.targetThread=targetThread;
+        }
+        
+        public void run(){
+            while(true){
+                if(hit()){//타겟이 맞았다면
+                    targetThread.interrupt();//타겟 스레드를 죽인다.
+                    //총알은 원래 위치로 이동
+                    bullet.setLocation(bullet.getParent().getWidth()/2-5, bullet.getParent().getHeight()-50);
+                    return;//총알 스레드도 죽인다.
+                }
+                else{
+                    int x=bullet.getX();
+                    int y=bullet.getY()-5;//5픽셀씩 위로 이동한다.=총알 속도가 5픽셀
+                    //총알이 프레임 밖으로 나갔을 때
+                    if(y<0){
+                        //총알 원래 위치로 이동
+                        bullet.setLocation(bullet.getParent().getWidth()/2-5, bullet.getParent().getHeight()-50);
+                        return;//총알 스레드를 죽인다.
+                    }
+                    //총알이 프레임 안에 있으면 5픽셀씩 이동한다.
+                    else
+                        bullet.setLocation(x, y);
+                }
+                //0.02초마다 5픽셀씩 이동
+                try{
+                    sleep(20);
+                }
+                
+                catch(Exception e){}
+            }
+        }
+        
+        private boolean hit(){
+            int x=bullet.getX();
+            int y=bullet.getY();
+            int w=bullet.getWidth();
+            int h=bullet.getHeight();
+            
+            if(targetContains(x,y)
+                    ||targetContains(x+w-1,y)
+                    ||targetContains(x+w-1,y+h-1)
+                    ||targetContains(x,y+h-1))
+                return true;
+            else
+                return false;
+        }
+        private boolean targetContains(int x, int y){
+            //타겟의 x좌표가 총알 x좌표보다 작거나 같으며 총알 x좌표보다 타겟 x좌표 + 타겟의 가로 길이가 크고 
+            if(((target.getX()<=x)&&(x<target.getX()+target.getWidth()))   
+                    //타겟의 y좌표가 총알 y좌표보다 작거나 같으며 총알 y좌표보다 타겟 y좌표 + 타겟의 세로 길이가 크면
+                    &&((target.getY()<=y)&&(y<target.getY()+target.getHeight())))
+                return true;
+            
+            else
+                return false;
+        }
+    }
+}
+public class JavaApplication30 {
+    public static void main(String[] args) {
+        new Ex5();
+    }
+}

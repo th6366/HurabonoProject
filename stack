@@ -1,0 +1,44 @@
+#include <stdio.h>
+
+#define N 100
+int stack[N];
+int top = -1;
+
+void push(int data) {
+	if (top >= N - 1) {
+		printf("에러");
+		return 0;
+	}
+
+	return stack[++top] = data;
+
+}
+
+
+int pop() {
+	if (top == -1) {
+		printf("에러");
+	}
+	return stack[top--];
+
+
+}
+
+int main() {
+
+	int a, b, c;
+	scanf("%d", &a);
+	scanf("%d", &b);
+	scanf("%d", &c);
+
+	push(a);
+	push(b);
+	push(c);
+	printf("%d", pop());
+	printf("%d", pop());
+
+
+
+
+	return 0;
+}

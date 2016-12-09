@@ -1,0 +1,31 @@
+import java.io.*;
+import java.lang.*;
+public class InteractiveProcessTest {
+   public static void main(String[] args) {
+      try {
+         Process p = Runtime.getRuntime().exec("ping 203.252.134.126");
+         byte[] msg = new byte[128];
+         int len;
+         while((len=p.getInputStream().read(msg)) > 0) {
+            System.out.print(new String(msg, 0, len));
+         }
+         String rs = "n";
+         byte[] rb  = new byte[] { (byte)'n' } ; //rs.getBytes();
+         OutputStream os = p.getOutputStream();
+         os.write(rb);
+         os.close();
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+}
+/*
+ * Results:
+ D:AIITJAVA6>java InteractiveProcessTest
+ Pinging 203.252.134.126 with 32 bytes of data:
+ Reply from 203.252.134.126: bytes=32 time<10ms TTL=128
+ Reply from 203.252.134.126: bytes=32 time<10ms TTL=128
+ Reply from 203.252.134.126: bytes=32 time<10ms TTL=128
+ Reply from 203.252.134.126: bytes=32 time<10ms TTL=128
+ D:AIITJAVA6>
+*/

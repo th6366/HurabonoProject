@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include <string.h>   //strrev
+ 
+int main( )
+{
+    char string[] = "This is simple code";
+    char *pstr;
+ 
+    pstr = strrev( string );
+    printf( "%s\n", pstr );
+    printf( "%s\n", string );
+ 
+    return 0;
+}

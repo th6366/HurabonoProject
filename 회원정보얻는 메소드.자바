@@ -1,0 +1,37 @@
+**한사람의 회원 정보를 얻는 메소드*/
+    public MemberDTO getMemberDTO(String id){
+       
+        MemberDTO dto = new MemberDTO();
+       
+        Connection con = null;       //연결
+        PreparedStatement ps = null; //명령
+        ResultSet rs = null;         //결과
+       
+        try {
+           
+            con = getConn();
+            String sql = "select * from tb_member where id=?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+           
+            rs = ps.executeQuery();
+           
+            if(rs.next()){
+                dto.setId(rs.getString("id"));
+                dto.setPwd(rs.getString("Pwd"));
+                dto.setName(rs.getString("Name"));
+                dto.setTel(rs.getString("tel"));
+                dto.setAddr(rs.getString("addr"));
+                dto.setBirth(rs.getString("birth"));
+                dto.setJob(rs.getString("job"));
+                dto.setGender(rs.getString("gender"));
+                dto.setEmail(rs.getString("email"));
+                dto.setIntro(rs.getString("intro"));
+               
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }      
+       
+        return dto;    
+    }

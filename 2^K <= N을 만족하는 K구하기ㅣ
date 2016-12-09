@@ -1,0 +1,32 @@
+/*프로그램 작성자 : americano@korea.ac.kr
+프로그램 작성일 : 2011년 10월 18일
+프로그램 주제 : 사용자로부터 숫자 n을 입력받는다. 그리고 나서 다음 공식이 성립하는 최대 k 값을 계산해서 출력하는 프로그램을 작성해 본다.
+2^k <= n
+구현방법:
+상수 k의 최대값을 구해주는 함수를 선언하였습니다. 그 함수를 재귀호출하는 방식으로 해결했습니다.
+그 함수는 입력한 값을 2로 나눈 몫이 1이 나올 때 까지 재귀호출하여 입력받은 값을 2로 계속 나누었고
+나눌때마다 k값을 1씩 증가시켜서 k의 최대값을 구하였습니다.
+*/
+ 
+#include<stdio.h>
+ 
+int GetNum(int Value, int Number); // 상수 k값을 구해주는 함수
+ 
+int main()
+{
+    int Val=0, Num=0; // n과 k의 변수 0 으로 초기화
+    printf("상수 n 입력 : ");
+    scanf("%d", &Val);
+    Num = GetNum(Val, Num); // 함수 호출
+    printf("공식을 만족하는 k : %d\n",Num);
+    return 0;
+}
+ 
+int GetNum(int Value,int Number)
+{
+    if(Value==1) // 2로 나눈 몫이 1일 때 Number을 리턴한다.
+        return Number;
+    else   
+        return GetNum(Value/2, ++Number); // 몫이 1일 때 까지 재귀함수를 호출한다.
+        // 입력받은 값을 2로 나누고 구하려는 값을 1씩 증가시킨다.
+}

@@ -1,0 +1,20 @@
+#include<iostream>
+using namespace std;
+
+int main() {
+    int num = 10;
+    int &ref = num;//레퍼런스 변수는 선언과 동시에 초기화 해줘야한다.
+
+    cout << "num=" << num << endl;
+    cout << "ref=" << ref << endl;
+
+    ref = 100;
+    
+    cout << "num=" << num << endl;
+    cout << "ref=" << ref << endl;
+
+    cout << "&num=" << &num << endl;
+    cout << "&ref=" << &ref << endl;
+
+    return 0;
+}

@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <conio.h>
+ 
+enum{
+    False, True
+};
+ 
+int main(int argc, char* argv[]){
+    int ch;
+    while (True){
+        ch = _getch();
+        if (ch == 'Q'){
+            printf("프로그램 종료\n");
+            break;
+        }
+        printf("입력된 키 값 (정수) : %d\n", ch);
+    }
+    return 0;
+}

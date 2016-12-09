@@ -1,0 +1,53 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class Ex5 extends JFrame{
+    Ex5(){
+        this.setTitle("Focus Pratice Frame");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel panel = new JPanel();
+        this.setContentPane(panel);
+        
+        JLabel la = new JLabel("입력한 후 다른 창에 마우스 클릭하면 대문자로 변합니다.");
+        panel.add(la);
+        
+        JTextField tf = new JTextField(10);
+        panel.add(tf);
+        tf.requestFocus();
+        
+        panel.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String s=tf.getText();
+                tf.setText(s.toUpperCase());
+                tf.setFocusable(false);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+            
+        });
+        this.setSize(400,100);
+        this.setVisible(true);
+    }
+}
+public class JavaApplication51 {
+    public static void main(String[] args) {
+        new Ex5();
+    }
+}

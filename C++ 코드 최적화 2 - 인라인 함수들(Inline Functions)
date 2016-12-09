@@ -1,0 +1,50 @@
+class A 
+{
+private:
+        int a;
+public:
+        int Get_a() { return a; }               // 암묵적으로 인라인
+        virtual void Set_a(int aa) { a = aa; } // 암묵적으로 인라인
+        // 컴파일러가 합성한 규준적인 멤버 함수들 또한 인라인으로 선언된다
+};
+
+// filename Time.h
+#include<ctime>
+#include<iostream>
+ 
+using namespace std;
+ 
+class Time
+{
+public:
+        inline void Show() { for (int i = 0; i<10; i++) cout<<time(0)<<endl;}
+};
+// filename Time.h
+
+// filename f1.cpp
+#include "Time.hj"
+void f1()
+{
+        Time t1;
+        t1.Show();
+}
+// f1.cpp
+ 
+// filename f2.cpp
+#include "Time.h"
+void f2()
+{
+        Time t2;
+        t2.Show();
+}
+// f2.cpp
+
+void f1();
+void f2();
+ 
+int main()
+{
+        f1(); 
+        f2();
+        return 0;
+}

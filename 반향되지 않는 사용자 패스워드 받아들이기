@@ -1,0 +1,35 @@
+#include <termios.h>
+#include <stdio.h>
+
+#define MAX_PASS_LEN    16 
+static char passwd[MAX_PASS_LEN];
+static char *inputpass(void);
+
+static char *inputpass(void)
+{
+    char temp;
+    int i = 0;
+    struct termios old, new;
+
+    tcgetattr(fileno(stdin), &old);
+    new = old;
+    // 반향을 제거한다.
+    new.c_lflag =~ ECHO;
+    tcsetattr(fileno(stdin), TCSAFLUSH, &new);
+
+    printf("password ");
+    while((temp=getchar()) != '\n')
+    {
+        if (i == MAX_PASS_LEN) break;
+        passwd[i] = temp;
+        i++;
+    }
+    // 원래 터미널 상태로 되돌린다.
+    tcsetattr(fileno(stdin), TCSANOW, &old);
+    return passwd;
+}
+int main()
+{
+    printf("you input is (%s)\n", inputpass());
+    return 0;
+}

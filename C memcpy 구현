@@ -1,0 +1,29 @@
+struct data
+{
+  int age;
+  char name[24];
+  char a;
+};
+
+int main(int argc, char **argv)
+{
+  int i = 0;
+  struct data src, dst;
+  clock_t stime, etime;
+
+  memset((void *)&dst, 0x00, sizeof(src));
+  src.age = 10;
+  src.a = 'a';
+  sprintf(src.name, "%s", "yundream");
+
+  stime = clock();
+  for (i = 0; i < 10000000; i++)
+  {
+    mymemcpy((void *)&dst, (void *)&src, sizeof(src));
+  }
+  etime = clock();
+  printf("Time : %.3fs\n",(double)(etime - stime)/CLOCKS_PER_SEC);
+  printf("%d\n", dst.age);
+  printf("%c\n", dst.a);
+  printf("%s\n", dst.name);
+}

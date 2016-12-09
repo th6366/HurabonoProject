@@ -1,0 +1,736 @@
+#include "colorConsole.h"
+
+HANDLE initiate()
+{
+	HANDLE hOutput; 
+	hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+	return hOutput;
+}
+BOOL textout(HANDLE hOutput,int x,int y,WORD wColors[],int nColors,LPTSTR lpszString)
+{
+    DWORD cWritten; 
+    BOOL fSuccess; 
+    COORD coord; 
+   
+	coord.X = x;              // start at first cell 
+    coord.Y = y;              //   of first row      
+    fSuccess = WriteConsoleOutputCharacter( 
+        hOutput,              // screen buffer handle 
+        lpszString,           // pointer to source string 
+        lstrlen(lpszString),  // length of string 
+        coord,                // first cell to write to 
+        &cWritten);           // actual number written 
+    if (! fSuccess) 
+        cout<<"error:WriteConsoleOutputCharacter"<<endl;
+    
+	    
+	for (;fSuccess && coord.X < lstrlen(lpszString)+x; coord.X += nColors) 
+    {
+        fSuccess = WriteConsoleOutputAttribute( 
+            hOutput,          // screen buffer handle 
+            wColors,          // pointer to source string 
+            nColors,                // length of string 
+            coord,            // first cell to write to 
+            &cWritten);       // actual number written 
+    }
+    if (! fSuccess) 
+    	cout<<"error:WriteConsoleOutputAttribute"<<endl;
+
+	return 0;
+}
+Raw
+ colorConsole.h
+#include <windows.h>
+#include <iostream.h>
+
+
+HANDLE initiate();
+BOOL textout(HANDLE hOutput,int x,int y,WORD wColors[],int nColors,LPTSTR lpszString);
+Raw
+ main.cpp
+#include "Tetris.h"
+#include <conio.h>
+#include <stdlib.h>
+
+#include <time.h>
+#include <fstream>
+//#include <mmsystem.h>//导入声音头文件
+//#pragma comment(lib,"winmm.lib")//导入声音头文件库
+
+Teris::Teris()
+{
+	
+score=0;  //初始化分数
+level=0;  //初始化游戏级别
+mscore=0;
+ Num = rand() %7 ; //创建第一个方块编号
+ nextNum = Num;    //保存下一个方块编号
+
+
+x = 0;y = 0;  //记录游戏开始的相对坐标
+
+
+}
+void::Teris::Init()
+{
+		for(int a1=0;a1!=MAPH;++a1)
+	for(int b1=0;b1!=MAPW;++b1)
+    map[a1][b1] = 0;
+	handle=initiate();
+
+	srand(2);//time(NULL));
+
+	//初始化工作区
+	for(int i=0;i<20;i++)
+	{
+		map[i][0]=-2;
+		map[i][11]=-2;
+	}
+	for(int i=0;i<12;i++)
+	{
+		map[0][i]=-1;
+		map[19][i]=-1;
+	}
+	map[0][0]=-3;
+	map[0][11]=-3;
+	map[19][0]=-3;
+	map[19][11]=-3;
+
+
+	WORD wColors[1]={FOREGROUND_GREEN| FOREGROUND_BLUE|FOREGROUND_INTENSITY};
+	textout(handle,26+dx,3+dy,wColors,1,"得分");
+	textout(handle,26+dx,7+dy,wColors,1,"等级");
+    textout(handle,26+dx,11+dy,wColors,1,"最高分");
+	textout(handle,26+dx,15+dy,wColors,1,"接下来");
+
+	wColors[0]=FOREGROUND_RED|FOREGROUND_BLUE|FOREGROUND_INTENSITY;
+	DrawBlocks(&map[0][0],12,20,0,0,wColors,1);
+	textout(handle,dx,dy,wColors,1,"○══════════○");
+
+	wColors[0]=FOREGROUND_BLUE| FOREGROUND_GREEN|FOREGROUND_INTENSITY;
+	textout(handle,28,10,wColors,1,"请选择等级：0—9");
+
+	int ch=_getch();
+	textout(handle,28,10,wColors,1,"                ");
+    if(ch>47&&ch<59)
+		level=ch-48;  //判断等级是否在0—9之内，确保安全
+}
+
+bool Teris::IsAvailable(int a[],int x,int y,int w,int h)
+{
+	for(int i=y;i<y+h;i++)
+		for(int j=x;j<x+w;j++)
+			if(map[i][j] && a[w*(i-y)+j-x])
+				return false;
+	return true;
+}
+
+void Teris::DrawBlocks(int a[],int w,int h,int x,int y,WORD wColors[],int nColors)
+{
+	int temp;
+	
+	for(int i=0;i<h;i++)
+		for(int j=0;j<w;j++)
+			if((temp=a[i*w+j])&&y+i>0)
+			{
+				if(temp==-3)
+					textout(handle,2*(x+j)+dx,y+i+dy,wColors,nColors,"○");
+				else if(temp==-2)
+					textout(handle,2*(x+j)+dx,y+i+dy,wColors,nColors,"║");
+				else if(temp==-1)
+					textout(handle,2*(x+j)+dx,y+i+dy,wColors,nColors,"═");
+				else if(temp>=1)
+					textout(handle,2*(x+j)+dx,y+i+dy,wColors,nColors,"■");
+			}
+}
+
+void Teris::Turn(int a[][4],int w,int h,int *x,int y)
+{
+	int b[4][4]={{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
+	int sign=0,line=0;
+	for(int i=h-1;i>=0;i--)
+	{
+		for(int j=0;j<w;j++)
+			if(a[i][j])
+			{
+				b[j][line]=a[i][j];
+				sign=1;
+			}
+		if(sign) 
+		{
+			line++;
+			sign=0;
+		}
+	}
+	for(int i=0;i<4;i++)
+		if(IsAvailable(b[0],*x-i,y,w,h))
+		{
+			*x-=i;
+			for(int k=0;k<h;k++)
+				for(int j=0;j<w;j++)
+					a[k][j]=b[k][j];
+			break;
+		}
+}
+void Teris::ClearSquare(int *a,int w,int h,int x,int y)
+{
+	WORD wColors[1]={0};
+	for(int i=0;i<h;i++)
+		for(int j=0;j<w;j++)
+		{
+			if(a[i*w+j]>0 && (i+y>0))
+			{
+				textout(handle,2*(x+j)+dx,y+i+dy,wColors,1,"  ");
+			}
+		}
+
+}
+
+void Teris::GameOver()
+{
+	WORD wColors[1]={FOREGROUND_RED| FOREGROUND_GREEN|FOREGROUND_INTENSITY};
+	textout(handle,7+dx,7+dy,wColors,1,"GAME OVER");
+    textout(handle,4+dx,8+dy,wColors,1,"PLAY AGAIN? Y/N");
+	 while(true){      //仅按Y，N有效，提高安全性，不区分大小写
+     if(_getch()=='y'||_getch()=='Y')
+     return;
+     else
+     if(_getch()=='n'||_getch()=='N')
+     break;
+ }
+	exit(EXIT_SUCCESS);
+}
+
+void Teris::DeleteLine(int m[][MAPW],int row)
+{
+	WORD wColors[1]={FOREGROUND_RED| FOREGROUND_GREEN|FOREGROUND_INTENSITY};
+	textout(handle,2+dx,row+dy,wColors,1,"﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌");
+	_sleep(100);
+
+	for(int i=row;i>1;i--)
+	{
+		ClearSquare(&m[i][1],MAPW-2,1,1,i);
+		for(int j=1;j<MAPW-1;j++)
+		{
+			m[i][j]=m[i-1][j];
+			if (m[i][j] == 0)
+				wColors[0] = 0;
+			else
+				wColors[0] = SQUARE_COLOR[m[i][j]-1];
+			DrawBlocks(&m[i][j],1,1,j,i,wColors,1);
+		}
+	}
+	for(int i=1;i<MAPW-1;i++)
+		m[1][i]=0;
+}
+void Teris::FileIn()
+{   
+	//int c=0;
+	ifstream ifile("D:\\1.ini");  
+    ifile>>mscore;
+	ifile.close();
+	//mscore=c;
+}
+void Teris::Fileout()
+{  
+   ofstream ofile("D:\\1.ini");
+   ofile<<mscore<<endl;
+   ofile.close();
+}
+
+void Teris::Play()
+{
+	
+	while(1)
+	{
+		for(int i=0;i<4;i++)          //复制方块
+			for(int j=0;j<4;j++)
+				if(a[i][j] = b[nextNum][i][j]) 
+					blank=i;
+		
+		y = 1- blank;
+		x = 4;
+
+		//创建下一个方块
+		Num = nextNum;
+		ClearSquare(b[Num][0],4,4,13,17);
+		nextNum = rand() % 7 ;
+		WORD wColors[1]= { SQUARE_COLOR[nextNum] };
+		DrawBlocks(b[nextNum][0],4,4,13,17,wColors,1);
+	
+		wColors[0] = SQUARE_COLOR[Num] ;
+		DrawBlocks(&a[0][0],4,4,x,y,wColors,1);
+
+		//显示分数信息
+		char string[5];
+		wColors[0]=FOREGROUND_RED| FOREGROUND_GREEN|FOREGROUND_INTENSITY;
+		textout(handle,26+dx,5+dy,wColors,1,itoa(score,string,10));
+		textout(handle,26+dx,9+dy,wColors,1,itoa(level,string,10));
+		textout(handle,26+dx,13+dy,wColors,1,itoa(mscore,string,10));
+	    int max_delay = 100-10*level; //计算不同游戏级别的下落时间间隔
+	    while(1)
+		{
+			int delay=0; //延迟量
+			while(delay<max_delay)
+			{
+				if(_kbhit())  //用if避免按住键使方块卡住
+				{   
+		            
+					int key=_getch();
+					switch (key)
+					{
+					case KEY_UP:
+						{
+							ClearSquare(&a[0][0],4,4,x,y);
+							Turn(a,4,4,&x,y);
+							wColors[0]=SQUARE_COLOR[Num];
+							DrawBlocks(&a[0][0],4,4,x,y,wColors,1);
+						}
+						break;
+					case KEY_DOWN:
+						delay=max_delay;
+						break;
+					case KEY_LEFT:
+						{
+							if(IsAvailable(&a[0][0],x-1,y,4,4))
+							{
+								ClearSquare(&a[0][0],4,4,x,y);
+								x--;
+								wColors[0]=SQUARE_COLOR[Num];
+								DrawBlocks(&a[0][0],4,4,x,y,wColors,1);
+							}	
+						}
+						break;
+					case KEY_RIGHT:
+						{
+							if(IsAvailable(&a[0][0],x+1,y,4,4))
+							{
+								ClearSquare(&a[0][0],4,4,x,y);
+								x++;
+								wColors[0]=SQUARE_COLOR[Num];
+								DrawBlocks(&a[0][0],4,4,x,y,wColors,1);
+							}
+						}
+						break;
+					case KEY_ESC:
+						if(score>=mscore)
+					    Fileout();  //离开前保存最高分
+						exit(EXIT_SUCCESS);
+						break;
+					case KEY_BOARD:     
+						getch();
+						break;
+					}
+				}
+
+				
+				_sleep(8);delay++;
+			}
+			if(IsAvailable(&a[0][0],x,y+1,4,4)) //是否能下移
+			{
+				ClearSquare(&a[0][0],4,4,x,y);
+				y++;
+				wColors[0]=SQUARE_COLOR[Num];
+				DrawBlocks(&a[0][0],4,4,x,y,wColors,1);
+			}
+			else
+			{
+				if(y<=1){if(score>=mscore)
+					Fileout();
+				    GameOver();
+				    for(y=4;y<22;++y)
+                    for(x=26;x<45;++x)
+					{textout(handle,x,y,wColors,1,"■");
+					Sleep(5);}//简单却友好的动画效果
+					system("cls");
+					Init();
+					break;    } //是否结束,是否再玩一次
+				for(int i=0;i<4;i++)     //放下方块，更新工作区
+					for(int j=0;j<4;j++)
+						if(a[i][j]&&((i+y)<MAPH-1)&&((j+x)<MAPW-1)) 
+							map[i+y][j+x]=a[i][j];
+
+				int full,k=0;
+				for(int i=y;i<min(y+4,MAPH-1);i++)
+				{
+					full=1;
+					for(int j=1;j<11;j++)
+						if(!map[i][j]) full=0;
+					if(full)   //消掉一行
+					{
+						DeleteLine(map,i);
+						k++;
+						score=score+k;
+						if(score>mscore)
+						mscore=score;          //即时记录最高分
+						if(level<(score/30))  //防止自选等级后突然跳零级
+						level=min(score/30,9);
+						max_delay=100-10*level;
+					}
+				}
+				break; 
+			}
+		}
+}
+exit(EXIT_SUCCESS);
+}
+int main()
+{//PlaySound(TEXT("C:\\WINDOWS\\Media\\tada.wav"),NULL, SND_LOOP );
+	Teris A;
+    //检测是否有分数文件，没有则创建，使用ini格式增强保密性
+	 fstream _file;
+     _file.open("D:\\1.ini",ios::in);
+     if(!_file)
+     {
+         ofstream ofile("D:\\1.ini");
+	     ofile<<0<<endl;
+      }
+	 A.Init();
+	 A.FileIn();
+	 A.Play();
+     return EXIT_SUCCESS;
+}
+Raw
+ Tetris.h
+#include "1.h"
+#include <conio.h>
+#include <stdlib.h>
+
+#include <time.h>
+#include <fstream>
+//#include <mmsystem.h>//导入声音头文件
+//#pragma comment(lib,"winmm.lib")//导入声音头文件库
+
+Teris::Teris()
+{
+	
+score=0;  //初始化分数
+level=0;  //初始化游戏级别
+mscore=0;
+ Num = rand() %7 ; //创建第一个方块编号
+ nextNum = Num;    //保存下一个方块编号
+
+
+x = 0;y = 0;  //记录游戏开始的相对坐标
+
+
+}
+void::Teris::Init()
+{
+		for(int a1=0;a1!=MAPH;++a1)
+	for(int b1=0;b1!=MAPW;++b1)
+    map[a1][b1] = 0;
+	handle=initiate();
+
+	srand(2);//time(NULL));
+
+	//初始化工作区
+	for(int i=0;i<20;i++)
+	{
+		map[i][0]=-2;
+		map[i][11]=-2;
+	}
+	for(int i=0;i<12;i++)
+	{
+		map[0][i]=-1;
+		map[19][i]=-1;
+	}
+	map[0][0]=-3;
+	map[0][11]=-3;
+	map[19][0]=-3;
+	map[19][11]=-3;
+
+
+	WORD wColors[1]={FOREGROUND_GREEN| FOREGROUND_BLUE|FOREGROUND_INTENSITY};
+	textout(handle,26+dx,3+dy,wColors,1,"得分");
+	textout(handle,26+dx,7+dy,wColors,1,"等级");
+    textout(handle,26+dx,11+dy,wColors,1,"最高分");
+	textout(handle,26+dx,15+dy,wColors,1,"接下来");
+
+	wColors[0]=FOREGROUND_RED|FOREGROUND_BLUE|FOREGROUND_INTENSITY;
+	DrawBlocks(&map[0][0],12,20,0,0,wColors,1);
+	textout(handle,dx,dy,wColors,1,"○══════════○");
+
+	wColors[0]=FOREGROUND_BLUE| FOREGROUND_GREEN|FOREGROUND_INTENSITY;
+	textout(handle,28,10,wColors,1,"请选择等级：0—9");
+
+	int ch=_getch();
+	textout(handle,28,10,wColors,1,"                ");
+    if(ch>47&&ch<59)
+		level=ch-48;  //判断等级是否在0—9之内，确保安全
+}
+
+bool Teris::IsAvailable(int a[],int x,int y,int w,int h)
+{
+	for(int i=y;i<y+h;i++)
+		for(int j=x;j<x+w;j++)
+			if(map[i][j] && a[w*(i-y)+j-x])
+				return false;
+	return true;
+}
+
+void Teris::DrawBlocks(int a[],int w,int h,int x,int y,WORD wColors[],int nColors)
+{
+	int temp;
+	
+	for(int i=0;i<h;i++)
+		for(int j=0;j<w;j++)
+			if((temp=a[i*w+j])&&y+i>0)
+			{
+				if(temp==-3)
+					textout(handle,2*(x+j)+dx,y+i+dy,wColors,nColors,"○");
+				else if(temp==-2)
+					textout(handle,2*(x+j)+dx,y+i+dy,wColors,nColors,"║");
+				else if(temp==-1)
+					textout(handle,2*(x+j)+dx,y+i+dy,wColors,nColors,"═");
+				else if(temp>=1)
+					textout(handle,2*(x+j)+dx,y+i+dy,wColors,nColors,"■");
+			}
+}
+
+void Teris::Turn(int a[][4],int w,int h,int *x,int y)
+{
+	int b[4][4]={{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
+	int sign=0,line=0;
+	for(int i=h-1;i>=0;i--)
+	{
+		for(int j=0;j<w;j++)
+			if(a[i][j])
+			{
+				b[j][line]=a[i][j];
+				sign=1;
+			}
+		if(sign) 
+		{
+			line++;
+			sign=0;
+		}
+	}
+	for(int i=0;i<4;i++)
+		if(IsAvailable(b[0],*x-i,y,w,h))
+		{
+			*x-=i;
+			for(int k=0;k<h;k++)
+				for(int j=0;j<w;j++)
+					a[k][j]=b[k][j];
+			break;
+		}
+}
+void Teris::ClearSquare(int *a,int w,int h,int x,int y)
+{
+	WORD wColors[1]={0};
+	for(int i=0;i<h;i++)
+		for(int j=0;j<w;j++)
+		{
+			if(a[i*w+j]>0 && (i+y>0))
+			{
+				textout(handle,2*(x+j)+dx,y+i+dy,wColors,1,"  ");
+			}
+		}
+
+}
+
+void Teris::GameOver()
+{
+	WORD wColors[1]={FOREGROUND_RED| FOREGROUND_GREEN|FOREGROUND_INTENSITY};
+	textout(handle,7+dx,7+dy,wColors,1,"GAME OVER");
+    textout(handle,4+dx,8+dy,wColors,1,"PLAY AGAIN? Y/N");
+	 while(true){      //仅按Y，N有效，提高安全性，不区分大小写
+     if(_getch()=='y'||_getch()=='Y')
+     return;
+     else
+     if(_getch()=='n'||_getch()=='N')
+     break;
+ }
+	exit(EXIT_SUCCESS);
+}
+
+void Teris::DeleteLine(int m[][MAPW],int row)
+{
+	WORD wColors[1]={FOREGROUND_RED| FOREGROUND_GREEN|FOREGROUND_INTENSITY};
+	textout(handle,2+dx,row+dy,wColors,1,"﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌");
+	_sleep(100);
+
+	for(int i=row;i>1;i--)
+	{
+		ClearSquare(&m[i][1],MAPW-2,1,1,i);
+		for(int j=1;j<MAPW-1;j++)
+		{
+			m[i][j]=m[i-1][j];
+			if (m[i][j] == 0)
+				wColors[0] = 0;
+			else
+				wColors[0] = SQUARE_COLOR[m[i][j]-1];
+			DrawBlocks(&m[i][j],1,1,j,i,wColors,1);
+		}
+	}
+	for(int i=1;i<MAPW-1;i++)
+		m[1][i]=0;
+}
+void Teris::FileIn()
+{   
+	//int c=0;
+	ifstream ifile("D:\\1.ini");  
+    ifile>>mscore;
+	ifile.close();
+	//mscore=c;
+}
+void Teris::Fileout()
+{  
+   ofstream ofile("D:\\1.ini");
+   ofile<<mscore<<endl;
+   ofile.close();
+}
+
+void Teris::Play()
+{
+	
+	while(1)
+	{
+		for(int i=0;i<4;i++)          //复制方块
+			for(int j=0;j<4;j++)
+				if(a[i][j] = b[nextNum][i][j]) 
+					blank=i;
+		
+		y = 1- blank;
+		x = 4;
+
+		//创建下一个方块
+		Num = nextNum;
+		ClearSquare(b[Num][0],4,4,13,17);
+		nextNum = rand() % 7 ;
+		WORD wColors[1]= { SQUARE_COLOR[nextNum] };
+		DrawBlocks(b[nextNum][0],4,4,13,17,wColors,1);
+	
+		wColors[0] = SQUARE_COLOR[Num] ;
+		DrawBlocks(&a[0][0],4,4,x,y,wColors,1);
+
+		//显示分数信息
+		char string[5];
+		wColors[0]=FOREGROUND_RED| FOREGROUND_GREEN|FOREGROUND_INTENSITY;
+		textout(handle,26+dx,5+dy,wColors,1,itoa(score,string,10));
+		textout(handle,26+dx,9+dy,wColors,1,itoa(level,string,10));
+		textout(handle,26+dx,13+dy,wColors,1,itoa(mscore,string,10));
+	    int max_delay = 100-10*level; //计算不同游戏级别的下落时间间隔
+	    while(1)
+		{
+			int delay=0; //延迟量
+			while(delay<max_delay)
+			{
+				if(_kbhit())  //用if避免按住键使方块卡住
+				{   
+		            
+					int key=_getch();
+					switch (key)
+					{
+					case KEY_UP:
+						{
+							ClearSquare(&a[0][0],4,4,x,y);
+							Turn(a,4,4,&x,y);
+							wColors[0]=SQUARE_COLOR[Num];
+							DrawBlocks(&a[0][0],4,4,x,y,wColors,1);
+						}
+						break;
+					case KEY_DOWN:
+						delay=max_delay;
+						break;
+					case KEY_LEFT:
+						{
+							if(IsAvailable(&a[0][0],x-1,y,4,4))
+							{
+								ClearSquare(&a[0][0],4,4,x,y);
+								x--;
+								wColors[0]=SQUARE_COLOR[Num];
+								DrawBlocks(&a[0][0],4,4,x,y,wColors,1);
+							}	
+						}
+						break;
+					case KEY_RIGHT:
+						{
+							if(IsAvailable(&a[0][0],x+1,y,4,4))
+							{
+								ClearSquare(&a[0][0],4,4,x,y);
+								x++;
+								wColors[0]=SQUARE_COLOR[Num];
+								DrawBlocks(&a[0][0],4,4,x,y,wColors,1);
+							}
+						}
+						break;
+					case KEY_ESC:
+						if(score>=mscore)
+					    Fileout();  //离开前保存最高分
+						exit(EXIT_SUCCESS);
+						break;
+					case KEY_BOARD:     
+						getch();
+						break;
+					}
+				}
+
+				
+				_sleep(8);delay++;
+			}
+			if(IsAvailable(&a[0][0],x,y+1,4,4)) //是否能下移
+			{
+				ClearSquare(&a[0][0],4,4,x,y);
+				y++;
+				wColors[0]=SQUARE_COLOR[Num];
+				DrawBlocks(&a[0][0],4,4,x,y,wColors,1);
+			}
+			else
+			{
+				if(y<=1){if(score>=mscore)
+					Fileout();
+				    GameOver();
+				    for(y=4;y<22;++y)
+                    for(x=26;x<45;++x)
+					{textout(handle,x,y,wColors,1,"■");
+					Sleep(5);}//简单却友好的动画效果
+					system("cls");
+					Init();
+					break;    } //是否结束,是否再玩一次
+				for(int i=0;i<4;i++)     //放下方块，更新工作区
+					for(int j=0;j<4;j++)
+						if(a[i][j]&&((i+y)<MAPH-1)&&((j+x)<MAPW-1)) 
+							map[i+y][j+x]=a[i][j];
+
+				int full,k=0;
+				for(int i=y;i<min(y+4,MAPH-1);i++)
+				{
+					full=1;
+					for(int j=1;j<11;j++)
+						if(!map[i][j]) full=0;
+					if(full)   //消掉一行
+					{
+						DeleteLine(map,i);
+						k++;
+						score=score+k;
+						if(score>mscore)
+						mscore=score;          //即时记录最高分
+						if(level<(score/30))  //防止自选等级后突然跳零级
+						level=min(score/30,9);
+						max_delay=100-10*level;
+					}
+				}
+				break; 
+			}
+		}
+}
+exit(EXIT_SUCCESS);
+}
+int main()
+{//PlaySound(TEXT("C:\\WINDOWS\\Media\\tada.wav"),NULL, SND_LOOP );
+	Teris A;
+    //检测是否有分数文件，没有则创建，使用ini格式增强保密性
+	 fstream _file;
+     _file.open("D:\\1.ini",ios::in);
+     if(!_file)
+     {
+         ofstream ofile("D:\\1.ini");
+	     ofile<<0<<endl;
+      }
+	 A.Init();
+	 A.FileIn();
+	 A.Play();
+     return EXIT_SUCCESS;
+}

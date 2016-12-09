@@ -1,0 +1,26 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class Frame1 extends JFrame
+{
+  JPanel pane = new JPanel();
+  Frame1()
+  {
+    super("Empty Simple Frmae"); 
+    setBounds(100,100,300,100);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    Container con = this.getContentPane();
+    con.add(pane); // add the panel to content pane
+
+    /* customize panel here */
+
+    setVisible(true);
+  }
+
+  public static void main(String args[])
+  {
+    Frame1 frame = new Frame1();
+  }
+}

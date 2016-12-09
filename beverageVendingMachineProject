@@ -1,0 +1,202 @@
+#include "stdafx.h"
+#include "stdlib.h"
+#include "windows.h"
+
+int proSelect, moreSelect = 0, change = 0; //proselect는 product select(상품 선택) 즉 상품선택하는 변수
+										   //more select는 즉 한 번더 뽑을건지 말지 결정하는 변수
+										   //change는 남은 돈
+int totMoney = 0, money = 0;//totMoney는 기존의 있던 돈과 합해주기 위해 만든 변수
+							//money는 넣을 돈을 의미하는 변수
+							//예를들어 처음에 700원(money)을 넣고 다음에 100원을 넣었다면 총 800원(totMoney)이 됨
+
+void push(); //돈을 넣는 함수
+void choice(); //음료 선택하는 함수
+void chan();//남은 돈 계산하는 함수
+void drinkMenu();//음료 그림
+
+
+int main()
+{
+	printf("\n\n\n\n\n\n\n\t\t\t 음 료 수   자 판 기\n\n");
+	printf("\t\t\t2초 후 자동으로 START\n");
+	Sleep(2000);
+	system("cls");
+
+	while (1)
+	{
+		if (moreSelect == 0 || moreSelect == 1) //moreSelect 2가 아닐 때 drink()함수 호출
+		{
+			system("cls");
+			drinkMenu();
+		}
+
+		switch (moreSelect)
+		{
+		case 0: //처음 시작할 때 초기값
+			push();
+			choice();
+			chan();
+			break;
+		case 1:
+			if (totMoney >= 1200) //최소금액인 1200보다 많을 때 
+			{
+				choice();
+				chan();
+			}
+			else
+			{
+				printf("돈이 부족합니다.\n");
+				printf("총금액:%d\n\n", totMoney);
+				push();
+			}
+			break;
+		case 2: // chan()함수에서 2를 선택하면 프로그램 종료
+			printf("이용해 주셔서 감사합니다.\n");
+			return 0;
+		}
+	}
+}
+
+void push()
+{
+	while (1)
+	{
+		printf("돈을 넣어주세요.(예:1000)\n");
+		scanf_s("%d", &money); //money는 넣을돈, totMoney는 총 돈
+
+		totMoney += money;
+		change = totMoney; // 남은 돈 저장
+
+		if (totMoney >= 1200)
+		{
+			break;
+		}
+		else
+		{
+			printf("돈이 부족합니다. 최소 부족한 돈 (%d원)\n", 1200 - totMoney);
+			printf("총금액:%d원\n\n\n", totMoney);
+		}
+	}
+}
+
+void choice()
+{
+	system("cls");
+	printf("총금액:%d원\n\n", totMoney);
+	printf("상품을 선택해 주세요(1~10 번호로 선택)\n");
+	drinkMenu();
+	scanf_s("%d", &proSelect);
+
+	switch (proSelect) //입력한 음료의 번호에 따른 조건문
+	{
+	case 1: case 4: case 6:
+		if (totMoney >= 1600) {
+			change -= 1600;
+			break;
+		}
+		else {
+			printf("선택하신 상품은 금액 부족입니다.\n");
+			system("pause");
+			choice();
+		}
+		break;
+	case 2: case 8:
+		if (totMoney >= 1500) {
+			change -= 1500;
+			break;
+		}
+		else {
+			printf("선택하신 상품은 금액 부족입니다.\n");
+			system("pause");
+			choice();
+		}
+		break;
+	case 3: case 7:
+		if (totMoney >= 1300) {
+			change -= 1300;
+			break;
+		}
+		else {
+			printf("선택하신 상품은 금액 부족입니다.\n");
+			system("pause");
+			choice();
+		}
+		break;
+	case 5:
+		if (totMoney >= 1400) {
+			change -= 1400;
+			break;
+		}
+		else {
+			printf("선택하신 상품은 금액 부족입니다.\n");
+			system("pause");
+			choice();
+		}
+		break;
+	case 9:
+		if (totMoney >= 1200) {
+			change -= 1200;
+			break;
+		}
+		else {
+			printf("선택하신 상품은 금액 부족입니다.\n");
+			system("pause");
+			choice();
+		}
+		break;
+	case 10:
+		if (totMoney >= 2000) {
+			change -= 2000;
+			break;
+		}
+		else {
+			printf("선택하신 상품은 금액 부족입니다.\n");
+			system("pause");
+			choice();
+		}
+		break;
+	default:
+		printf("번호를 잘못 선택 하셨습니다. 다시 입력해 주세요.\n\n\n\n");
+		system("pause");
+		choice();
+	}
+}
+
+void chan()
+{
+	printf("남은돈=%d\n\n", change);
+	totMoney = change;
+	printf("더 뽑으시겠습니까? 1.예 2.아니오\n");
+	scanf_s("%d", &moreSelect);
+
+	if (moreSelect == 1 && change<1200)
+		printf("잔돈이 부족해서 뽑을수없습니다..\n");
+
+	if (moreSelect == 2)
+	{
+		printf("거스름돈:");
+		printf("%d\n", change);
+	}
+	else if (moreSelect != 1) //1,2가 아닌 다른 번호를 선택 했을때 chan()함수 재귀호출
+	{
+		printf("잘못 선택 하셨습니다.\n");
+		chan();
+	}
+}
+
+void drinkMenu()
+{
+	printf("\n\n| ******** MENU ********      |");
+	printf("\n ------------------------------");
+	printf("\n| (1)  콜     라     - 1,600원 |");
+	printf("\n| (2)  어이 오찬     - 1,500원 |");
+	printf("\n| (3)  마운틴 듀     - 1,300원 |");
+	printf("\n| (4)  환     타     - 1,600원 |");
+	printf("\n| (5)  오시 르고     - 1,400원 |");
+	printf("\n| (6)  이로 하스     - 1,600원 |");
+	printf("\n| (7)  오렌지 주스   - 1,300원 |");
+	printf("\n| (8)  멕     콜     - 1,500원 |");
+	printf("\n| (9)  미츠야 사이다 - 1,200원 |");
+	printf("\n| (10) 레드   볼     - 2,000원 |");
+	printf("\n ------------------------------\n");
+}

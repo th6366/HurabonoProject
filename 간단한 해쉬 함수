@@ -1,0 +1,10 @@
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include "hash.h"
+
+int main()
+{
+    printf("%d\n", hash(inet_addr("127.0.0.1")));
+    printf("%d\n", hash(inet_addr("248.251.2.1")));
+}

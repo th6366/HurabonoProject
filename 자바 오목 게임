@@ -1,0 +1,502 @@
+//DrawBoard Class
+package Omoke;
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+import javax.swing.JPanel;
+
+
+@SuppressWarnings("serial")
+public class DrawBorad extends JPanel{
+	MapSize size;
+	Map map;
+	final int STONE_SIZE=28;
+	public DrawBorad(MapSize m,Map map) {
+		// TODO Auto-generated constructor stub
+		setBackground(new Color(206,167,61));
+		size=m;
+		setLayout(null);
+		System.out.println("board");
+		this.map=map;
+		
+	}
+	@Override
+	public void paintComponent(Graphics arg0) {
+		// TODO Auto-generated method stub
+		super.paintComponent(arg0);
+		arg0.setColor(Color.BLACK);
+		board(arg0);
+		drawStone(arg0);
+	}
+	public void board(Graphics arg0) {
+		for(int i=1;i<=size.getSize();i++){
+			arg0.drawLine(size.getCell(), i*size.getCell(), size.getCell()*size.getSize(), i*size.getCell());
+			arg0.drawLine(i*size.getCell(), size.getCell(), i*size.getCell() , size.getCell()*size.getSize());
+		}
+	}
+	public void drawStone(Graphics arg0) {
+		for(int y=0;y<size.SIZE;y++){
+			for(int x=0;x<size.SIZE;x++){
+				if(map.getXY(y, x)==map.getBlack())
+					drawBlack(arg0,x,y);
+				else if(map.getXY(y, x)==map.getWhite())
+					drawWhite(arg0, x, y);
+			}
+		}
+	}
+	public void drawBlack(Graphics arg0,int x,int y){
+		arg0.setColor(Color.BLACK);
+		arg0.fillOval((x+1)*size.getCell()-15, (y)*size.getCell()+15, STONE_SIZE, STONE_SIZE);
+
+	}
+	public void drawWhite(Graphics arg0,int x,int y){
+		arg0.setColor(Color.WHITE);
+		arg0.fillOval(x*size.getCell()+15, y*size.getCell()+15, STONE_SIZE, STONE_SIZE);
+		
+	}
+}
+
+//Map Class
+package Omoke;
+
+
+
+public class Map{
+	short[][] map;
+	final short BLACK=1;
+	final short WHITE=-1;
+	boolean checkBNW=true;
+	
+	MapSize ms;
+	public Map(MapSize ms){
+		// TODO Auto-generated constructor stub
+		this.ms=ms;
+		map=new short[ms.getSize()][];
+		for(int i=0;i<map.length;i++)
+			map[i]=new short[ms.getSize()];
+
+		System.out.println("map");
+	}
+	public short getBlack() {
+		return BLACK;
+	}
+	public short getWhite() {
+		return WHITE;
+	}
+	public short getXY(int y,int x) {
+		return map[y][x];
+	}
+	public boolean getCheck() {
+		return checkBNW;
+	}
+	public void changeCheck() {
+		if(checkBNW)
+			checkBNW=false;
+		else
+			checkBNW=true;
+	}
+	public void setMap(int y,int x) {
+		if(checkBNW)
+			map[y][x]=BLACK;
+		else
+			map[y][x]=WHITE;
+	}
+	public boolean winCheck(int x,int y){
+		if(winCheckL(x, y)||winCheckLD(x, y)||winCheckLU(x, y)||winCheckR(x, y)
+		||winCheckRD(x, y)||winCheckRU(x, y)||winCheckUp(x, y)||winCheckDown(x, y)
+		||winCheckOneDown(x, y)||winCheckOneL(x, y)||winCheckOneLD(x, y)||winCheckOneLU(x, y)
+		||winCheckOneR(x, y)||winCheckOneRD(x, y)||winCheckOneUp(x, y)||winCheckOneRU(x, y)
+		||winCheckCenterLU(x, y)||winCheckCenterRL(x, y)||winCheckCenterRU(x, y)||winCheckCenterUD(x, y))
+			return true;
+		else
+			return false;
+	}
+	
+	//위쪽
+	public boolean winCheckUp(int x,int y) {
+		try{
+			for(int i=y;i<y+5;i++){
+				if(map[y][x]!=map[i][x])
+					return false;
+			}	
+		}catch(ArrayIndexOutOfBoundsException e){
+			return false;
+		}
+		
+		return true;
+	}
+	//아래쪽
+	public boolean winCheckDown(int x,int y) {
+		try {
+			for(int i=y;i>y-5;i--){
+				if(map[y][x]!=map[i][x])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	//오른쪽 위 대각선
+	public boolean winCheckRU(int x,int y) {
+		try {
+			for(int i=y, z=x;i>y-5;i--,z++){
+				if(map[y][x]!=map[i][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//왼쪽 위 대각선
+	public boolean winCheckLU(int x,int y) {
+		try {
+			for(int i=y, z=x;i>y-5;i--,z--){
+				if(map[y][x]!=map[i][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//오른쪽
+	public boolean winCheckR(int x,int y) {
+		try {
+			for(int z=x;z<x+5;z++){
+				if(map[y][x]!=map[y][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//왼쪽
+	public boolean winCheckL(int x,int y) {
+		try {
+			for(int z=x;z>x-5;z--){
+				if(map[y][x]!=map[y][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//오른쪽 아래 대각선
+	public boolean winCheckRD(int x,int y) {
+		try {
+			for(int i=y, z=x;i<y+5;i++,z++){
+				if(map[y][x]!=map[i][z]||i>19||z>19||i<0||z<0)
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//왼쪽 아래 대각선
+	public boolean winCheckLD(int x,int y) {
+		try {
+			for(int i=y, z=x;i<y+5;i++,z--){
+				if(map[y][x]!=map[i][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	//한칸 위쪽
+	public boolean winCheckOneUp(int x,int y) {
+		try{
+			for(int i=y-1;i<y+4;i++){
+				if(map[y][x]!=map[i][x])
+					return false;
+			}	
+		}catch(ArrayIndexOutOfBoundsException e){
+			return false;
+		}
+		
+		return true;
+	}
+	//한칸 아래쪽
+	public boolean winCheckOneDown(int x,int y) {
+		try {
+			for(int i=y+1;i>y-4;i--){
+				if(map[y][x]!=map[i][x])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	//한칸 오른쪽 위 대각선
+	public boolean winCheckOneRU(int x,int y) {
+		try {
+			for(int i=y+1, z=x-1;i>y-4;i--,z++){
+				if(map[y][x]!=map[i][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//한칸 왼쪽 위 대각선
+	public boolean winCheckOneLU(int x,int y) {
+		try {
+			for(int i=y+1, z=x+1;i>y-4;i--,z--){
+				if(map[y][x]!=map[i][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//한칸 오른쪽
+	public boolean winCheckOneR(int x,int y) {
+		try {
+			for(int z=x-1;z<x+4;z++){
+				if(map[y][x]!=map[y][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//한칸 왼쪽
+	public boolean winCheckOneL(int x,int y) {
+		try {
+			for(int z=x+1;z>x-4;z--){
+				if(map[y][x]!=map[y][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//한칸 오른쪽 아래 대각선
+	public boolean winCheckOneRD(int x,int y) {
+		try {
+			for(int i=y-1, z=x-1;i<y+4;i++,z++){
+				if(map[y][x]!=map[i][z]||i>19||z>19||i<0||z<0)
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//한칸 왼쪽 아래 대각선
+	public boolean winCheckOneLD(int x,int y) {
+		try {
+			for(int i=y-1, z=x+1;i<y+4;i++,z--){
+				if(map[y][x]!=map[i][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	//센터 업다운
+	public boolean winCheckCenterUD(int x,int y) {
+		try{
+			for(int i=y-2;i<y+3;i++){
+				if(map[y][x]!=map[i][x])
+					return false;
+			}	
+		}catch(ArrayIndexOutOfBoundsException e){
+			return false;
+		}
+		
+		return true;
+	}
+	//센터 라이트 레프트
+	public boolean winCheckCenterRL(int x,int y) {
+		try {
+			for(int z=x-2;z<x+3;z++){
+				if(map[y][x]!=map[y][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	//센터 라이트 대각선
+	public boolean winCheckCenterRU(int x,int y) {
+		try {
+			for(int i=y+2, z=x-2;i>y-3;i--,z++){
+				if(map[y][x]!=map[i][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+	//센터 레프트 대각선
+	public boolean winCheckCenterLU(int x,int y) {
+		try {
+			for(int i=y+2, z=x+2;i>y-4;i--,z--){
+				if(map[y][x]!=map[i][z])
+					return false;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+		return true;
+	}
+}
+
+//GUI Class
+package Omoke;
+
+import java.awt.Container;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+@SuppressWarnings("serial")
+public class GUI extends JFrame{
+	Container c;
+	MapSize size=new MapSize();
+	public GUI(String title) {
+		// TODO Auto-generated constructor stub
+		c=getContentPane();
+		setBounds(200,20,650,700);
+		c.setLayout(null);
+		Map map=new Map(size);
+		DrawBorad d=new DrawBorad(size,map);
+		setContentPane(d);
+		addMouseListener(new MouseEventHandler(map, size,d,this));
+		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	public void showPopUp(String message) {
+		JOptionPane.showMessageDialog(this, message,"축하합니다",JOptionPane.INFORMATION_MESSAGE);
+		System.exit(0);
+	}
+}
+//MapSize Class
+package Omoke;
+
+public class MapSize {
+	final int CELL=30;
+	final int SIZE=20;
+	public int getCell() {
+		return CELL;
+	}
+	public int getSize() {
+		return SIZE;
+	}
+}
+
+//MouseEventHandler Class
+package Omoke;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class MouseEventHandler extends MouseAdapter {
+	Map map;
+	int x,y;
+	MapSize ms;
+	DrawBorad d;
+	GUI main;
+	public MouseEventHandler(Map m,MapSize ms,DrawBorad d,GUI main) {
+		// TODO Auto-generated constructor stub
+		map=m;
+		this.ms=ms;
+		this.d=d;
+		this.main=main;
+	}
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		super.mousePressed(arg0);
+		System.out.println("mouse");
+		 int x=(int)Math.round(arg0.getX()/(double)ms.getCell())-1;
+	     int y=(int)Math.round(arg0.getY()/(double)ms.getCell())-2; 
+	    
+	    if(x<0||x>19||y<0||y>19)
+	    	return;
+	    if(map.getXY(y, x)==map.getBlack()||map.getXY(y, x)==map.getWhite())
+	    	return;
+	    
+	    System.out.println(x+" "+y);
+	    map.setMap(y, x);
+	    map.changeCheck();
+	    d.repaint();
+	    if(map.winCheck(x, y))
+	    	if(map.getCheck()==true)
+	    		main.showPopUp("백돌 승리!");
+	    	else
+	    		main.showPopUp("흑돌 승리!");
+	}
+}
+
+//OmokeGameMain Class
+package Omoke;
+
+public class OmokeGameMain {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new GUI("오목");
+	}
+
+}

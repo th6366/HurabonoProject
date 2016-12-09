@@ -1,0 +1,14 @@
+<TABLE
+width="가로 크기"
+height="세로 크기"
+border="테이블 전체 굵기"
+bordercolor="색상" 테두리 색상
+bordercolorlight="색상" 테두리 색상중 밝은부분
+bordercolordark="색상" 테두리 색상중 어두운부분
+bgcolor="색상" 테이블 배경색
+background="이미지 경로" 테이블 배경이미지
+align="정렬" 테이블 전체 수평정렬
+valign="정렬" 테이블 전체 수직정렬  top, middle, bottom 
+cellpadding="여백" 테이블 내 셀과 데이터 간격
+cellspacing="여백" 테이블 내 셀과 셀 간격
+>

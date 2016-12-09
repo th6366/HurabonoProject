@@ -1,0 +1,69 @@
+먼저 금액을 입력받고 그 금액에서 비디오를 빌린 금액 1500원을 빼 주었습니다.
+물건을 구입한 후 남는 잔액을 통하여 크림빵, 새우깡, 콜라, 커피를 뒤에서부터 증가시키며 값을 늘려나갔습니다.
+while문을 4번 중첩시켰고 뒤에서부터 증가시키기 위해 바깥쪽에서 안쪽으로 크림빵, 새우깡, 콜라, 커피 순으로 중첩시켰습니다.
+첫번째 루프는 먼저 while문 실행 시 제일 안쪽에 있는 커피의 while문까지 들어와 커피로 최대한 살 수 있는 만큼의 개수를 구하였고
+두번쨰 루프는 다시 커피를 초기화 시키고 그 한단계 바깥쪽에 있는 콜라를 한 개 씩 증가시키고 다시 안 쪽의 while문으로 돌아와 남는 잔액으로 커피를 최대한 살 수 있는 개수를 구하였습니다.
+세번째 루프는 다시 커피를 초기화 시키고 콜라 한잔을 더 증가시키며 다시 개수를 구하였고
+이런 방식으로 while문을 바깥으로 한층 한층 나가면서 그 층의 간식거리 개수를 하나씩 증가시키고
+다시 안쪽으로 돌어오며 다시 while문을 실행시켰습니다. 
+ 
+이런식으로 while문을 이용하였고 while문은 잔액이 0이상일 때만 루프를 돌게 하였습니다.
+또한 출력은 모든 간식거리가 한가지 이상은 구입했을 때만 출력을 하도록 했습니다.
+*/
+ 
+#include<stdio.h>
+ 
+void print(int a,int b, int c,int d); // 출력함수
+ 
+int main()
+{
+    int bread = 0, snack = 0, coke = 0, coffee = 0; // 각 군것질거리의 개수를 나타낼 변수
+    int money, balance; // 입력받을 금액과 잔액
+     
+    printf("비디오를 빌리기 전 금액을 입력하시오 : ");
+    scanf("%d",&money);
+    money -= 1500; // 비디오를 빌려보고 남은 금액
+    printf("현재 당신이 소유하고 있는 금액 : %d\n",money);
+    balance = money; // 아직은 비디오만 빌린 상태
+    while(balance >=0) // while문은 남은 돈으로 크림빵을 최대한 많이 살 수 있을때까지 루프를 돌게 된다 
+    {
+        while(balance >0)  // while문은 남은 돈으로 새우깡을 최대한 많이 살 수 있을때까지 루프를 돌게 된다
+        {
+            while(balance >0)  // while문은 돈으로 콜라를 최대한 많이 살 수 있을때까지 루프를 돌게 된다 
+            {
+                while(balance >0)  // while문은 돈으로 커피를 최대한 많이 살 수 있을때까지 루프를 돌게 된다 
+                {
+                    coffee++;
+                    balance = balance - 100; // 커피 한잔 더 구매
+                }
+                if(balance>=0&&bread>0&&snack>0&&coke>0&&coffee>0) // 출력은 모든 품목을 히니이상 구입했을 때만
+                    print(bread, snack, coke, coffee); // 프린트 함수 
+                balance = money-snack*700-bread*500; // 잔액은 처음 돈에서 과자와 빵을 구매하고 남은 돈으로 입력
+                coke++; // 콜라 한병 더 구매
+                coffee=0;
+                balance = balance - coke*400; 
+            }
+            if(balance>=0&&bread>0&&snack>0&&coke>0&&coffee>0) // 출력은 모든 품목을 하나이상 구입했을 때만
+                print(bread, snack, coke, coffee);
+            balance = money-bread*500; // 잔액은 처음돈에서 빵을 구매하고 남은 돈으로 입력
+            snack++; // 새우깡 한봉 지 더 구매
+            coffee = 0;
+            coke = 0;
+            balance = balance - snack*700; 
+        }
+        if(balance>=0&&bread>0&&snack>0&&coke>0&&coffee>0) // 출력은 모든 품목을 하나이상 구입했을 때만
+            print(bread, snack, coke, coffee);
+        balance = money; // 초기화
+        bread++; // 크림빵 한 개 더 구매
+        coffee = 0;
+        coke = 0;
+        snack = 0;
+        balance = balance - bread*500; 
+    }
+    printf("어떻게 구입하시겠습니까?\n");
+ 
+}
+void print(int a,int b,int c,int d)
+{
+    printf("크림빵(%d개), 새우깡(%d봉지), 콜라(%d병), 커피(%d잔)\n",a,b,c,d);
+}

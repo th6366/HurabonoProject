@@ -1,0 +1,108 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <string.h> 
+struct lib 
+{ 
+   char sub[100]; 
+   char maker[100]; 
+   char position[100]; 
+   int i; 
+   struct lib *next;//연결을 위한 변수 
+}; 
+int main() 
+{ 
+   //struct lib list[100]; 
+   struct lib *head = NULL;//링크드리스트의 맨앞 객체 
+   struct lib *tail = NULL;//링크드리스트의 맨뒤 객체 
+   struct lib *p, *del;//조작을 위한 변수 
+   int b,c,n=0; 
+   char word[50]; 
+   while(1) 
+   { 
+      printf("--------------------\n"); 
+      printf("1.추가\n"); 
+      printf("2.출력\n"); 
+      printf("3.검색\n"); 
+      printf("4.종료\n"); 
+      printf("--------------------\n"); 
+      printf("메뉴를 입력하시오:"); 
+      scanf("%d",&b); 
+      switch(b) 
+      { 
+         case 1 : 
+         p = (struct lib *)malloc(sizeof(struct lib));//메모리 생성 
+         printf("제목:"); 
+         scanf("%s",p->sub); 
+         printf("저자:"); 
+         scanf("%s",p->maker); 
+         printf("위치:"); 
+         scanf("%s",p->position); 
+         printf("장르(0:만화, 1:공상과학, 2:소설, 3:고전) :"); 
+         scanf("%d",&p->i); 
+         p->next = NULL;//맨끝을 NULL로 
+         //맨처음 입력일 경우 
+         if(head == NULL) 
+         { 
+            head = tail = p; 
+         }else 
+         { 
+            tail->next = p;//맨뒤에 객체 추가 
+            p = tail; 
+         } 
+         break; 
+         case 2 : 
+         p = head;//조작을 위해 
+         while(p)//NULL이 아닐때 까지 
+         { 
+            printf("제목:%s\n",p->sub); 
+            printf("저자:%s\n",p->maker); 
+            printf("위치:%s\n",p->position); 
+            if(p->i==0) 
+            printf("장르:만화\n"); 
+            else if(p->i==1) 
+            printf("장르:공상과학\n"); 
+            else if(p->i==2) 
+            printf("장르:소설\n"); 
+            else if(p->i==3) 
+            printf("장르:고전\n"); 
+            p = p->next;//다음 객체로 이동 
+         } 
+         break; 
+         case 3 : 
+         printf("제목을 입력하시오:"); 
+         scanf("%s",word); 
+         p = head; 
+         while(p) 
+         { 
+            if(strcmp(p->sub,word)==0)//같은 문자열을 찾으면 출력 
+            { 
+               printf("제목:%s\n",p->sub); 
+               printf("저자:%s\n",p->maker); 
+               printf("위치:%s\n",p->position); 
+               if(p->i==0) 
+               printf("장르:만화\n"); 
+               else if(p->i==1) 
+               printf("장르:공상과학\n"); 
+               else if(p->i==2) 
+               printf("장르:소설\n"); 
+               else if(p->i==3) 
+               printf("장르:고전\n"); 
+               else 
+               printf("\자료가 없습니다\n"); 
+            } 
+            p = p->next; 
+         } 
+         break; 
+         case 4 : 
+         //할당된 메모리를 모두 해제 
+         while(head) 
+         { 
+            del = head;     
+            head = head->next; 
+            free(del); 
+         } 
+         return 0; 
+      } 
+   } 
+   return 0; 
+} 

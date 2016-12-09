@@ -1,0 +1,39 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class Ex6 extends JFrame{
+    Ex6(){
+        this.setTitle("JSliser Practice Frame");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+        
+        JLabel la = new JLabel("100");
+        la.setBackground(Color.green);
+        la.setOpaque(true);
+        
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 200, 100);
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        slider.setPaintTrack(true);
+        slider.setMajorTickSpacing(50);
+        slider.setMinorTickSpacing(10);
+        slider.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider js=(JSlider)e.getSource();
+                la.setText(""+js.getValue());
+            }
+        });
+        this.add(slider);
+        this.add(la);
+        this.setSize(400,100);
+        this.setVisible(true);
+    }
+}
+public class JavaApplication52 {
+    public static void main(String[] args) {
+        new Ex6();
+    }
+}

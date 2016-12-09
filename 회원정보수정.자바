@@ -1,0 +1,36 @@
+ /**회원정보 수정*/
+    public boolean updateMember(MemberDTO vMem){
+        System.out.println("dto="+vMem.toString());
+        boolean ok = false;
+        Connection con = null;
+        PreparedStatement ps = null;
+        try{
+           
+            con = getConn();           
+            String sql = "update tb_member set name=?, tel=?, addr=?, birth=?, job=?, gender=?" +
+                    ", email=?,intro=? "+ "where id=? and pwd=?";
+           
+            ps = con.prepareStatement(sql);
+           
+            ps.setString(1, vMem.getName());
+            ps.setString(2, vMem.getTel());
+            ps.setString(3, vMem.getAddr());
+            ps.setString(4, vMem.getBirth());
+            ps.setString(5, vMem.getJob());
+            ps.setString(6, vMem.getGender());
+            ps.setString(7, vMem.getEmail());
+            ps.setString(8, vMem.getIntro());
+            ps.setString(9, vMem.getId());
+            ps.setString(10, vMem.getPwd());
+           
+            int r = ps.executeUpdate(); //실행 -> 수정
+            // 1~n: 성공 , 0 : 실패
+           
+            if(r>0) ok = true; //수정이 성공되면 ok값을 true로 변경
+           
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+       
+        return ok;
+    }

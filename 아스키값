@@ -1,0 +1,10 @@
+#include<stdio.h>
+
+void main()
+{
+	char bin[3];
+	
+	scanf("%c %c %c",&bin[0],&bin[1], &bin[2]);
+
+	printf("[%c: %d] [%c: %d] [%c: %d]",bin[0],bin[0],bin[1],bin[1],bin[2],bin[2]);
+}
