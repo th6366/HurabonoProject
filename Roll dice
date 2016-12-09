@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+
+void roll_dice (int * roll_1, int * roll_2)
+{ 
+	*roll_1 = rand() % 6 + 1;
+	*roll_2 = rand() % 6 + 1;
+}
+
+int main ()
+{
+	srand( time(NULL) );
+	int dice_roll_1 = 0;
+	int dice_roll_2 = 0;
+
+	printf("&dice_roll_1 = %d, &dice_roll_2 = %d\n", &dice_roll_1, &dice_roll_2);
+
+	roll_dice( &dice_roll_1, &dice_roll_2 );
+
+	printf( "%d, %d", dice_roll_1, dice_roll_2 );
+
+	return 0;
+}

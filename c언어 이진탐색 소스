@@ -1,0 +1,22 @@
+#include<stdio.h>
+#include<conio.h>
+//이진탐색
+int main(void) {
+ int number, input[100], search, i, j, start=0, end, mid;
+ scanf("%d", &number);//배열의 갯수
+ for (i = 0; i < number; i++) {//정렬된 배열
+  scanf("%d", &input[i]);
+ }
+ end = number-1;
+ scanf("%d", &search);//찾을 값
+
+ while (1){
+  mid = (start + end)/2;
+  if (search == input[mid]){ break;}
+  (search < input[mid]) ? end = mid - 1 : start = mid + 1;
+ }
+
+ printf("%d ", mid);//몇번쨰인지
+ 
+ getch();
+}

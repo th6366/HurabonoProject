@@ -1,0 +1,30 @@
+int Compare( LPCTSTR lpsz ) const;
+int CompareNoCase( LPCTSTR lpsz ) const;
+//lpsz : NULL로 종결되는 비교할 문자열
+//반환값 : 문자열이 lpsz보다 작을 경우 -1
+//         문자열이 lpsz와 같을 경우 0
+//         문자열이 lpsz보다 큰 경우 1
+
+#include <atlstr.h>       //CString
+
+#define print( str ) printf( "%d\n", str )
+
+int main( )
+{
+	CString strText1;
+	CString strText2;
+	CString strText3;
+
+	strText1 = "ABC";
+
+	//Compare - 대소문자 구분
+	print( strText1.Compare( "ABC" ) );
+	print( strText1.Compare( "abc" ) );
+	print( strText1.Compare( "123" ) );
+
+	//CompareNoCase - 대소문자 구분 안 함
+	print( strText1.CompareNoCase( "ABC" ) );
+	print( strText1.CompareNoCase( "abc" ) );
+
+	return 0;
+}

@@ -1,0 +1,14 @@
+import javax.swing.*;
+
+public class Foo {
+  public static void main(String args[]) {
+
+    JFrame oFrame = new JFrame("이것은 창 제목입니다."); // GUI의 기본 창 만들기
+    JLabel oLabel = new JLabel("차창 밖으로 비가 내리고 있었다.", JLabel.CENTER ); // 글을 쓸 수 있는 라벨 만들기
+
+    oFrame.add(oLabel); // 라벨을 기본 창에 붙여 넣기
+    oFrame.setSize(300, 400); // 크기를 지정해 주지 않으면, 창이 너무 작게 나옴
+    oFrame.setVisible(true); // 창이 보이게 하기. 기본적으로는 보이지 않음
+    oFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 창 닫으면 프로그램 종료
+  }
+}

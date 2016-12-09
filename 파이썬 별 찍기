@@ -1,0 +1,29 @@
+'''
+Created on Apr 14, 2012
+
+@author: taehwan, taehwan@thdev.net
+'''
+print 'rowspan : ',
+rowspan = raw_input()
+print 'colspan : ',
+colspan = raw_input()
+
+rowspan = int(rowspan) * 2 - 1;
+colspan = int(colspan) * 2 - 1;
+
+for i in range(0, rowspan):
+    for j in range(0, colspan):
+        val = i % 2
+        if val:
+            value = j % 2
+            if value:
+                print '*',
+            else:
+                print ' ',
+        else:
+            value = j % 2
+            if value:
+                print ' ',
+            else:
+                print '*',
+    print '\n'

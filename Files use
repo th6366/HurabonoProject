@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+//static  FILE    *Sfile;
+static  int     Sfile_open=0;
+
+FILE *Open_Sfile(char *modname){
+  char file_name[256];
+  FILE *Sfile;
+  if (Sfile_open==0) {
+    strcpy(file_name,modname);
+    Sfile=fopen(file_name,"w");
+    printf("// Writing file %s\n",file_name);
+    Sfile_open=1;
+  };
+  return Sfile;
+}
+
+int main(int argc, char **argv) {
+  FILE *source_file;
+  source_file = Open_Sfile("example.txt");
+  fprintf(source_file, "Helloworld\n");
+  fclose(source_file);
+  exit(0);
+}

@@ -1,0 +1,21 @@
+#include<stdio.h>
+
+void main()
+{
+	int bin[5][5],fa,fb,x=1;
+	for(fa=0;fa<5;fa++)
+	{
+		for(fb=0;fb<5;fb++)
+		{
+			bin[fb][fa]=x++;
+		}
+	}
+	for(fa=0;fa<5;fa++)
+	{
+		for(fb=0;fb<5;fb++)
+		{
+			printf("[%2d]",bin[fa][fb]);
+		}
+		printf("\n");
+	}
+}

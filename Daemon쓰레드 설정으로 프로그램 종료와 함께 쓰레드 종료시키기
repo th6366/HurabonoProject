@@ -1,0 +1,19 @@
+public class DaemonThreadTest {
+    public DaemonThreadTest() {
+    }
+    public static void main(String[] args) {
+        Thread test = new Thread(){
+            public void run(){
+                try{
+                    Thread.sleep(5000);
+                    System.out.println("MyThread 종료");
+                }catch(Exception e){
+                    //무시
+                }
+            }
+        };
+        test.setDaemon(true);
+        test.start();
+        System.out.println("main() 종료");
+    }
+}

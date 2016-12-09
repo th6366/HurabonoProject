@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <time.h>
+#include "time2str.h"
+
+#ifdef _SOLARIS_
+#include <kstat.h>
+#endif
+
+#include <stdio.h>
+
+int uptime()
+{
+  double stime;
+  double idletime;
+#ifdef _LINUX_
+  char buf[36];
+  FILE *fp;
+  if ((fp = fopen("/proc/uptime", "r")) == NULL)
+  {
+    return -1;
+  }
+
+  fgets(buf, 36, fp);
+  sscanf(buf, "%lf %lf", &stime, &idletime);
+  fclose(fp);
+
+  return (int)stime;
+#endif
+
+#ifdef _SOLARIS_
+  kstat_ctl_t *kc;
+  kstat_t *ks;
+  kid_t kid;
+  kstat_named_t *named;
+  int i;
+
+  kc = kstat_open();
+  if(kc == NULL)
+  {
+    perror("kstat_open");
+    exit(0);
+  }
+
+  ks = kstat_lookup(kc, "unix", -1, "system_misc");
+  kid = kstat_read(kc, ks, NULL);
+  named = kstat_data_lookup(ks, "lbolt");
+  return (named->value.ul)/100;
+#endif
+}

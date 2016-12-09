@@ -1,0 +1,40 @@
+import java.awt.*;
+import javax.swing.*;
+
+class ThreadTimerEx extends JFrame{
+    JLabel la;
+    ThreadTimerEx(){
+        this.setTitle("ThreadTimer 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+        MyThread th = new MyThread();
+        la=new JLabel();
+        la.setFont(new Font("Gothic", Font.ITALIC, 80));
+        this.add(la);
+        
+        this.setLocationRelativeTo(null);
+        this.setSize(300,150);
+        this.setVisible(true);
+        th.start();
+    }
+    
+    class MyThread extends Thread{
+        public void run(){
+            int n=0;
+            while(true){
+                la.setText(Integer.toString(n++));
+                try{
+                    sleep(1000);
+                }
+                catch(Exception e){
+                    return;
+                }
+            }
+        }
+    }
+}
+public class JavaApplication20 {
+    public static void main(String[] args) {
+        new ThreadTimerEx();
+    }
+}

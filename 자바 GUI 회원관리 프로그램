@@ -1,0 +1,921 @@
+//MemberDTO Class
+public class MemberDTO {
+   
+   
+    private String id;
+    private String pwd;
+    private String name;
+    private String tel;
+    private String addr;
+    private String birth;
+    private String job ;
+    private String gender;
+    private String email;
+    private String intro;
+ 
+    //이클립스팁 : Getter/Setter 만들기
+    //             우클릭 -> source->Generate Getters And Setters-> [Select AlL] -> [OK]
+   
+   
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getPwd() {
+        return pwd;
+    }
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getTel() {
+        return tel;
+    }
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+    public String getAddr() {
+        return addr;
+    }
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+    public String getBirth() {
+        return birth;
+    }
+    public void setBirth(String birth) {
+        this.birth = birth;
+    }
+    public String getJob() {
+        return job;
+    }
+    public void setJob(String job) {
+        this.job = job;
+    }
+    public String getGender() {
+        return gender;
+    }
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getIntro() {
+        return intro;
+    }
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+   
+    //DTO 객체 확인
+    //이클립스팁 : toString() 자동생성: 우클릭 -> source -> Generate toString->[OK]
+    @Override
+    public String toString() {
+        return "MemberDTO [id=" + id + ", pwd=" + pwd + ", name=" + name
+                + ", tel=" + tel + ", addr=" + addr + ", birth=" + birth
+                + ", job=" + job + ", gender=" + gender + ", email=" + email
+                + ", intro=" + intro + "]";
+    }
+}
+ 
+ 
+ //MemberDAO Class
+ import java.sql.*;
+import java.util.Vector;
+ 
+import javax.swing.table.DefaultTableModel;
+ 
+//DB 처리
+public class MemberDAO {
+ 
+    private static final String DRIVER
+        = "oracle.jdbc.driver.OracleDriver";
+    private static final String URL
+        = "jdbc:oracle:thin:@192.168.0.3:1521:ORCL";
+   
+    private static final String USER = "SCOTT"; //DB ID
+    private static final String PASS = "SCOTT"; //DB 패스워드
+    Member_List mList;
+   
+    public MemberDAO() {
+   
+    }
+   
+    public MemberDAO(Member_List mList){
+        this.mList = mList;
+        System.out.println("DAO=>"+mList);
+    }
+   
+    /**DB연결 메소드*/
+    public Connection getConn(){
+        Connection con = null;
+       
+        try {
+            Class.forName(DRIVER); //1. 드라이버 로딩
+            con = DriverManager.getConnection(URL,USER,PASS); //2. 드라이버 연결
+           
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       
+        return con;
+    }
+   
+   
+    /**한사람의 회원 정보를 얻는 메소드*/
+    public MemberDTO getMemberDTO(String id){
+       
+        MemberDTO dto = new MemberDTO();
+       
+        Connection con = null;       //연결
+        PreparedStatement ps = null; //명령
+        ResultSet rs = null;         //결과
+       
+        try {
+           
+            con = getConn();
+            String sql = "select * from tb_member where id=?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+           
+            rs = ps.executeQuery();
+           
+            if(rs.next()){
+                dto.setId(rs.getString("id"));
+                dto.setPwd(rs.getString("Pwd"));
+                dto.setName(rs.getString("Name"));
+                dto.setTel(rs.getString("tel"));
+                dto.setAddr(rs.getString("addr"));
+                dto.setBirth(rs.getString("birth"));
+                dto.setJob(rs.getString("job"));
+                dto.setGender(rs.getString("gender"));
+                dto.setEmail(rs.getString("email"));
+                dto.setIntro(rs.getString("intro"));
+               
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }      
+       
+        return dto;    
+    }
+   
+    /**멤버리스트 출력*/
+    public Vector getMemberList(){
+       
+        Vector data = new Vector();  //Jtable에 값을 쉽게 넣는 방법 1. 2차원배열   2. Vector 에 vector추가
+       
+           
+        Connection con = null;       //연결
+        PreparedStatement ps = null; //명령
+        ResultSet rs = null;         //결과
+       
+        try{
+           
+            con = getConn();
+            String sql = "select * from tb_member order by name asc";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+           
+            while(rs.next()){
+                String id = rs.getString("id");
+                String pwd = rs.getString("pwd");
+                String name = rs.getString("name");
+                String tel = rs.getString("tel");
+                String addr = rs.getString("addr");
+                String birth = rs.getString("birth");
+                String gender = rs.getString("gender");
+                String job = rs.getString("job");
+                String email = rs.getString("email");
+                String intro = rs.getString("intro");
+               
+                Vector row = new Vector();
+                row.add(id);
+                row.add(pwd);
+                row.add(name);
+                row.add(tel);
+                row.add(addr);
+                row.add(birth);
+                row.add(job);
+                row.add(gender);
+                row.add(email);
+                row.add(intro);
+               
+                data.add(row);             
+            }//while
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return data;
+    }//getMemberList()
+   
+ 
+ 
+    /**회원 등록*/
+    public boolean insertMember(MemberDTO dto){
+       
+        boolean ok = false;
+       
+        Connection con = null;       //연결
+        PreparedStatement ps = null; //명령
+       
+        try{
+           
+            con = getConn();
+            String sql = "insert into tb_member(" +
+                        "id,pwd,name,tel,addr,birth," +
+                        "job,gender,email,intro) "+
+                        "values(?,?,?,?,?,?,?,?,?,?)";
+           
+            ps = con.prepareStatement(sql);
+            ps.setString(1, dto.getId());
+            ps.setString(2, dto.getPwd());
+            ps.setString(3, dto.getName());
+            ps.setString(4, dto.getTel());
+            ps.setString(5, dto.getAddr());
+            ps.setString(6, dto.getBirth());
+            ps.setString(7, dto.getJob());
+            ps.setString(8, dto.getGender());
+            ps.setString(9, dto.getEmail());
+            ps.setString(10, dto.getIntro());          
+            int r = ps.executeUpdate(); //실행 -> 저장
+           
+           
+            if(r>0){
+                System.out.println("가입 성공");   
+                ok=true;
+            }else{
+                System.out.println("가입 실패");
+            }
+           
+               
+           
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+       
+        return ok;
+    }//insertMmeber
+   
+   
+    /**회원정보 수정*/
+    public boolean updateMember(MemberDTO vMem){
+        System.out.println("dto="+vMem.toString());
+        boolean ok = false;
+        Connection con = null;
+        PreparedStatement ps = null;
+        try{
+           
+            con = getConn();           
+            String sql = "update tb_member set name=?, tel=?, addr=?, birth=?, job=?, gender=?" +
+                    ", email=?,intro=? "+ "where id=? and pwd=?";
+           
+            ps = con.prepareStatement(sql);
+           
+            ps.setString(1, vMem.getName());
+            ps.setString(2, vMem.getTel());
+            ps.setString(3, vMem.getAddr());
+            ps.setString(4, vMem.getBirth());
+            ps.setString(5, vMem.getJob());
+            ps.setString(6, vMem.getGender());
+            ps.setString(7, vMem.getEmail());
+            ps.setString(8, vMem.getIntro());
+            ps.setString(9, vMem.getId());
+            ps.setString(10, vMem.getPwd());
+           
+            int r = ps.executeUpdate(); //실행 -> 수정
+            // 1~n: 성공 , 0 : 실패
+           
+            if(r>0) ok = true; //수정이 성공되면 ok값을 true로 변경
+           
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+       
+        return ok;
+    }
+   
+    /**회원정보 삭제 :
+     *tip: 실무에서는 회원정보를 Delete 하지 않고 탈퇴여부만 체크한다.*/
+    public boolean deleteMember(String id, String pwd){
+       
+        boolean ok =false ;
+        Connection con =null;
+        PreparedStatement ps =null;
+       
+        try {
+            con = getConn();
+            String sql = "delete from tb_member where id=? and pwd=?";
+           
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            ps.setString(2, pwd);
+            int r = ps.executeUpdate(); // 실행 -> 삭제
+           
+            if (r>0) ok=true; //삭제됨;
+           
+        } catch (Exception e) {
+            System.out.println(e + "-> 오류발생");
+        }      
+        return ok;
+    }
+   
+   
+    /**DB데이터 다시 불러오기*/   
+    public void userSelectAll(DefaultTableModel model) {
+       
+       
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+       
+        try {
+            con = getConn();
+            String sql = "select * from tb_member order by name asc";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+           
+            // DefaultTableModel에 있는 데이터 지우기
+            for (int i = 0; i < model.getRowCount();) {
+                model.removeRow(0);
+            }
+ 
+            while (rs.next()) {
+                Object data[] = { rs.getString(1), rs.getString(2),
+                        rs.getString(3), rs.getString(4),
+                       rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)};
+ 
+                model.addRow(data);                
+            }
+ 
+        } catch (SQLException e) {
+            System.out.println(e + "=> userSelectAll fail");
+        } finally{
+           
+            if(rs!=null)
+                try {
+                    rs.close();
+                } catch (SQLException e2) {
+                    // TODO Auto-generated catch block
+                    e2.printStackTrace();
+                }
+            if(ps!=null)
+                try {
+                    ps.close();
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            if(con!=null)
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+        }
+    }
+}
+
+//MemberProc Class
+import java.awt.*;
+import java.sql.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+ 
+import java.awt.event.*;
+ 
+public class MemberProc extends JFrame implements ActionListener {
+   
+   
+    JPanel p;
+    JTextField tfId, tfName, tfAddr, tfEmail;
+    JTextField tfTel1, tfTel2, tfTel3; //전화
+    JComboBox cbJob; //직업
+    JPasswordField pfPwd; //비밀번호   
+    JTextField tfYear, tfMonth, tfDate; //생년월일
+    JRadioButton rbMan, rbWoman; //남, 여
+    JTextArea taIntro;
+    JButton btnInsert, btnCancel, btnUpdate,btnDelete; //가입, 취소, 수정 , 탈퇴 버튼
+   
+    GridBagLayout gb;
+    GridBagConstraints gbc;
+    Member_List mList ;
+   
+    public MemberProc(){ //가입용 생성자
+       
+        createUI(); // UI작성해주는 메소드
+        btnUpdate.setEnabled(false);
+        btnUpdate.setVisible(false);
+        btnDelete.setEnabled(false);
+        btnDelete.setVisible(false);
+       
+       
+    }//생성자
+   
+    public MemberProc(Member_List mList){ //가입용 생성자
+       
+        createUI(); // UI작성해주는 메소드
+        btnUpdate.setEnabled(false);
+        btnUpdate.setVisible(false);
+        btnDelete.setEnabled(false);
+        btnDelete.setVisible(false);
+        this.mList = mList;
+       
+    }//생성자
+    public MemberProc(String id,Member_List mList){ // 수정/삭제용 생성자
+        createUI();
+        btnInsert.setEnabled(false);
+        btnInsert.setVisible(false);
+        this.mList = mList;
+       
+       
+        System.out.println("id="+id);
+       
+        MemberDAO dao = new MemberDAO();
+        MemberDTO vMem = dao.getMemberDTO(id);
+        viewData(vMem);
+       
+       
+    }//id를 가지고 생성
+ 
+       
+    //MemberDTO 의 회원 정보를 가지고 화면에 셋팅해주는 메소드
+    private void viewData(MemberDTO vMem){
+       
+        String id = vMem.getId();
+        String pwd = vMem.getPwd();
+        String name = vMem.getName();
+        String tel = vMem.getTel();
+        String addr = vMem.getAddr();
+        String birth = vMem.getBirth();
+        String job = vMem.getJob();
+        String gender = vMem.getGender();
+        String email= vMem.getEmail();
+        String intro = vMem.getIntro();    
+       
+        //화면에 세팅
+        tfId.setText(id);
+        tfId.setEditable(false); //편집 안되게
+        pfPwd.setText(""); //비밀번호는 안보여준다.
+        tfName.setText(name);
+        String[] tels = tel.split("-");
+        tfTel1.setText(tels[0]);
+        tfTel2.setText(tels[1]);
+        tfTel3.setText(tels[2]);
+        tfAddr.setText(addr);
+       
+        tfYear.setText(birth.substring(0, 4));
+        tfMonth.setText(birth.substring(4, 6));
+        tfDate.setText(birth.substring(6, 8));
+       
+        cbJob.setSelectedItem(job);
+       
+       
+        if(gender.equals("M")){
+            rbMan.setSelected(true);
+        }else if(gender.equals("W")){
+            rbWoman.setSelected(true);
+        }
+       
+        tfEmail.setText(email);
+        taIntro.setText(intro);
+   
+       
+    }//viewData
+   
+   
+   
+    private void createUI(){
+        this.setTitle("회원정보");
+        gb = new GridBagLayout();
+        setLayout(gb);
+        gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+       
+       
+        //아이디
+        JLabel bId = new JLabel("아이디 : ");
+        tfId = new JTextField(20);     
+        //그리드백에 붙이기
+        gbAdd(bId, 0, 0, 1, 1);
+        gbAdd(tfId, 1, 0, 3, 1);
+       
+        //비밀번호
+        JLabel bPwd = new JLabel("비밀번호 : ");
+        pfPwd = new JPasswordField(20);
+        gbAdd(bPwd, 0, 1, 1, 1);
+        gbAdd(pfPwd, 1, 1, 3, 1);
+       
+        //이름
+        JLabel bName = new JLabel("이름 :");
+        tfName = new JTextField(20);
+        gbAdd(bName,0,2,1,1);
+        gbAdd(tfName,1,2,3,1);
+       
+        //전화
+        JLabel bTel = new JLabel("전화 :");
+        JPanel pTel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        tfTel1 = new JTextField(6);    
+        tfTel2 = new JTextField(6);    
+        tfTel3 = new JTextField(6);
+        pTel.add(tfTel1);
+        pTel.add(new JLabel(" - "));
+        pTel.add(tfTel2);
+        pTel.add(new JLabel(" - "));
+        pTel.add(tfTel3);
+        gbAdd(bTel, 0, 3, 1,1);
+        gbAdd(pTel, 1, 3, 3,1);
+       
+        //주소
+        JLabel bAddr = new JLabel("주소: ");
+        tfAddr = new JTextField(20);
+        gbAdd(bAddr, 0,4,1,1);
+        gbAdd(tfAddr, 1, 4, 3,1);
+       
+        //생일
+        JLabel bBirth= new JLabel("생일: ");
+        tfYear = new JTextField(6);
+        tfMonth = new JTextField(6);
+        tfDate = new JTextField(6);
+        JPanel pBirth = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pBirth.add(tfYear);
+        pBirth.add(new JLabel("/"));
+        pBirth.add(tfMonth);
+        pBirth.add(new JLabel("/"));
+        pBirth.add(tfDate);
+        gbAdd(bBirth, 0,5,1,1);
+        gbAdd(pBirth, 1, 5, 3,1);
+       
+        //직업       
+        JLabel bJob = new JLabel("직업 : ");
+        String[] arrJob = {"---", "학생", "직장인", "주부"};
+        cbJob = new JComboBox(arrJob);
+        JPanel pJob = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pJob.add(cbJob);       
+        gbAdd(bJob, 0,6,1,1);
+        gbAdd(pJob,1,6,3,1);
+       
+        //성별
+        JLabel bGender = new JLabel("성별 : ");
+        JPanel pGender = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        rbMan = new JRadioButton("남",true);
+        rbWoman = new JRadioButton("여",true);
+        ButtonGroup group = new ButtonGroup();
+        group.add(rbMan);
+        group.add(rbWoman);
+        pGender.add(rbMan);
+        pGender.add(rbWoman);      
+        gbAdd(bGender, 0,7,1,1);
+        gbAdd(pGender,1,7,3,1);
+       
+        //이메일
+        JLabel bEmail = new JLabel("이메일 : ");
+        tfEmail = new JTextField(20);
+        gbAdd(bEmail, 0,8,1,1);
+        gbAdd(tfEmail,1,8,3,1);
+       
+        //자기소개
+        JLabel bIntro = new JLabel("자기 소개: ");
+        taIntro = new JTextArea(5, 20); //행 : 열
+        JScrollPane pane = new JScrollPane(taIntro);
+        gbAdd(bIntro,0,9,1,1);
+        gbAdd(pane,1,9,3,1);
+       
+        //버튼
+        JPanel pButton = new JPanel();
+        btnInsert = new JButton("가입");
+        btnUpdate = new JButton("수정"); 
+        btnDelete = new JButton("탈퇴");
+        btnCancel = new JButton("취소");     
+        pButton.add(btnInsert);
+        pButton.add(btnUpdate);
+        pButton.add(btnDelete);
+        pButton.add(btnCancel);    
+        gbAdd(pButton, 0, 10, 4, 1);
+       
+        //버튼에 감지기를 붙이자
+        btnInsert.addActionListener(this);
+        btnUpdate.addActionListener(this);
+        btnCancel.addActionListener(this);
+        btnDelete.addActionListener(this);
+       
+        setSize(350,500);
+        setVisible(true);
+        //setDefaultCloseOperation(EXIT_ON_CLOSE); //System.exit(0) //프로그램종료
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE); //dispose(); //현재창만 닫는다.
+       
+       
+    }//createUI
+   
+    //그리드백레이아웃에 붙이는 메소드
+    private void gbAdd(JComponent c, int x, int y, int w, int h){
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.gridwidth = w;
+        gbc.gridheight = h;
+        gb.setConstraints(c, gbc);
+        gbc.insets = new Insets(2, 2, 2, 2);
+        add(c, gbc);
+    }//gbAdd
+   
+    public static void main(String[] args) {
+       
+        new MemberProc();
+    }
+   
+ 
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        if(ae.getSource() == btnInsert){
+            insertMember();
+            System.out.println("insertMember() 호출 종료");
+        }else if(ae.getSource() == btnCancel){
+            this.dispose(); //창닫기 (현재창만 닫힘)
+            //system.exit(0)=> 내가 띄운 모든 창이 다 닫힘          
+        }else if(ae.getSource() == btnUpdate){
+            UpdateMember();            
+        }else if(ae.getSource() == btnDelete){
+            //int x = JOptionPane.showConfirmDialog(this,"정말 삭제하시겠습니까?");
+            int x = JOptionPane.showConfirmDialog(this,"정말 삭제하시겠습니까?","삭제",JOptionPane.YES_NO_OPTION);
+           
+            if (x == JOptionPane.OK_OPTION){
+                deleteMember();
+            }else{
+                JOptionPane.showMessageDialog(this, "삭제를 취소하였습니다.");
+            }
+        }
+       
+        //jTable내용 갱신 메소드 호출
+        mList.jTableRefresh();
+       
+    }//actionPerformed 
+   
+   
+    private void deleteMember() {
+        String id = tfId.getText();
+        String pwd = pfPwd.getText();
+        if(pwd.length()==0){ //길이가 0이면
+           
+            JOptionPane.showMessageDialog(this, "비밀번호를 꼭 입력하세요!");
+            return; //메소드 끝
+        }
+        //System.out.println(mList);
+        MemberDAO dao = new MemberDAO();
+        boolean ok = dao.deleteMember(id, pwd);
+       
+        if(ok){
+            JOptionPane.showMessageDialog(this, "삭제완료");
+            dispose();         
+           
+        }else{
+            JOptionPane.showMessageDialog(this, "삭제실패");
+           
+        }          
+       
+    }//deleteMember
+   
+    private void UpdateMember() {
+       
+        //1. 화면의 정보를 얻는다.
+        MemberDTO dto = getViewData();     
+        //2. 그정보로 DB를 수정
+        MemberDAO dao = new MemberDAO();
+        boolean ok = dao.updateMember(dto);
+       
+        if(ok){
+            JOptionPane.showMessageDialog(this, "수정되었습니다.");
+            this.dispose();
+        }else{
+            JOptionPane.showMessageDialog(this, "수정실패: 값을 확인하세요");   
+        }
+    }
+ 
+    private void insertMember(){
+       
+        //화면에서 사용자가 입력한 내용을 얻는다.
+        MemberDTO dto = getViewData();
+        MemberDAO dao = new MemberDAO();       
+        boolean ok = dao.insertMember(dto);
+       
+        if(ok){
+           
+            JOptionPane.showMessageDialog(this, "가입이 완료되었습니다.");
+            dispose();
+           
+        }else{
+           
+            JOptionPane.showMessageDialog(this, "가입이 정상적으로 처리되지 않았습니다.");
+        }
+       
+       
+       
+    }//insertMember
+   
+    public MemberDTO getViewData(){
+       
+        //화면에서 사용자가 입력한 내용을 얻는다.
+        MemberDTO dto = new MemberDTO();
+        String id = tfId.getText();
+        String pwd = pfPwd.getText();
+        String name = tfName.getText();
+        String tel1 = tfTel1.getText();
+        String tel2 = tfTel2.getText();
+        String tel3 = tfTel3.getText();
+        String tel = tel1+"-"+tel2+"-"+tel3;
+        String addr = tfAddr.getText();
+        String birth1 = tfYear.getText();
+        String birth2 = tfMonth.getText();
+        String birth3 = tfDate.getText();
+        //String birth = birth1+"/"+birth2+"/"+birth3;
+        String birth = birth1+birth2+birth3;
+        String job = (String)cbJob.getSelectedItem();
+        String gender = "";
+        if(rbMan.isSelected()){
+            gender = "M";
+        }else if(rbWoman.isSelected()){
+            gender = "W";
+        }
+       
+        String email = tfEmail.getText();
+        String intro = taIntro.getText();
+       
+        //dto에 담는다.
+        dto.setId(id);
+        dto.setPwd(pwd);
+        dto.setName(name);
+        dto.setTel(tel);
+        dto.setAddr(addr);
+        dto.setBirth(birth);
+        dto.setJob(job);
+        dto.setGender(gender);
+        dto.setEmail(email);
+        dto.setIntro(intro);
+       
+        return dto;
+    }
+   
+}
+
+Member_List Class
+import java.awt.BorderLayout;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+ 
+ 
+public class Member_List extends JFrame implements MouseListener,ActionListener{
+   
+    Vector v;  
+    Vector cols;
+    DefaultTableModel model;
+    JTable jTable;
+    JScrollPane pane;
+    JPanel pbtn;
+    JButton btnInsert;
+       
+   
+    public Member_List(){
+        super("회원관리 프로그램  v0.1.1");
+        //v=getMemberList();
+        //MemberDAO
+        MemberDAO dao = new MemberDAO();
+        v = dao.getMemberList();
+        System.out.println("v="+v);
+        cols = getColumn();
+       
+        //public DefaultTableModel()
+        //public DefaultTableModel(int rowCount, int columnCount)
+        //public DefaultTableModel(Vector columnNames, int rowCount)
+        //public DefaultTableModel(Object[] columnNames, int rowCount)
+        //public DefaultTableModel(Vector data,Vector columnNames)
+        //public DefaultTableModel(Object[][] data,Object[] columnNames)
+       
+        model = new DefaultTableModel(v, cols);
+       
+        //JTable()
+        //JTable(int numRows, int numColumns)
+        //JTable(Object[][] rowData, Object[] columnNames)
+        //JTable(TableModel dm)
+        //JTable(TableModel dm, TableColumnModel cm)
+        //JTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm)
+        //JTable(Vector rowData, Vector columnNames)
+       
+        //jTable = new JTable(v,cols);
+        jTable = new JTable(model);
+        pane = new JScrollPane(jTable);
+        add(pane);
+       
+        pbtn = new JPanel();
+        btnInsert = new JButton("회원가입");
+        pbtn.add(btnInsert);
+        add(pbtn,BorderLayout.NORTH);
+       
+       
+        jTable.addMouseListener(this); //리스너 등록
+        btnInsert.addActionListener(this); //회원가입버튼 리스너 등록
+       
+        setSize(600,200);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }//end 생성자
+   
+   
+    //JTable의 컬럼
+    public Vector getColumn(){
+        Vector col = new Vector();
+        col.add("아이디");
+        col.add("비밀번호");
+        col.add("이름");
+        col.add("전화");
+        col.add("주소");
+        col.add("생일");
+        col.add("직업");
+        col.add("성별");
+        col.add("이메일");
+        col.add("자기소개");
+       
+        return col;
+    }//getColumn
+   
+   
+    //Jtable 내용 갱신 메서드
+    public void jTableRefresh(){
+       
+        MemberDAO dao = new MemberDAO();
+        DefaultTableModel model= new DefaultTableModel(dao.getMemberList(), getColumn());
+        jTable.setModel(model);    
+       
+    }
+   
+    public static void main(String[] args) {
+        new Member_List();
+    }//main
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // mouseClicked 만 사용
+        int r = jTable.getSelectedRow();
+        String id = (String) jTable.getValueAt(r, 0);
+        //System.out.println("id="+id);
+        MemberProc mem = new MemberProc(id,this); //아이디를 인자로 수정창 생성
+               
+    }
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // TODO Auto-generated method stub
+       
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // TODO Auto-generated method stub
+       
+    }
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO Auto-generated method stub
+       
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO Auto-generated method stub
+       
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        //버튼을 클릭하면
+        if(e.getSource() == btnInsert ){
+            new MemberProc(this);
+           
+            /*테스트*/
+            //dao = new MemberDAO();           
+            //dao.userSelectAll(model);
+            //model.fireTableDataChanged();
+            //jTable.updateUI();           
+            //jTable.requestFocusInWindow();
+           
+        }
+       
+    }
+   
+}
+

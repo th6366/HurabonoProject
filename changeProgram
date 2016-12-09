@@ -1,0 +1,26 @@
+#include "stdafx.h"
+#include "stdlib.h"
+
+void main()
+{
+	int centigrade, fanherenheit; //섭씨, 화씨.
+	char choice;
+
+	printf("Please enter <c> or <f> : ");
+	scanf("%c", &choice);
+
+	if (choice == 'c') {
+		printf("Please enter temperature : ");
+		scanf("%d", &centigrade);
+		fanherenheit = (9 * centigrade + 160) / 5;
+		printf("%d is Centigrade is %d in Faherenhelt\n", centigrade, fanherenheit);
+	}
+	else if (choice == 'f') {
+		printf("Please enter temperature : ");
+		scanf("%d", &fanherenheit);
+		centigrade = 5 * (fanherenheit - 32) / 9;
+		printf("%d is Faherenhelt is %d in Centigrade\n", fanherenheit, centigrade);
+	}
+
+	system("pause");
+}

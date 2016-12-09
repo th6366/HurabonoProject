@@ -1,0 +1,15 @@
+#include <stdio.h>
+
+
+float getradian(int c) {
+	
+	float radian;
+	if (c < 0 || c>360) {
+		int b;
+		printf("범위를 벗어났으니 다시 입력하시오");
+		scanf("%d", &b);
+		getradian(b);
+	}
+	radian = ((float)c/180) * 3.14;
+	return radian;
+}

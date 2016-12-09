@@ -1,0 +1,66 @@
+#include "stdafx.h"
+#include "stdlib.h"
+#include "string.h"
+
+void main()
+{
+	FILE *fp = NULL; //파일 포인터(NULL 값으로 초기화).
+	char fstr[50]; //입력 파일에서 문자열 한줄 저장 배열.
+	char *result = NULL; //fgets()의 반환값 저장.
+	char *token; //strtok()의 반환값 저장 포인터.
+	char *str; //키보드로 입력 받을 문자열 포인터(동적 할당).
+	int boolean = 0; //키보드 입력 문자열과 일치하는 문자열 확인할 변수(false로 초기화). 
+
+	str = (char *)malloc(30); //30byte 메모리 동적 할당.
+
+	while (1) {
+		printf("Please enter the word : ");
+		gets_s(str, 20);
+		if (strcmp(str, "$") == 0) { //'$' 입력 시 프로그램 종료.
+			system("pause");
+			exit(-1);
+		}
+
+		fp = fopen("data.txt", "r"); //입력 파일 읽기 전용으로 개방.
+		if (fp == NULL) { //개방 여부 확인.
+			printf("파일이 열리지 않았습니다.\n");
+			system("pause");
+			exit(-1);
+		}
+
+		while (1) { 
+			result = fgets(fstr, sizeof(fstr), fp); //입력 파일에서 문자열 한줄 씩 저장.
+			if (result == NULL) break; //반환값이 NULL 값이면 반복 종료.
+			token = strtok(fstr, " \n"); //두번째 매개값의 각 문자를 구분기호 기준으로 문자열 정리.
+
+			while (token != NULL) { //반환값이 NULL이면 반복 종료.
+				if (strcmp(str, token) == 0) { //키보드로 입력한 문자열과 같으면 boolean을 true로 바꿈.
+					boolean = 1;
+					break;
+				}
+				token = strtok(NULL, " \n");
+			}
+
+		}
+		if (boolean == 1) printf("exist\n"); //true면 "exist" 출력, false이면 "not exist" 출력.
+		else printf("not exist\n");
+		boolean = 0; //다시 false로 대입.
+	}
+
+	free(str); //동적 할당 영역 반환.
+	fclose(fp); //파일 닫음.
+	system("pause");
+}
+
+---------------------------------------
+data.txt
+As we stroll along together
+Holding hands and walking all alone
+so in love are we two
+that we do not know what to do
+that we do not know what to do
+when we walk down the aisle to
+together
+we will vow to be together til we die
+so much love have we two
+just can not wait to say i do

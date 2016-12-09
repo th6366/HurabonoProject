@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void main()
+{
+ int selMenu;
+ int gameNum=0;
+ int com, player, i, gCnt=0, winCnt=0;
+ 
+ while(1)
+ {
+  srand(time(NULL));
+  rand();rand();rand();rand();
+  srand(rand());
+  
+  fflush(stdin);
+  system("cls");
+  printf("┏━━━━━━━━━━━━┓\n");
+  printf("┃ 배스킨 라빈스 31 게임      ┃\n");
+  printf("┃                                       ┃\n");
+  printf("┃ 1.게임 시작 (초급)           ┃\n");
+  printf("┃ 2.게임 시작 (중급)           ┃\n");
+  printf("┃ 3.게임 전적                     ┃\n");
+  printf("┃ 0.종료                             ┃\n");
+  printf("┗━━━━━━━━━━━━┛\n");
+  printf(" 선택 > "); scanf("%d", &selMenu);
+  if(selMenu < 0 || selMenu > 3) continue;
+  
+  switch(selMenu)
+  {
+  case 1:
+   gCnt++;
+   while(1)
+   {
+    fflush(stdin);
+    printf("\t [초급] 숫자 개수 (1~3) > "); scanf("%d", &player);
+    if(player < 1 || player > 3)    { continue; }
+    for(i=0; i<player; i++) { printf("%2d Player\n", ++gameNum); }
+    if(gameNum == 30)  { printf("\n ☆ 이겼습니다. 축하합니다. ☆\n"); winCnt++; break; }
+    if(gameNum >= 31)  { printf("\n ▽ 졌습니다. 다음 기회에... ▽\n"); break; }
+    if(gameNum == 29)       { com = 1; }
+    else if(gameNum == 28)  { com = 2; }
+    else if(gameNum == 27)  { com = 3; }
+    else                    { com = rand()%3+1; }
+    for(i=0; i<com; i++) { printf("%2d Computer\n", ++gameNum); }
+    if(gameNum == 30)  { printf("\n ▽ 컴퓨터가 이겼습니다. 다음 기회에... ▽\n"); break; }
+   }   
+   gameNum = 0;
+   break;
+  case 2:
+   gCnt++;
+   while(1)
+   {
+    fflush(stdin);
+    printf("\t [중급] 숫자 개수 (1~3) > "); scanf("%d", &player);
+    if(player < 1 || player > 3)    { continue; }
+    for(i=0; i<player; i++) { printf("%2d Player\n", ++gameNum); }
+    if(gameNum == 30)  { printf("\n ☆ 이겼습니다. 축하합니다. ☆\n"); winCnt++; break; }
+    if(gameNum >= 31)  { printf("\n ▽ 졌습니다. 다음 기회에... ▽\n"); break; }
+                if(gameNum % 4 == 0)        { com = 2; }
+                else if(gameNum % 4 == 1)   { com = 1; }
+                else if(gameNum % 4 == 2)   { com = rand()%3+1; }
+                else if(gameNum % 4 == 3)   { com = 3; }
+                else                        {}
+    for(i=0; i<com; i++) { printf("%2d Computer\n", ++gameNum); }
+    if(gameNum == 30)  { printf("\n ▽ 컴퓨터가 이겼습니다. 다음 기회에... ▽\n"); break; }
+   }   
+   gameNum = 0;
+   break;
+  case 3:
+   printf("★ %d전 %d승 %d패 ★\n", gCnt, winCnt, gCnt-winCnt);
+   break;
+  case 0:
+   return;
+  default:
+   break;
+  }
+  system("pause");
+ }
+}

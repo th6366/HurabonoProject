@@ -1,0 +1,88 @@
+#include <sys/types.h>
+#include <regex.h>
+#include <string.h>
+#include <stdio.h>
+#include <errno.h>
+#include <map>
+#include <vector>
+#include <string>
+#include <set>
+
+using namespace std;
+
+int main(int argc, char **argv)
+{
+    FILE *fp;
+    int rtv;
+    regex_t preg;
+    char linebuf[1024];
+    char *tr;
+    char seps[] = " -.,()\";:{}'+";
+    char msg[64];
+    map<string, set<string> > IndexMap;
+    map<string, set<string> >::iterator Mi;
+    vector<string> FileList; 
+
+    FileList.push_back("TestDoc/rfc1023.txt");
+    FileList.push_back("TestDoc/rfc1036.txt");
+
+    if (argc != 3)
+    {
+        printf("Usage : %s [filename] [pattern]\n", argv[0]);
+    }
+    rtv = regcomp(&preg, argv[2], REG_EXTENDED|REG_NOSUB); 
+    if(rtv != 0)
+    {
+        regerror(rtv, &preg, NULL, 0);
+        return 1;
+    }
+
+    for(int i = 0; i < FileList.size(); i++)
+    {
+        fp = fopen(FileList[i].c_str(), "r");    
+        if (fp == NULL)
+        {
+            perror("Error ");
+            return 1;
+        }
+  
+        while(fgets(linebuf, 1024, fp) != NULL)
+        {
+            linebuf[strlen(linebuf)-1] = '\0';
+            tr = strtok(linebuf, seps);
+            while(tr != NULL)
+            {
+                tr = strtok(NULL, seps);
+                if (tr != NULL)
+                {
+                    if (regexec(&preg, tr, 0, NULL, 0) == 0)
+                    {
+                        Mi = IndexMap.find(tr);
+                        IndexMap[tr].insert(FileList[i]);
+                    }
+                }
+            }
+        }
+        fclose(fp);
+    }
+    printf("Term Size %d\n", IndexMap.size());
+
+    Mi = IndexMap.begin();
+    set<string>::iterator Si;
+    int inum;
+
+    // 색인결과 출력
+    while (Mi != IndexMap.end()) 
+    {
+        printf("==== %s ==== \n",  Mi->first.c_str());
+        Si = Mi->second.begin();
+        inum = 1;
+        while(Si != Mi->second.end())
+        {
+            printf("%02d : %s\n", inum, Si->c_str());
+            inum++;
+            *Si++;
+        }
+        *Mi++;
+    }
+}

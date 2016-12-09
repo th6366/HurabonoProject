@@ -1,0 +1,30 @@
+
+        Inorder(sr->lchild);
+        printf("%d ", sr->data);
+        Inorder(sr->rchild);
+    }
+}
+void Postorder(Node *sr)//후위 순위 운행
+{
+    if (sr)
+    {
+        Postorder(sr->lchild);
+        Postorder(sr->rchild);
+        printf("%d ", sr->data);
+    }
+}
+void Dispose(Node *sr);
+void ClearTree(Tree *bst)
+{
+    Dispose(*bst);
+    *bst = 0;
+}
+void Dispose(Node *sr)//후위 순위로 해제
+{
+    if (sr)
+    {
+        Dispose(sr->lchild);
+        Dispose(sr->rchild);
+        free(sr);
+    }
+}

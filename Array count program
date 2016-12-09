@@ -1,0 +1,21 @@
++#include <stdio.h>
++
++int main(){
++    int n = 667;
++    int aaa[16] = {163, 565, 343, 225, 163, 141, 322, 56, 591, 322, 70, 211, 56, 211, 397, 322};
++    int a;
++    int array_count;
++    int count;
++
++    for(array_count = 0; array_count < 17; array_count ++) {
++        int b = 1;
++        for(count = 1; count < 146; count ++) {
++            a = b * aaa[array_count];
++            b = a % n;
++        }
++        printf("%c", b);
++    }
++    puts("");
++
++    return 0;
++}

@@ -1,0 +1,16 @@
+cash=int(input("금액을 입력하세요:"));
+
+#기존 화폐 저장
+cash_org=cash;
+
+#금액별 화폐수 분류
+c10000=cash//10000;
+cash=cash-c10000*10000;
+c1000=cash//1000;
+cash=cash-c1000*1000;
+c100=cash//100;
+cash=cash-c100*100;
+c10=cash//10;
+cash=cash-c10*10;
+
+print("cash=",cash_org," 10000:",c10000," 1000:",c1000," 100:",c100," 10:",c10," 1:",cash);

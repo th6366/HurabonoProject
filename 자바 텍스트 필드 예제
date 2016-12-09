@@ -1,0 +1,40 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class TextFieldEx extends JFrame{
+    TextFieldEx(){
+        this.setTitle("텍스트필드 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+        JLabel la=new JLabel("학과");
+        JLabel la1=new JLabel("성명");
+        JLabel la2=new JLabel("전화번호");
+        
+        JTextField te=new JTextField(10);
+        JTextField te1=new JTextField("드린이",10);
+        JTextField te2=new JTextField(11);
+        te.setEditable(false);
+        te.setText("소프트웨어학과");
+        te1.selectAll();
+        this.add(la);
+        this.add(te);
+        
+        this.add(la1);
+        this.add(te1);
+        
+        this.add(la2);
+        this.add(te2);
+        
+        this.setSize(190,150);
+        this.setVisible(true);
+    }
+}
+public class JavaApplication34 {
+
+    public static void main(String[] args) {
+        new TextFieldEx();
+    }
+    
+}

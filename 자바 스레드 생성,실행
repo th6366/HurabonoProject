@@ -1,0 +1,25 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class TimerThread extends Thread{
+    int n=0;
+    public void run(){
+        while(true){
+            System.out.print(n++);
+            try{
+                sleep(1000);
+            }
+            catch(Exception e){
+                return; 
+            }
+        }
+    }
+}
+public class JavaApplication19 {
+    public static void main(String[] args) {
+        TimerThread th = new TimerThread();
+        th.start();
+    }
+}

@@ -1,0 +1,16 @@
+#include <stdio.h>
+
+int main(void)
+{
+ int absolute_value;
+
+ printf("정수를 입력하시오 : ");
+​
+ scanf("%d", &absolute_value);
+
+ printf("%d\n", (absolute_value > 0) ? absolute_value : -absolute_value);
+
+ return 0;
+
+}
+[출처] C언어] 절대값 구하기|작성자 투신프로젝트

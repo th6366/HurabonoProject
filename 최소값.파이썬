@@ -1,0 +1,29 @@
+import sys
+
+def skip_header(r):
+	line = r.readline()
+	line = r.readline()
+	
+	while line.startswith('#'):
+		line = r.readline()
+
+	return line
+
+def smallest_value(r):
+	line = skip_header(r).strip()
+	print line
+
+	smallest = int(line)
+
+	for line in r:
+		line = line.strip()
+		if line != '*':
+			value = int(line)
+			if value < smallest:
+				smallest = value
+	return smallest
+
+if __name__ == "__main__":
+	input_file = open(sys.argv[1], "r")
+	print smallest_value(input_file)
+	input_file.close()

@@ -1,0 +1,67 @@
+include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+
+void gotoxy(int x, int y)
+{
+         COORD CursorPosition = { x, y };
+         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), CursorPosition);
+}
+
+int main(void)
+{
+ int sec=5;
+  
+ srand((int)time(NULL)); //현재시간을 이용하여 SEED값 저장 
+ printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+ printf("@@@@    0부터 100까지의 숫자를 이용하여 계산하라!    @@@@@\n");
+ printf("@@@@   0~100까지의 수+덧셈연산이 랜덤으로 나옵니다.  @@@@@\n");
+ printf("@@@ 30초 내에 많은 문제를 맞추어 점수를 내는게임입니다.@@@\n");
+ printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+ 
+ for(sec; sec>0; sec--)
+ {
+  gotoxy(0,5);
+  printf("게임시작 %d초전..",sec);
+  Sleep(1000);
+ }
+ system("cls");
+ printf("점수는 %d 점입니다!\n",game());
+ system("pause");
+ return 0;
+}
+
+int game(void)
+{
+ int score=0;
+ int a,b,c,answer;
+ clock_t t1, t2;
+ 
+ t1 = clock();
+ for(;;)
+    {
+     gotoxy(50,0);
+     printf("%d점",score);
+     a=rand()%100+1; //0~100까지의 난수를 변수 a,b에 저장 
+     b=rand()%100+1;
+     gotoxy(0,0);
+     printf("                    ");
+     gotoxy(0,0);
+        printf("%d + %d = ",a,b);
+        t2 = clock();
+        if ((t2 - t1) > (30 * CLOCKS_PER_SEC)){ //t2 - t1가 30초보다 클경우 반복문 탈출! 
+         break;
+  }
+        scanf("%d",&answer);
+        if (answer==a+b){ //플레이어가 입력한 숫자가 정답일경우 점수에 +10 
+         score+=10;
+  }
+ }
+    printf("시간종료.\n");
+    Sleep(3000); 
+ return score; //점수값 반환 
+}
+
+[출처] [C언어] 덧셈게임!|작성자 뷁구
+
