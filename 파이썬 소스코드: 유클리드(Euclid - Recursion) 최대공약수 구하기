@@ -1,0 +1,18 @@
+num1=int(input("최대공약수를 구할 첫번째 수를 입력하세요"));
+num2=int(input("최대공약수를 구할 두번째 수를 입력하세요"));
+
+#입력값을 저장
+num1st=num1;
+num2nd=num2;
+
+#재귀함수를 이용한 최대공약수 구하기
+def euclid(num1, num2):
+    temp=num1%num2;
+    if(temp==0):
+        return num2;
+    else:
+        num1=num2;
+        num2=temp;
+    return euclid(num1, num2);
+
+print("수 ",num1st,"와 수 ",num2nd,"의 최대공약수는 ",euclid(num1, num2),"입니다.");

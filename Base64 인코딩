@@ -1,0 +1,171 @@
+콜백함수를 호출하면 간단하게 데이터를 다룰 수 있습니다. 하지만 static 함수를 호출하기 때문에, c++등에서 추상화 단계를 밟으려면 애로사항이 꽃핍니다. 
+   }
+#include <sqlite3.h>
+   result[i] = '\0';
+#include <string.h>
+   return result;
+#include <stdio.h>
+}
+
+
+#include <iostream>
+/* as above, but backwards. :) */
+#include <string>
+unsigned char *__base64_decode(const unsigned char *str, int length, int *ret_length) {
+#include <vector>
+   const unsigned char *current = str;
+
+   int ch, i = 0, j = 0, k;
+using namespace std;
+   /* this sucks for threaded environments */
+   static short reverse_table[256];
+
+class Sqlite
+{
+private:
+	sqlite3 *mdb;
+	string mdbname;
+	sqlite3_stmt *stmt;
+	vector<string> mRow;
+	bool classCheckFlag;
+
+public:
+	Sqlite(string adbname)
+   static int table_built;
+   unsigned char *result;
+
+   if (++table_built == 1) {
+      char *chp;
+      for(ch = 0; ch < 256; ch++) {
+         chp = strchr(__base64_table, ch);
+         if(chp) {
+	{
+            reverse_table[ch] = chp - __base64_table;
+		int rc;
+         } else {
+		classCheckFlag = false;
+            reverse_table[ch] = -1;
+		mdbname = adbname;
+         }
+		// DB 열기
+      }
+		rc = sqlite3_open(mdbname.c_str(), &mdb);
+   }
+
+		if(rc == SQLITE_OK)
+		{
+			classCheckFlag = true;
+		}
+	}
+
+	~Sqlite()
+	{
+		sqlite3_close(mdb); 
+	}
+
+	bool ClassCheck()
+	{
+		return classCheckFlag;
+	}
+   result = (unsigned char *)malloc(length + 1);
+	
+   if (result == NULL) {
+	
+      return NULL;
+	int Exec(string sql)
+   }
+	{
+
+		int rc;
+   /* run through the whole string, converting as we go */
+
+   while ((ch = *current++) != '\0') {
+		// sql을 실행한다.
+      if (ch == __base64_pad) break;
+		rc = sqlite3_prepare(mdb, sql.c_str(), sql.length(), &stmt, NULL);
+		if(rc != SQLITE_OK)
+
+      /* When Base64 gets POSTed, all pluses are interpreted as spaces.
+         This line changes them back.  It's not exactly the Base64 spec,
+         but it is completely compatible with it (the spec says that
+         spaces are invalid).  This will also save many people considerable
+         headache.  - Turadg Aleahmad <turadg@wise.berkeley.edu>
+      */
+
+      if (ch == ' ') ch = '+';
+
+      ch = reverse_table[ch];
+      if (ch < 0) continue;
+
+      switch(i % 4) {
+      case 0:
+		{
+			return 1;
+		}
+		return 0;
+         result[j] = ch << 2;
+	}
+	}
+         break;
+	vector<string> GetRows()
+      case 1:
+	{
+         result[j++] |= ch >> 4;
+		int rc;
+         result[j] = (ch & 0x0f) << 4;
+		int n;
+         break;
+		int i;
+      case 2:
+         result[j++] |= ch >>2;
+         result[j] = (ch & 0x03) << 6;
+         break;
+      case 3:
+         result[j++] |= ch;
+         break;
+      }
+      i++;
+   }
+
+   k = j;
+   /* mop things up if we ended on a boundary */
+   if (ch == __base64_pad) {
+      switch(i % 4) {
+		char buf[80];
+      case 0:
+      case 1:
+		mRow.clear();
+         free(result);
+         return NULL;
+
+      case 2:
+		// sqlite3_step로 row 데이터를 하나씩 가져온다.
+         k++;
+		rc = sqlite3_step(stmt);
+      case 3:
+		if(rc != SQLITE_DONE)
+         result[k++] = 0;
+		{
+      }
+   }
+			switch(rc)
+			{
+				case SQLITE_BUSY:
+					break;
+				case SQLITE_ERROR:
+					break;
+				// row 데이터를 가져왔다면
+				// 컬럼 데이터를 읽어온다. 
+				// 귀찮아서 컬럼 타입에 관계 없이 전부 string으로 넣어버렸다.
+				case SQLITE_ROW:
+					n = sqlite3_column_count(stmt);
+   if(ret_length) {
+					for(i = 0; i < n ; i++)
+      *ret_length = j;
+					{
+   }
+						switch(sqlite3_column_type(stmt, i))
+   result[k] = '\0';
+   return result;
+}
+						{

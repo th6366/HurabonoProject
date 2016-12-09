@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <math.h>
+
+
+int main() {
+
+	
+	double a;
+	double x, y;
+	double result;
+	printf("제곱근으로 계산할 정수를입력하시오\n");
+	scanf("%lf", &a);
+	result=sqrt(a);
+	printf("제곱근은%lf입니다\n", result);
+	printf("두수의 제곱을 구할수를 입력하시오\n");
+	scanf("%lf%lf", &x, &y);
+	result = pow(x, y);
+	printf("두수의 제곱은 %lf입니다", result);
+
+	return 0;
+}

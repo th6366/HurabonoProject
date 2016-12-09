@@ -1,0 +1,17 @@
+<html>  
+    <head></head>
+
+    <body >
+        <form action = "#" accept-charset="utf-8" name = "person_info" method = "get"> 
+            <fieldset style = "width:250">
+                <legend>개인 정보 입력</legend>
+                    가입 인사 <br>
+                    <textarea name = "comment" cols = "50" rows = "5"  
+                              placeholder="가입인사를 남겨주세요."></textarea>
+                    <br><br>
+                    <input type = "submit" value = "submit"/>
+                    <input type = "reset" value = "reset"/><br><br>
+            </fieldset> 
+        </form>
+    </body>
+</html>  

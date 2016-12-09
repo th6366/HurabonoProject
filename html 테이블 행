@@ -1,0 +1,10 @@
+<TD
+width="셀의 가로크기"
+height="셀의 세로크기"
+bgcolor="셀의 배경색"
+background="셀의 배경이미지 경로"
+align="셀의 수평정렬"
+valign="셀의 수직정렬"  top, middle, bottom 
+colspan="지정된 열의수 만큼 셀합치기"
+rowspan="지정된 행의수 만큼 셀합치기"
+>

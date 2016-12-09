@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+void main()
+{
+ char sel='H';
+ int sum = 0;
+ char selMenu[1000] = "";
+    
+ while(1)
+ {
+  fflush(stdin);
+  system("cls");
+  
+  switch(sel)
+  {
+  case 'H':
+   system("color e");
+   printf("┏━━━━━━━━━━━━┓\n");
+   printf("┃    정 통 중 국 요 리         ┃\n");
+   printf("┃                                    ┃\n");
+   printf("┃    1. 식 사 부                 ┃\n");
+   printf("┃    2. 요 리 부                 ┃\n");
+   printf("┃    3. 셋 트 요 리             ┃\n");
+   printf("┃    M. 선택한 메뉴           ┃\n");
+   printf("┃    Q. 종 료                    ┃\n");
+   printf("┗━━━━━━━━━━━━┛\n"); 
+   
+   printf("▶메뉴를 선택하세요 : "); scanf("%c", &sel);
+   
+   if(sel == 'q' || sel == 'm') { sel -= 32; }
+   if(sel == 'M')
+   {
+    printf("★선택한 메뉴 및 가격★\n");
+    printf("%s", selMenu);
+    printf("▤합계 : %d원▤\n", sum);
+    system("pause");
+    sel = 'H';
+   }
+   break;
+  case '1':
+   while(1)
+   {
+    char sel1;
+    
+    fflush(stdin);
+    system("cls");
+    
+    system("color d");
+    printf("┏━━━━━━━━━━━━┓\n");
+    printf("┃      식 사 부                   ┃\n");
+    printf("┃                                    ┃\n");
+    printf("┃ 1. 짜 장 면   5000원        ┃\n");
+    printf("┃ 2. 짬    뽕   6000원         ┃\n");
+    printf("┃ 3. 볶 음 밥   6000원        ┃\n");
+    printf("┃ 4. 잡 채 밥   7000원        ┃\n");
+    printf("┃ 5. 새우볶음밥 8000원      ┃\n");
+    printf("┃ H. 첫 페이지로               ┃\n");
+    printf("┗━━━━━━━━━━━━┛\n");
+    
+    printf("▶식사를 선택하세요 : "); scanf("%c", &sel1);
+    if(sel1 == 'h') { sel1 -= 32; }
+    if(sel1 == 'H') { sel = 'H'; break; }
+    
+    switch(sel1)
+    {
+    case '1':
+     sum = sum + 5000;
+     strcat(selMenu, "-짜장면(5000원)\n");
+     break;
+    case '2':
+     sum = sum + 6000;
+     strcat(selMenu, "-짬뽕(6000원)\n");
+     break;
+    case '3':
+     sum = sum + 6000;
+     strcat(selMenu, "-볶음밥(6000원)\n");
+     break;
+    case '4':
+     sum = sum + 7000;
+     strcat(selMenu, "-잡채밥(7000원)\n");
+     break;
+    case '5':
+     sum = sum + 8000;
+     strcat(selMenu, "-새우볶음밥(8000원)\n");
+     break;
+    default:
+     break;
+    }
+   }
+   break;
+[출처] [소스코드 : C언어] 06.정통중국요리 메뉴 선택 프로그램|작성자 근육빵빵코더

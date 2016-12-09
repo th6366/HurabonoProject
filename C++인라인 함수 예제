@@ -1,0 +1,19 @@
+#include<iostream>
+using namespace std;
+
+inline int Add(int x, int y);
+
+int main() {
+    int a, b;
+    cout << "두 정수를 입력하세요: ";
+    cin >> a >> b;
+    cout << "a+b=" << Add(a, b) << endl;
+
+    return 0;
+}
+
+//인라인 함수는 최대한 코드를 짧게 작성
+//인라인 함수는 실행 속도를 빠르게 하기 위해 사용한다.
+inline int Add(int x, int y) {
+    return x + y;
+}

@@ -1,0 +1,30 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class GraphicsDrawPolygonEx extends JFrame{
+    GraphicsDrawPolygonEx(){
+        this.setTitle("drawPolygon 사용 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        MyPanel panel = new MyPanel();
+        this.add(panel, BorderLayout.CENTER);
+        this.setLocationRelativeTo(null);
+        this.setSize(300,300);
+        this.setVisible(true);
+    }
+    class MyPanel extends JPanel{
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.setColor(Color.RED);
+            int[] x={80,40,80,120};
+            int[] y={40,120,200,120};
+            g.drawPolygon(x, y, 4);
+        }
+    }
+}
+public class JavaApplication10 {
+    public static void main(String[] args) {
+        new GraphicsDrawPolygonEx();
+    }
+}

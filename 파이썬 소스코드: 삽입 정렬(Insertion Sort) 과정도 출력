@@ -1,0 +1,27 @@
+n=5;
+array=[40,90,20,50,10];
+
+#입력된 자료 출력
+print("입력자료",end=" ");
+for i in range(0, n):
+    print(array[i],end=' ');
+print();
+
+#삽입 정렬 시작
+for i in range(1, n):
+    cu=array[i];
+    j=i-1;
+    while(j>=0 and array[j]>cu):   
+        array[j+1]=array[j];
+        j=j-1;
+    array[j+1]=cu;
+
+    for k in range(0, n):
+        print(array[k],end=' ');
+    print();
+
+#삽입 정렬된 결과 출력
+print("출력자료",end=" ");
+for i in range(0, n):
+    print(array[i],end=' ');
+print();

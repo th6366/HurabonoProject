@@ -1,0 +1,39 @@
+void TrimLeft( );
+void TrimRight( );
+void TrimLeft( TCHAR chTarget );
+void TrimRight( TCHAR chTarget );
+void TrimLeft( LPCTSTR lpszTargets );
+void TrimRight( LPCTSTR lpszTargets );
+//chTarget : 문자열에서 제거할 문자
+//lpszTargets : 문자열에서 제거할 문자셋
+
+#include <atlstr.h>       //CString
+ 
+#define print( str ) printf( "%s\n", str )
+ 
+int main( )
+{
+    CString strText11 = " Visual Studio 2013 ";
+    print( strText11 );
+ 
+    //Trim함수 사용시 인자를 사용하지 않을 경우 공백, 탭 개행 문자를 지운다.
+    strText11.TrimLeft( );
+    print( strText11 );
+    strText11.TrimRight( );
+    print( strText11 );
+     
+    //------------------------------------------------------------------------------
+ 
+    CString strText22 = " OpenGL, OpenCV ";
+    print( strText22 );
+ 
+    //Trim함수 사용시 인자를 사용할 경우 공백, 탭 개행 문자말고 지정한 문자만 지운다.
+    //아래는 Left에 "Op"가 있을 경우, Right에 "CV"가 있을 경우 지우라고 했는데
+    //공백이 있으므로 지워지지 않는다.
+    strText22.TrimLeft( "Op" );
+    print( strText22 );
+    strText22.TrimRight( "CV" );
+    print( strText22 );
+ 
+    return 0;
+}

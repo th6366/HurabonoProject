@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <string.h>
+ 
+char *CompareResult( int nResult )
+{
+    switch(nResult)
+    {
+    case 0:
+        return "두 문자열이 같습니다.";
+        break;
+    default:
+        return "두 문자열이 다릅니다.";
+        break;
+    }
+}
+ 
+int main( )
+{
+    int nResult;
+     
+    nResult = strcmp( "Sample string", "Sample string" );
+    printf( "%s\n", CompareResult(nResult) );
+    nResult = stricmp( "Sample string", "SAMPLE STRING" );
+    printf( "%s\n", CompareResult(nResult) );
+ 
+    nResult = strncmp( "Sample string", "Sam", 3 );
+    printf( "%s\n", CompareResult(nResult) );
+    nResult = strnicmp( "Sample string", "SAM", 3 );
+    printf( "%s\n", CompareResult(nResult) );
+ 
+    return 0;
+}

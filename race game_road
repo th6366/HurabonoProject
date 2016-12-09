@@ -1,0 +1,119 @@
+int show_road()
+{
+	int i,j;
+	int rand_num;
+	
+	static int road_left=15,road_right=32;
+	
+	//화면 밑의 줄의 도로 표시는 무조건 지움
+	gotoxy(road[(road_index+1)%22][0],1);
+	printf(" ");
+	gotoxy(road[(road_index+1)%22][1],1);
+	printf(" ");
+
+	for(j=2,i=road_index+1;j<23;i++,j++)
+	{
+		i =i%22;
+		if(road[(i+1)%22][0] != road[i][0]) 	//윗줄과 아랫줄의 도로의 위치가 같을때는 화면에 도로를 지우지 않음
+		{
+			gotoxy(road[(i+1)%22][0],j);
+			printf(" ");
+			gotoxy(road[(i+1)%22][1],j);
+			printf(" ");
+		}
+		
+	}
+	
+	//랜덤으로 도로 생성 0:왼쪽두칸 1,2:왼쪽한칸 3,4,5,6:직진 7,8:오른쪽한칸 9:오른쪽두칸
+	//rand_num=rand()%10;
+	rand_num=rand()%8;
+	rand_num++;
+	switch(rand_num)
+	{
+	case 0:
+		if(road[(road_index+1)%22][0] <=4 )
+		{
+			road[next_index][0] = road[(road_index+1)%22][0];
+			road[next_index][1] = road[(road_index+1)%22][1];
+			break;
+		}
+		road[next_index][0] =road[(road_index+1)%22][0]-2;
+		road[next_index][1] =road[(road_index+1)%22][1]-2;
+		break;
+	case 1:
+	case 2:
+		if(road[(road_index+1)%22][0] <=3 )
+		{
+			road[next_index][0] = road[(road_index+1)%22][0];
+			road[next_index][1] = road[(road_index+1)%22][1];
+			break;
+		}
+		road[next_index][0] =road[(road_index+1)%22][0]-1;
+		road[next_index][1] =road[(road_index+1)%22][1]-1;
+		break;
+	case 7:
+	case 8:
+		if(road[(road_index+1)%22][1] >=55 )
+		{
+			road[next_index][0] = road[(road_index+1)%22][0];
+			road[next_index][1] = road[(road_index+1)%22][1];
+			break;
+		}
+		road[next_index][0] =road[(road_index+1)%22][0]+1;
+		road[next_index][1] =road[(road_index+1)%22][1]+1;
+		break;
+	case 9:
+		if(road[(road_index+1)%22][1] >=54 )
+		{
+			road[next_index][0] = road[(road_index+1)%22][0];
+			road[next_index][1] = road[(road_index+1)%22][1];
+			break;
+		}
+		road[next_index][0] =road[(road_index+1)%22][0]+2;
+		road[next_index][1] =road[(road_index+1)%22][1]+2;
+		break;
+	default:
+		road[next_index][0] = road[(road_index+1)%22][0];
+		road[next_index][1] = road[(road_index+1)%22][1];
+		break;
+		
+	}
+	road_index=next_index;
+	
+	
+	if( road_index == 0)
+		next_index = 21;
+	else
+		next_index = road_index-1;
+	
+	
+	
+	
+	
+	for(j=1,i=road_index;j<23;i++,j++)
+	{
+		i = i%22;
+		gotoxy(road[i][0],j);
+		printf("[");
+		gotoxy(road[i][1],j);
+		printf("]");
+	}
+	road_index=next_index;
+	
+
+	return 0;
+}
+
+int	show_car(int move)
+{
+	player_carpos = player_carpos + move;
+
+	//자동차가 화면 밖으로 삐져나가지 못하게 좌표 수정
+	if( player_carpos <2)
+		player_carpos = 2;
+	if( player_carpos >48)
+		player_carpos = 48;
+
+	show_carxy(player_carnum,player_carpos,18);
+	return 0;
+}

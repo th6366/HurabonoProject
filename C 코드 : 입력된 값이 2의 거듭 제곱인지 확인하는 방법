@@ -1,0 +1,12 @@
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+  int rtv;
+  printf("%d\n",is_power_of_two(atoi(argv[1])));
+}
+
+int is_power_of_two(unsigned n)
+{
+  return ( (n > 0) && !(n & (n - 1)) );
+}

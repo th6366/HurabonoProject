@@ -1,0 +1,20 @@
+#include <stdio.h>  
+void pibo(int n) 
+{ 
+     int i, a=1, b=1, c;  
+     for(i=1; i<=n; i++)  
+     {  
+            printf("%d ", a);  
+            c=a+b;  
+            a=b;  
+            b=c;  
+     }  
+} 
+void main()  
+{  
+     int n; 
+     printf("출력할 피보나치 수열 개수 : "); 
+     scanf("%d", &n); 
+     pibo(n); 
+     printf("\n"); 
+}  

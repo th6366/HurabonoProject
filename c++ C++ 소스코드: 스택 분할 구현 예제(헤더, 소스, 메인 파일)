@@ -1,0 +1,87 @@
+#ifndef STACK_H
+#define STACK_H
+
+class Stack {
+public:
+    int m_size;
+    int m_top;
+    int *m_buffer;
+
+    void Initialize(int size = 10);
+    void RemoveAll();
+    bool Push(int value);
+    bool Pop(int& value);
+};
+
+#endif // !STACK_H
+//Stack.cpp
+
+#include<string.h>
+#include "Stack.h"
+
+void Stack::Initialize(int size) {//스택 생성
+    m_size = size;
+    m_top = -1;
+    m_buffer = new int[m_size];
+    memset(m_buffer, 0, sizeof(int)*m_size);
+}
+
+void Stack::RemoveAll() {//스택 초기화, 삭제
+    m_size = 0;
+    m_top = -1;
+    delete[] m_buffer;
+    m_buffer = NULL;
+}
+
+bool Stack::Push(int value) {
+    if (m_top >= m_size - 1)    return false;//오버플로우 발생시 거짓 리턴
+    m_buffer[++m_top] = value;
+    return true;
+}
+
+bool Stack::Pop(int& value) {
+    if (m_top < 0)  return false;//언더플로우 발생시 거짓 리턴
+    value = m_buffer[m_top--];
+    return true;
+}
+//Main.cpp
+
+#include<iostream>
+using namespace std;
+
+#include "Stack.h"
+
+int main() {
+    Stack s1, s2;
+
+    s1.Initialize(5);
+    s2.Initialize();
+
+    while (s1.Push(rand() % 100));
+    cout << "s1에 저장된 데이터: ";
+    for(int i = 0; i < s1.m_size; i++)
+        cout << s1.m_buffer[i] << " ";
+    cout << "\n";
+
+    cout << "s1에서 꺼낸 데이터: ";
+    int data;
+    while (s1.Pop(data))
+        cout << data << " ";
+    cout << "\n";
+
+    while (s2.Push(rand() % 100));
+    cout << "s2에 저장된 데이터: ";
+    for (int i = 0; i < s2.m_size; i++)
+        cout << s2.m_buffer[i] << " ";
+    cout << "\n";
+
+    cout << "s2에서 꺼낸 데이터";
+    while (s2.Pop(data))
+        cout << data << " ";
+    cout << "\n";
+
+    s1.RemoveAll();
+    s2.RemoveAll();
+
+    return 0;
+}

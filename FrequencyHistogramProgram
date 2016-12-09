@@ -1,0 +1,60 @@
+#include "stdafx.h"
+#include "stdlib.h"
+#include "string.h"
+
+void main()
+{
+	FILE *fp; //파일 포인터.
+	char *result; //fgets()의 반환값 저장.
+	char *token; //strtok()의 반환값 저장 포인터.
+	char fstr[50]; //입력 파일에서 문자열 한줄 저장 배열.
+	char *compareStr[5] = { "As", "we", "stroll", "along", "do" };
+	int count[5] = { 0 }; //각 문자열 개수(차례대로).
+	int i, j;
+
+	fp = fopen("data.txt", "r"); //입력 파일 읽기 전용으로 개방.
+	if (fp == NULL) { //개방 여부 확인.
+		printf("파일이 열리지 않았습니다.\n");
+		system("pause");
+		exit(-1);
+	}
+
+	while (1) {
+		result = fgets(fstr, sizeof(fstr), fp); //입력 파일에서 문자열 한줄 씩 저장.
+		if (result == NULL) break; //반환값이 NULL값이면 반복 종료.
+		token = strtok(fstr, " \n"); //두번째 매개값의 각 문자를 구분기호 기준으로 문자열 분리.
+
+		while (token != NULL) { //반환값이 NULL이면 반복 종료.
+			if (strcmp(token, "As") == 0) count[0]++; //문자열을 비교 했을 때 true이면 카운트 1씩 증가.
+			else if (strcmp(token, "we") == 0) count[1]++;
+			else if (strcmp(token, "stroll") == 0) count[2]++;
+			else if (strcmp(token, "along") == 0) count[3]++;
+			else if (strcmp(token, "do") == 0) count[4]++;
+
+			token = strtok(NULL, " \n");
+		}
+	}
+
+	for (i = 0; i < 5; i++) { //출력 반복문.
+		printf("%s	%d	", compareStr[i], count[i]);
+		for (j = 0; j < count[i]; j++) {
+			printf("%c", '*');
+		}
+		printf("\n");
+	}
+
+	fclose(fp); //파일 닫음.
+	system("pause");
+}
+---------------------------------
+data.txt
+As we stroll along together
+Holding hands and walking all alone
+so in love are we two
+that we do not know what to do
+that we do not know what to do
+when we walk down the aisle to
+together
+we will vow to be together til we die
+so much love have we two
+just can not wait to say i do

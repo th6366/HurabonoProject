@@ -1,0 +1,14 @@
+#include "stdafx.h"
+#include 
+#include 
+using namespace std;
+int _tmain(int argc, _TCHAR* argv[])
+{
+	float a[5],b[5],c[5];
+	int i;
+	cout<<"Suma de vectores: Programa que lee Arreglo A, y Arreglo B. Suma los valores y da como resultado Arreglo C"< ";cin>>a[i];
+	}
+	cout<<"Ingrese otros 5 valores para el segundo vector"< ";
+		cin>>b[i];
+	}
+	cout<<"El tercer vector sera la suma de los valores ingresados en los vectores anteriores"< "<

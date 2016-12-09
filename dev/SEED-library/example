@@ -1,0 +1,210 @@
+/*
+ Copyright (C) Information Equipment co.,LTD.
+ All rights reserved.
+ Code by JaeHyuk Cho <mailto:minzkn@infoeq.com>
+ CVSTAG="$Header: /usr/local/mutihost/joinc/modules/moniwiki/data/text/RCS/Code_2fC_2fseed,v 1.2 2010/02/06 08:40:43 root Exp root $"
+*/
+
+#if !defined(__def_mzapi_source_main_c__)
+#define __def_mzapi_source_main_c__ "main.c"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "mzseed.h"
+
+#define __def_mzapi_show_round_key__ (0)
+
+#if __def_mzapi_seed_rounds__ == (16)
+__t_mzapi_byte__ __mzapi_const__ g_user_key[ __def_mzapi_seed_rounds__ ] = {
+ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+#else
+__t_mzapi_byte__ __mzapi_const__ g_user_key[ __def_mzapi_seed_rounds__ ] = {
+ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ 0x00, 0x00, 0x00, 0x00
+};
+#endif
+
+void mzapi_dump(void *s_data, int s_size)
+{
+ int s_o,s_w,s_i;unsigned char s_b[17];
+ if(((void *)(s_data))==NULL)return;s_b[16]='\0';s_o=(int)0;
+ while(s_o<(s_size)){
+  s_w=((s_size)-s_o)<16?((s_size)-s_o):16;printf("%08X",s_o);for(s_i=0;s_i<s_w;s_i++){if(s_i==8)printf(" | ");else printf(" ");
+  s_b[s_i]=*(((unsigned char *)(s_data))+s_o+s_i);printf("%02X",s_b[s_i]);if((s_b[s_i]&0x80)||(s_b[s_i]<' '))s_b[s_i]='.';}
+  while(s_i<16){if(s_i==8)printf("     ");else printf("   ");s_b[s_i]=' ';s_i++;}
+  printf(" [%s]\n",(char *)s_b);s_o+=16;}
+}
+
+void test_seed_block(void)
+{
+ __t_mzapi_dword__ s_round_key[ __def_mzapi_seed_round_keys__ ];
+ __t_mzapi_byte__ s_data[ __def_mzapi_seed_block_size__ ] = {
+  0xf0, 0xe1, 0xd2, 0xc3, 0xb4, 0xa5, 0x96, 0x87,
+  0x78, 0x69, 0x5a, 0x4b, 0x3c, 0x2d, 0x1e, 0x0f
+ };
+
+ (void)printf("test seed block\n~~~~~~~~~~~~~~~\n\n");
+
+ (void)printf("user_key:\n");
+ mzapi_dump((void *)(&g_user_key[0]), (int)sizeof(g_user_key));
+
+ (void)printf("\ndata:\n");
+ mzapi_dump(s_data, (int)sizeof(s_data));
+
+ (__t_mzapi_void__)mzapi_seed_encrypt_round_key((__t_mzapi_ptr__)(&s_round_key[0]), (__t_mzapi_ptr__)(&g_user_key[0]));
+
+ (void)printf("\nencrypt_block:\n");
+ mzapi_dump(mzapi_seed_encrypt_block((__t_mzapi_ptr__)(&s_data[0]), (__t_mzapi_ptr__)(&s_round_key[0])), (int)sizeof(s_data));
+
+ (void)printf("\ndecrypt_block:\n");
+ mzapi_dump(mzapi_seed_decrypt_block((__t_mzapi_ptr__)(&s_data[0]), (__t_mzapi_ptr__)(&s_round_key[0])), (int)sizeof(s_data));
+
+#if __def_mzapi_show_round_key__ != (0)
+ do
+ {
+  int s_index;
+  (void)printf("\nround key:\n");
+  for(s_index = 0;s_index < sizeof(g_user_key);s_index++)
+  {
+   (void)printf(
+    "\tK%02d,0 : 0x%08lX\t"
+    "K%02d,1 : 0x%08lX\n",
+    s_index + 1, (unsigned long)s_round_key[s_index << 1],
+    s_index + 1, (unsigned long)s_round_key[(s_index << 1) + 1]);
+  }
+ }while(0);
+#endif
+
+ (void)printf("\n");
+}
+
+void test_seed_data_nopadding(void)
+{
+ __t_mzapi_dword__ s_round_key[ __def_mzapi_seed_round_keys__ ];
+ __t_mzapi_byte__ s_data[] = {
+  "SEED encrypt/decrypt library/example source\n"
+  "Copyright (C) Information Equipment co.,LTD.\n"
+  "All rights reserved.\n"
+  "Code by JaeHyuk Cho <mailto:minzkn@infoeq.com>\n"
+ };
+ __t_mzapi_size__ s_data_size;
+
+ s_data_size = (__t_mzapi_size__)sizeof(s_data);
+
+ (void)printf("test seed data\n~~~~~~~~~~~~~~\n\n");
+
+ (void)printf("user_key:\n");
+ mzapi_dump((void *)(&g_user_key[0]), (int)sizeof(g_user_key));
+
+ (void)printf("\ndata:\n");
+ mzapi_dump(s_data, (int)s_data_size);
+
+ (__t_mzapi_void__)mzapi_seed_encrypt_round_key((__t_mzapi_ptr__)(&s_round_key[0]), (__t_mzapi_ptr__)(&g_user_key[0]));
+
+ (void)printf("\nencrypt:\n");
+ mzapi_dump(mzapi_seed_encrypt((__t_mzapi_ptr__)(&s_data[0]), s_data_size, (__t_mzapi_ptr__)(&s_round_key[0])), (int)s_data_size);
+
+ (void)printf("\ndecrypt:\n");
+ mzapi_dump(mzapi_seed_decrypt((__t_mzapi_ptr__)(&s_data[0]), s_data_size, (__t_mzapi_ptr__)(&s_round_key[0])), (int)s_data_size);
+
+#if __def_mzapi_show_round_key__ != (0)
+ do
+ {
+  int s_index;
+  (void)printf("\nround key:\n");
+  for(s_index = 0;s_index < sizeof(g_user_key);s_index++)
+  {
+   (void)printf(
+    "\tK%02d,0 : 0x%08lX\t"
+    "K%02d,1 : 0x%08lX\n",
+    s_index + 1, (unsigned long)s_round_key[s_index << 1],
+    s_index + 1, (unsigned long)s_round_key[(s_index << 1) + 1]);
+  }
+ }while(0);
+#endif
+
+ (void)printf("\n");
+}
+
+void test_seed_data_padding(void)
+{
+ __t_mzapi_dword__ s_round_key[ __def_mzapi_seed_round_keys__ ];
+ __t_mzapi_byte__ s_data[] = {
+  "SEED encrypt/decrypt library/example source\n"
+  "Copyright (C) Information Equipment co.,LTD.\n"
+  "All rights reserved.\n"
+  "Code by JaeHyuk Cho <mailto:minzkn@infoeq.com>\n"
+ };
+ __t_mzapi_size__ s_data_size;
+ __t_mzapi_ptr__ s_padding_data;
+ __t_mzapi_size__ s_padding_data_size;
+
+ s_data_size = (__t_mzapi_size__)sizeof(s_data);
+
+ (void)printf("test seed data padding\n~~~~~~~~~~~~~~~~~~~~~~\n\n");
+
+ s_padding_data_size = s_data_size + ((__t_mzapi_size__)(__def_mzapi_seed_block_size__ - 1));
+ s_padding_data_size -= s_padding_data_size % ((__t_mzapi_size__)__def_mzapi_seed_block_size__);
+ s_padding_data = (__t_mzapi_ptr__)malloc((size_t)s_padding_data_size);
+ if(s_padding_data == ((__t_mzapi_ptr__)0))
+ {
+  (void)printf("allocate error !\n");
+  return;
+ }
+ (void)memcpy((void *)s_padding_data, (void *)s_data, (size_t)s_data_size);
+ if((s_padding_data_size - s_data_size) > ((__t_mzapi_size__)0))
+ { /* zero padding */
+  (void)memset(__mzapi_seed_peek__(void *, s_padding_data, s_data_size), 0, (size_t)(s_padding_data_size - s_data_size));
+ }
+
+ (void)printf("user_key:\n");
+ mzapi_dump((void *)(&g_user_key[0]), (int)sizeof(g_user_key));
+
+ (void)printf("\ndata:\n");
+ mzapi_dump(s_data, (int)s_data_size);
+
+ (__t_mzapi_void__)mzapi_seed_encrypt_round_key((__t_mzapi_ptr__)(&s_round_key[0]), (__t_mzapi_ptr__)(&g_user_key[0]));
+
+ (void)printf("\nencrypt:\n");
+ mzapi_dump(mzapi_seed_encrypt(s_padding_data, s_padding_data_size, (__t_mzapi_ptr__)(&s_round_key[0])), (int)s_padding_data_size);
+
+ (void)printf("\ndecrypt:\n");
+ mzapi_dump(mzapi_seed_decrypt(s_padding_data, s_padding_data_size, (__t_mzapi_ptr__)(&s_round_key[0])), (int)s_data_size);
+
+#if __def_mzapi_show_round_key__ != (0)
+ do
+ {
+  int s_index;
+  (void)printf("\nround key:\n");
+  for(s_index = 0;s_index < sizeof(g_user_key);s_index++)
+  {
+   (void)printf(
+    "\tK%02d,0 : 0x%08lX\t"
+    "K%02d,1 : 0x%08lX\n",
+    s_index + 1, (unsigned long)s_round_key[s_index << 1],
+    s_index + 1, (unsigned long)s_round_key[(s_index << 1) + 1]);
+  }
+ }while(0);
+#endif
+
+ (void)printf("\n");
+
+ free((void *)s_padding_data);
+}
+
+int main(void)
+{
+ test_seed_block();
+ test_seed_data_nopadding();
+ test_seed_data_padding();
+ return 0;
+}
+
+#endif
+
+/* vim: set expandtab: */
+/* End of source */

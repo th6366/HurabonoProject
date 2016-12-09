@@ -1,0 +1,17 @@
+#include<iostream>
+using namespace std;
+
+int main() {
+    int num = 10;
+    int &ref = num;//레퍼런스 변수는 선언과 동시에 초기화 해줘야한다.
+
+    cout << "num의 크기: " << sizeof(num) << endl;
+    cout << "ref의 크기: " << sizeof(ref) << endl;
+
+    cout << "char& 형의 크기: " << sizeof(char&) << endl;
+    cout << "short& 형의 크기: " << sizeof(short&) << endl;
+    cout << "int& 형의 크기: " << sizeof(int&) << endl;
+    cout << "double& 형의 크기: " << sizeof(double&) << endl;
+
+    return 0;
+}

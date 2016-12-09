@@ -1,0 +1,16 @@
+#include <stdio.h>
+#include <memory.h> // or #include <string.h>
+ 
+#define ARR_SIZE 10
+ 
+int main(int argc, char* argv[]){
+    int dstArr[ARR_SIZE];
+    int srcArr[ARR_SIZE] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    int i;
+    memcpy(dstArr, srcArr, sizeof(srcArr)); // or memcpy(dstArr, srcArr, sizeof(int) * ARR_SIZE);
+    for (i = 0; i < ARR_SIZE; i++){
+        printf("%d ", dstArr[i]);
+    }
+    printf("\n");
+    return 0;
+}

@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <string.h>   //strspn, strcspn
+ 
+int main( )
+{
+    char string[] = "a1b2c3 A1B2C3";
+    char strCharset[] = "12ab";
+    int nIndex=0;
+ 
+    //문자열에서 '1', '2', 'a', 'b' 문자가 없는 첫 위치를 검색
+    nIndex = strspn( string, strCharset );
+    printf( "index : %d, %s\n", nIndex, &string[nIndex] );
+ 
+    //문자열에서 'A', 'B', 'C' 중 일치되는 첫 문자가 있는 위치 검색
+    nIndex = strcspn( string, "ABC" );
+    printf( "index : %d, %s\n", nIndex, &string[nIndex] );
+ 
+    return 0;
+}

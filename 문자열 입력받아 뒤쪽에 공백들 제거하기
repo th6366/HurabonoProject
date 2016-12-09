@@ -1,0 +1,47 @@
+#include <stdio.h>
+void RemoveEndSpaces(char *buf);
+int main()
+{
+    char buf[256] = "";
+    int i = 0;
+    printf("문자열 입력:");
+    scanf("%[^\n]", buf);//개행 문자 입력까지 문자열을 입력받습니다.(공백 포함)
+    
+    while (buf[i])//buf[i]가 참(널문자가 아님)이면 반복하여라.
+    {
+        i++;
+    }
+    //현재 i는 널문자가 있는 위치이므로 1 감소
+    i--;    
+    while (buf[i]==' ')//공백 문자이면
+    {
+        buf[i] = '\0';//널 문자로 변경
+        i--;
+    }
+    printf("끝에 공백 문자 제거:[%s]\n", buf);
+ 
+    //함수 호출을 이용한 예
+    rewind(stdin);//표준 입력 버퍼를 초기화하시오.
+    printf("문자열 입력:");
+    scanf("%[^\n]", buf);//개행 문자 입력까지 문자열을 입력받습니다.(공백 포함)
+ 
+    printf("입력한 문자열: %s\n", buf);
+    RemoveEndSpaces(buf);
+    printf("끝에 공백 문자 제거:[%s]\n", buf);
+    return 0;
+}
+void RemoveEndSpaces(char *buf)
+{
+    int i = 0;
+    while (buf[i])//buf[i]가 참(널문자가 아님)이면 반복하여라.
+    {
+        i++;
+    }
+    //현재 i는 널문자가 있는 위치이므로 1 감소
+    i--;
+    while (buf[i] == ' ')//공백 문자이면
+    {
+        buf[i] = '\0';//널 문자로 변경
+        i--;
+    }
+}

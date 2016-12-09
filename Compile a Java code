@@ -1,0 +1,21 @@
+import java.io.IOException;
+
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+
+public class JDK6FirstCompile {
+  public static void main(String args[]) throws IOException {
+    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+    int results = compiler.run(null, null, null, "Foo.java");
+    System.out.println("Success: " + (results == 0));
+  }
+}
+
+// File: MyClass.java
+class MyClass {
+  public static void main(String args[]) {
+    System.out.println("Hello, World");
+  }
+}
+[출처] [Java Source] Compile a Java code (자바/Java/C/C++ 개발자모임 [Code人/코드인]) |작성자 코로나
+

@@ -1,0 +1,28 @@
+using System;
+
+namespace data_type
+{
+    class MainClass
+    {
+        public static void Main(string[] args)
+        {
+            bool b = true;
+
+            short sh = -123;
+            int i = 123;
+            long l = 123L;
+            float f = 123.45F;
+            double d1 = 123.45;
+            double d2 = 123.45D;
+            decimal d = 123.45M;
+            char c = 'A';
+            string s = "Helloworld";
+
+            DateTime dt = new DateTime(2016, 11, 06, 19, 38,0);
+            if (b)
+            {
+                Console.WriteLine("{0} {1} {2} {3} {4} {5} {6} {7} {8} \n{9}",sh,i, l, f, d1, d2, d, c, s, dt);
+            }
+        }
+    }
+}

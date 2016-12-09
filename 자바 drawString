@@ -1,0 +1,28 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class GraphicsDrawStringEx extends JFrame{
+    GraphicsDrawStringEx(){
+        this.setTitle("drawString 사용 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        MyPanel panel = new MyPanel();
+        this.add(panel, BorderLayout.CENTER);
+        this.setLocationRelativeTo(null);
+        this.setSize(300,300);
+        this.setVisible(true);
+    }
+    class MyPanel extends JPanel{
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.drawString("자바는 재밌다.~~", 30, 30);
+            g.drawString("얼만큼? 하늘만큼 땅만큼!!!", 60, 60);
+        }
+    }
+}
+public class JavaApplication4 {
+    public static void main(String[] args) {
+        new GraphicsDrawStringEx();
+    }
+}

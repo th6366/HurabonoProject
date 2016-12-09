@@ -1,0 +1,83 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct heap_node{
+        int data;
+        int array_no;
+        int item_no;
+} heap_node ;
+
+void swap_ptr(heap_node * a[], int i, int j){
+        heap_node * temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;    
+}
+void build_heap_ptr(heap_node *a[], int len){
+        int i = len/2 +1;
+        for(; i>=0; i--){
+                min_heapify_ptr(a,i, len);
+        }
+}
+void min_heapify_ptr(heap_node * a[], int i, int len){
+        int smallest =i;
+        int left, right;
+
+        left = left_child(i);
+        right = right_child(i);
+        if(left <= len && a[i]->data >a[left]->data){
+                smallest = left;
+        }
+        if(right <= len && a[smallest]->data > a[right]->data){
+                smallest = right;
+        }
+        if(smallest != i){
+                swap_ptr(a, i, smallest);
+                min_heapify_ptr(a, smallest, len);
+        }
+}
+
+void merge(int a[5][5], int N, int K, int result[]){
+   int i;
+   heap_node *min_heap[K];
+   /* Put all elements in an array */
+   for(i=0;i<K; i++){
+       min_heap[i] = create_node(a[i][0],i, 0);
+   }
+
+   /* Build min heap with those entered elements */
+   build_heap_ptr(min_heap,K-1);
+        
+   /* Now we have to take every element one by one and replace root with that and heapify again */ 
+   for(i=0; i<N*K; i++){
+      heap_node * min_node = min_heap[0];
+                                        
+      /* Put the root of min heap in result array */
+      result[i] = min_node->data;
+      /* If there are elements to be considered in that array */
+        if(min_node->item_no + 1< N){
+         min_heap[0] = create_node(a[min_node->array_no][min_node->item_no + 1],
+                                    min_node->array_no, min_node->item_no + 1);
+        }       
+        /* else put INT_MAX at root */
+        else
+        {
+          min_heap[0] = create_node(INT_MAX, min_node->array_no,min_node->item_no + 1);
+        }
+        /* Heapify again */
+         min_heapify_ptr(min_heap, 0,K-1);
+   }       
+}
+void main(){
+
+  int a[5][5] = {2,3,5,6,7,
+                  4,7,8,9,10,
+                  3,5,11,13,45,
+                  1,4,5,7,8};
+
+   int result[25];
+   merge(a,N, K, result);          
+
+   for(i=0; i<N*K; i++){
+       printf("%d  ", result[i]);
+   }
+}

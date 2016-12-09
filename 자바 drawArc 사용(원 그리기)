@@ -1,0 +1,28 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class GraphicsDrawArcEx extends JFrame{
+    GraphicsDrawArcEx(){
+        this.setTitle("drawArc 사용 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        MyPanel panel = new MyPanel();
+        this.add(panel, BorderLayout.CENTER);
+        this.setLocationRelativeTo(null);
+        this.setSize(300,300);
+        this.setVisible(true);
+    }
+    class MyPanel extends JPanel{
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.setColor(Color.RED);
+            g.drawArc(20, 100, 80, 80, 90, 270);
+        }
+    }
+}
+public class JavaApplication9 {
+    public static void main(String[] args) {
+        new GraphicsDrawArcEx();
+    }
+}

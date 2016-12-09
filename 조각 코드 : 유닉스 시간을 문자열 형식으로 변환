@@ -1,0 +1,58 @@
+char * time2str(time_t org_time, char *format)
+{
+    struct tm *tm_ptr;
+    int index=0;
+    int i;
+    tm_ptr = localtime(&org_time);
+    memset(dday, 0x00, 256);
+    for (i = 0; i < strlen(format); i++)
+    {
+        switch(format[i])
+        {
+            case 'y': // 년  
+                sprintf(dday+index, "%04d", tm_ptr->tm_year+1900);
+                index += 4;
+                break;
+            case 'm': // 월(1-12), 분(0-59)  
+                if (format[i+1] == 'i')
+                {
+                    sprintf(dday+index, "%02d", tm_ptr->tm_min);
+                    index += 2;
+                    i++;
+                    break;
+                }
+                else
+                {
+                    sprintf(dday+index, "%02d", tm_ptr->tm_mon+1);
+                    index += 2;
+                    break;
+                }
+            case 'M':
+               sprintf(dday+index, "%s", montable+((tm_ptr->tm_mon)*4));
+               index += 3;
+               break;
+
+            case 'd': // 일 (1-31) 
+                sprintf(dday+index, "%02d", tm_ptr->tm_mday);
+                index += 2;
+                break;
+            case 'D': // 요일(일 ~ 토) 
+                sprintf(dday+index, "%s", daytable+(tm_ptr->tm_wday * 4));
+                index += 3;
+                break;
+            case 'h': // 시(00-23) 
+                sprintf(dday+index, "%02d", tm_ptr->tm_hour);
+                index += 2;
+                break;
+            case 's': // 초(00-59) 
+                sprintf(dday+index, "%02d", tm_ptr->tm_sec);
+                index += 2;
+                break;
+
+            default:
+                dday[index] = format[i];
+                index++;
+        }
+    }
+    return dday;
+}

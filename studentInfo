@@ -1,0 +1,20 @@
+#include <stdio.h>
+struct studentInfo
+{
+    int studentNumber;
+    double height;
+};
+void sortStudentInfo( struct studentInfo* p
+                     ,int size);
+void printStudentInfo( struct studentInfo* p
+                     ,int size);
+int main( )
+{
+    struct studentInfo s[5]
+    = { 1, 170.5, 2, 180.3,
+        3, 172.3, 4, 150.3,
+        5, 180.6};
+    sortStudentInfo(s, 5);
+    printStudentInfo(s, 5);
+    return 0;
+}

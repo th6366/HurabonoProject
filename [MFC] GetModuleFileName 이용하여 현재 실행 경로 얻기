@@ -1,0 +1,17 @@
+CString CAdoTestDlg::GetExecutedPath( )
+{
+    CString strResult;
+    CString strPath;
+ 
+    if( GetModuleFileName( nullptr, strPath.GetBuffer(_MAX_PATH + 1), MAX_PATH ) != FALSE )
+    {
+        strPath.ReleaseBuffer( );
+ 
+        strResult = strPath.Left( strPath.ReverseFind( '\\' )+1 );
+    }
+    else
+    {
+    }
+ 
+    return strResult;
+}

@@ -1,0 +1,18 @@
+#include <stdio.h>
+
+void circumference(int radius, double *circle) {
+	double result;
+	result = radius * 2 * 3.14;
+	circle = &result;
+	printf("%lf", *circle);
+	
+}
+
+int main() {
+	int radius;
+	double *circle;
+	scanf("%d", &radius);
+	circumference(radius, &circle);
+	
+	return 0;
+}

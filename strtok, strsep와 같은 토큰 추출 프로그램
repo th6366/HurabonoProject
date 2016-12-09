@@ -1,0 +1,18 @@
+#include <stdio.h>
+
+char* token(char* str, char* src, const char* sep) {
+   int i = 0;
+   if (*src == '\0') return(NULL);
+   while (1) {
+      if (sep[i] == '\0') {
+         str -= strlen(sep);
+         break;
+      } else if (*src == sep[i]) {
+         i++;
+      } else i = 0;
+      if (*src == '\0') break;
+      *str++ = *src++;
+   }
+   *str = '\0';
+   return(src);
+}

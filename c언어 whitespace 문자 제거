@@ -1,0 +1,31 @@
+#include <ctype.h>
+#include <string.h>
+
+char *trim(char *src, char *dsc)
+{
+  int i;
+  char *org;
+  org = src;
+
+  while(*src)
+  {
+    if (!isspace(*src))
+    {
+      break;
+    }
+    else
+    {
+      *src++;
+    }
+  }
+  memcpy(dsc, src, strlen(src));
+  for (i = (strlen(dsc)-1); i > 0; i--)
+  {
+    if ( !isspace(*(dsc+i)) )
+    {
+      *(dsc+i+1) = 0x00;
+      break;
+    }
+  }
+  return dsc;
+}

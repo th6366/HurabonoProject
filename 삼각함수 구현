@@ -1,0 +1,72 @@
+#define twoopi   0.636619772367581 
+#define p0   0.135788409787738e8 
+#define p1  -0.494290810090284e7 
+#define p2   0.440103053537527e6 
+#define p3  -0.138472724998245e5 
+#define p4   0.145968840666577e3 
+#define q0   0.864455865292253e7 
+#define q1   0.408179225234330e6 
+#define q2   0.946309610153821e4 
+#define q3   0.132653490878614e3 
+
+static double sinus(double arg, int quad) 
+{ 
+   double e, f; 
+   int k; 
+   double ysq; 
+   double x, y; 
+   double temp1, temp2; 
+   x = arg; 
+   if (x < 0) { 
+    x = -x; 
+    quad = quad + 2; 
+   } 
+   x = x * twoopi; /*underflow?*/ 
+   if (x > 32764) { 
+    y = modf(x,&e); 
+    e = e + quad; 
+    modf(0.25*e,&f); 
+    quad = e - 4*f; 
+   } 
+   else{ 
+    k = x; 
+    y = x - k; 
+    quad = (quad + k) & 03; 
+   } 
+   if (quad & 01) 
+    y = 1-y; 
+   if (quad > 1) 
+    y = -y; 
+   ysq = y*y; 
+   temp1 = ((((p4*ysq+p3)*ysq+p2)*ysq+p1)*ysq+p0)*y; 
+   temp2 = ((((ysq+q3)*ysq+q2)*ysq+q1)*ysq+q0); 
+   return(temp1/temp2); 
+} 
+
+/* 
+    cos() 함수는 x의 코사인 값(라디안 값)을 계산합니다. 
+*/ 
+
+double cos(double x) 
+{ 
+   if (x < 0.0) x = -x; 
+   return (sinus(x, 1)); 
+} 
+
+/* 
+   sin() 함수는 x의 사인 값(라디안 값)을 계산합니다. 
+*/ 
+
+double sin(double x) 
+{ 
+   return (sinus(x, 0)); 
+} 
+
+/* 
+### 주의 사항 ### 
+위의 sinus 함수에서 사용한 modf 함수는 주어진 수를 
+정수부분과 소수부분으로 나누어 주는 함수입니다. 
+예를 들어서 
+y = modf(x,&e); 
+라고 하면 x의 정수부분이 e 변수에 들어가고 소수부분이 y 변수에 들어가게 됩니다. 
+*/

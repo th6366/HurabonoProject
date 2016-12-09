@@ -1,0 +1,15 @@
+#include<iostream>
+using namespace std;
+
+void foo(int &ref);
+
+int main() {
+    int x = 10;
+    foo(x);
+    cout << "x= " << x << endl;
+    return 0;
+}
+
+void foo(int &ref) {
+    ref++;//1 증가 시킨다
+}

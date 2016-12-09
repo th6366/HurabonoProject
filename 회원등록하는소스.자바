@@ -1,0 +1,45 @@
+  /**회원 등록*/
+    public boolean insertMember(MemberDTO dto){
+       
+        boolean ok = false;
+       
+        Connection con = null;       //연결
+        PreparedStatement ps = null; //명령
+       
+        try{
+           
+            con = getConn();
+            String sql = "insert into tb_member(" +
+                        "id,pwd,name,tel,addr,birth," +
+                        "job,gender,email,intro) "+
+                        "values(?,?,?,?,?,?,?,?,?,?)";
+           
+            ps = con.prepareStatement(sql);
+            ps.setString(1, dto.getId());
+            ps.setString(2, dto.getPwd());
+            ps.setString(3, dto.getName());
+            ps.setString(4, dto.getTel());
+            ps.setString(5, dto.getAddr());
+            ps.setString(6, dto.getBirth());
+            ps.setString(7, dto.getJob());
+            ps.setString(8, dto.getGender());
+            ps.setString(9, dto.getEmail());
+            ps.setString(10, dto.getIntro());          
+            int r = ps.executeUpdate(); //실행 -> 저장
+           
+           
+            if(r>0){
+                System.out.println("가입 성공");   
+                ok=true;
+            }else{
+                System.out.println("가입 실패");
+            }
+           
+               
+           
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+       
+        return ok;
+    }//insertMmeber

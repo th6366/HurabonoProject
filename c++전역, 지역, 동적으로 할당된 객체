@@ -1,0 +1,9 @@
+#include<iostream>
+using namespace std;
+
+Stack s1;                   //전역 객체
+int main() {
+    Stack s2;               //지역 객체
+    Stack *p = new Stack;   //동적으로 할당된 객체
+    delete p;
+}
