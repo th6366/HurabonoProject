@@ -1,0 +1,26 @@
+<table>
+    <tr>
+        <td>화산 이름</td>
+        <td>위치</td>
+        <td>최근 분출</td>
+        <td>분출 종류</td>
+    </tr>
+    <tr>
+        <td>Mt. Lassen</td>
+        <td>California</td>
+        <td>1914-17</td>
+        <td>Explosive Eruption</td>
+    </tr>
+    <tr>
+        <td>Mt. Hood</td>
+        <td>Oregon</td>
+        <td>1790s</td>
+        <td>Pyroclastic flows and Mudflows</td>
+    </tr>
+    <tr>
+        <td>Mt .St. Helens</td>
+        <td>Washington</td>
+        <td>1980</td>
+        <td>Explosive Eruption</td>
+    </tr>
+</table>

@@ -1,0 +1,98 @@
+1. 간단한 도서 관리용 프로그램
+2. 도서에 대한 정보는 제목, 저자, 페이지수를 포함
+3. 구조체 배열 10개 선언 후 입력이 끝나면 도서에 대한 정보 화면에 출력
+4. 프로그램 종료와 함께 입력 내용을 "dadada.txt"에 저장
+구현방법:
+1. 구조체 배열을 10개 선언 합니다.
+2. (입력 : 1), (전체내용보기 : 2), (종료 : 3) 에서 한가지를 선택합니다.
+3. 입력(1) 시 Insert 함수를 call 하여 구조체 배열에 값들을 입력시킵니다.
+4. 전체내용보기(2) 시 Print 함수를 call하여 입력한 값들을 모두 출력합니다.
+5. 종료(3) 시 fprint 함수를 이용하여 "dadada.txt"에 입력한 내용을 모두 텍스트파일에 저장하고 동시에 프로그램은 종료됩니다..
+6. 3번을 누르지 않는 한 메뉴가 무한루프 되고 입력은 10개까지만 가능합니다.
+*/
+#include <stdio.h>
+typedef struct book
+{
+    char name[20]; // 저자
+    char title[30];// 제목
+    int page;      // 페이지 수
+}Book;
+ 
+ 
+void insert(Book *BookAry, int num); //입력함수
+void print(Book *BookAry, int num);  //출력함수
+ 
+int main()
+{
+    Book bk[10]; // 구조체 배열 10개 선언
+    int i;
+    int index;
+    int number=0; // 입력한 수는 최초 0개로 초기화
+    FILE *fp = fopen("dadada.txt","wt");
+    if(fp == NULL) // 파일오픈이 실패하였을 경우
+    {
+        puts("파일오픈실패!");
+        return -1; // 비정상종료
+    }
+    while(1)
+    {
+        //메뉴 선택
+        printf("어느 작업을 하시겠습니까?\n");
+        printf("(입력 : 1), (전체내용보기 : 2), (종료 : 3) :  ");
+        scanf("%d", &index); 
+        if(index==1&&number<10) // 입력선택 (입력개수는 10개이하)
+        {
+            insert(bk, number); // 입력함수 call
+            number++; // 입력개수 증가
+        }
+        else if(index==1&&number>=10) //초과입력 시
+            printf("더이상 입력할 수 없습니다 \n");
+        else if(index==2) // 전체내용출력
+            print(bk, number);
+        else if(index==3) // 프로그램종료 - 동시에 입력한 모든 내용 파일에 저장
+        {
+            for(i=0; i<number; i++)
+            {
+                fprintf(fp, "저자 : %s",bk[i].name);
+                fprintf(fp, "제목 : %s",bk[i].title);
+                fprintf(fp, "page : %d\n",bk[i].page);
+            }
+            fclose(fp);
+            return 0;
+        }
+        else // 잘못된 index 선택 시
+            printf("잘못 입력하셨습니다\n");
+    } // 무한루프
+}
+ 
+void insert(Book* BookAry,int num)
+{
+    printf("도서 정보 입력\n");
+ 
+    fflush(stdin); // 입력버퍼 소멸
+    printf("저자: ");
+    fgets(BookAry[num].name,19,stdin); // 저자입력
+    fflush(stdin); // 입력버퍼 소멸
+    printf("제목: ");
+    fgets(BookAry[num].title,29,stdin); // 제목입력
+    fflush(stdin); // 입력버퍼 소멸
+    printf("페이지수: ");
+    scanf("%d",&(BookAry[num].page)); // 페이지수 입력
+    fflush(stdin); // 입력버퍼 소멸
+     
+}
+         
+void print(Book* BookAry, int num)
+{
+    int i;
+    printf("도서 정보 출력\n");
+    for(i=0; i<num; i++)
+    {
+        printf("저자: ");
+        fputs(BookAry[i].name,stdout); // 저자를 화면에 출력
+        printf("제목: ");
+        fputs(BookAry[i].title,stdout); // 제목을 화면에 출력
+        printf("페이지수: ");
+        printf("%d\n",BookAry[i].page); // 페이지수를 화면에 출력
+    }
+}

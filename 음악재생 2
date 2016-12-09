@@ -1,0 +1,28 @@
+//palySound 함수 이용 사운드 파일 재생
+#include<stdio.h>
+#include<Windows.h>
+#include<mmsystem.h>
+#pragma comment(lib, "winmm.lib")
+ 
+#define Third_Run "D:\\sunrint\\Nefus\\Game_project\\BGM\\Third_Run.wav"
+ 
+void main()
+{
+ PlaySound(TEXT(Third_Run), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP );
+ //사운드 파일 위치, SND_ASYNC, SND_LOOP 세가지가 제일 중요
+ //SND_ASYNC : 재생하면서 다음코드 실행
+ //SND_LOOP : 반복재생
+  while (1)
+ {  
+   int a;
+   printf("종료?");
+   scanf("%d", &a);
+   if (a==0)
+   {
+    PlaySound(NULL, 0, 0);
+    Sleep(1000);
+    printf("노래를 종료했습니다. 함수도 종료합니다.");
+    return;
+   } 
+ }
+}

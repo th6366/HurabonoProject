@@ -1,0 +1,15 @@
+int main()
+{
+    printf("%d\n", jabs(-1));
+    printf("%d\n", jabs(111111111));
+}
+int myabs(int i)
+{
+    if (i >> 31)
+    {
+        i =~ i;
+        i++;
+    }
+
+    return (i & ~(1 << 31));
+}

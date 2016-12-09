@@ -1,0 +1,50 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class Ex2 extends JFrame{
+    ImageIcon i = new ImageIcon("back.jpg");
+    Image im=i.getImage();
+    int x=50;
+    int y=50;
+    Ex2(){
+        this.setTitle("이미지 위에 원 드래깅 연습");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        MyPanel panel = new MyPanel();
+        panel.setLayout(null);
+        panel.addMouseMotionListener(new MouseMotionListener(){
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                x=e.getX();
+                y=e.getY();
+                repaint();
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+            }
+            
+        });
+        this.add(panel);
+        this.setSize(400,400);
+        this.setVisible(true);
+    }
+    class MyPanel extends JPanel{
+            
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.drawImage(im,0,0,getWidth(),getHeight(),this);
+            g.setColor(Color.GREEN);
+            g.fillOval(x, y, 40, 40);
+        }
+    }
+}
+public class JavaApplication39 {
+
+    public static void main(String[] args) {
+        new Ex2();
+    }
+    
+}

@@ -1,0 +1,18 @@
+#include <atlstr.h>       //CString
+ 
+#define print( str ) printf( "%s\n", str )
+ 
+int main( )
+{
+    CString strText;
+ 
+    strText = "13579";
+    strText.MakeReverse( );
+    print( strText );
+ 
+    strText = "MFC";
+    strText.MakeReverse( );
+    print( strText );
+ 
+    return 0;
+}

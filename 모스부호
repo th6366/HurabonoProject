@@ -1,0 +1,233 @@
+		/********************************************
+		 *		  Program name   : Morse_Cod.c		*
+		 *		  Start  date	 : 06.11.22			*
+		 *		  U p d a t e	 : 06.12.03			*
+		 *		   N  a  m  e	 : lim-sungJin		*
+		 ********************************************/
+/*
+					<ㅡ<프로그램 설명>ㅡ>
+
+		1. 알파벳 혹은 숫자로 입력하면 모스부호로 출력.
+			1) 문자를 입력하였는데, 모스부호가 입력되는 경우, <<오류 메시지>>.
+			2) 스페이스바(공백) 1칸 만이 유효, 1칸 이상이면 <<오류 메시지>>.
+			3) 존재하지 않는 값을 입력할 경우 <<오류 메시지>>.
+
+		2. 모스부호를 입력하면 알파벳 혹은 숫자 출력.
+			1) 모스부호를 입력 하였는데, 문자가 입력되는 경우, <<오류 메시지>>.
+			2) 스페이스바(공백) 오직 1칸 혹은 3칸만이 유효, 2칸이나, 3칸 이상이면 <<오류 메시지>>.
+			3) 존재하지 않는 값을 입력할 경우 <<오류 메시지>>.
+
+		3. 문자에는 1칸 띄울 시, 3칸 띄어서 출력.
+
+		4. 모스부호는 1칸 띄울시, 알파벳이 붙여서 출력되며, 3칸 띄울시에는 한칸 띄어서 출력.
+		
+		5. 첫글자는 스페이스바나, 엔터값이 들어갈 수 없습니다 <<오류 메시지>>.
+
+		6. 에러 부분이 있을 경우, <<초기화면>> 출력.
+
+		7. 에러 부분 없이 출력된 경우, <<종료>>.
+*/
+
+#include<stdio.h>
+#include<conio.h>
+#include<ctype.h>
+#include<string.h>
+#include<windows.h>
+
+int error_1(char, int, int);			//문자오류
+int error_2(int);						//존재여부 오류
+int error_3(int, int, int, int, int);	//스페이스바(공백) 오류
+int error_4(char, int);					//첫글자 오류
+
+void main()
+{
+	char Ap[36]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R',
+				'S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0'};
+	char Mor[36][10]={".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..",
+					"--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-",
+					"-.--","--..",".----","..---","...--","....-",".....","-....","--...","---..",
+					"----.","-----"};
+	char input, Mor_input[1][20]={0};
+	int i, count=0,log=0, flag_sp=0, temp_flag=0, temp1_flag=0,sp_delete=0;
+	int sp1=0,sp2=0, exit=0,Gori=0, flag=0, flags=0, reset_1=0, reset_2=0, reset_3=0, reset_4=0;
+	while(1){
+		fflush(stdin);
+		printf("input : ");
+		do{
+			/*문자 입력되다가 모스부호나, 그 반대가 입력되면 오류 메시지*/
+			reset_3 = error_3(temp_flag, temp1_flag, Gori, sp1, sp2);
+			if(reset_3 == 1){
+				exit = 1;
+				break;
+			}
+			/* 입력 받는다.*/
+			input = getchar();
+			/*첫글자가 스페이스바나, 엔터인 경우*/
+			reset_4 = error_4(input, log);
+			if(reset_4 == 1){
+				exit = 1;
+				break;
+			}
+			log = 1;
+			/* 엔터와 스페이스가 존재한다면(모스부호를 알파벳으로 출력)*/
+			if((input == '\n' && flags == 1) ||(input == 32 && flags == 1)){
+				for(i=0; i<36; i++){
+					if((memcmp(Mor_input[0],Mor[i], 6)) == 0){	//Mor_input와, Mor[i]를 문자열 비교.
+						Gori=0;
+						printf("%c", Ap[i]);
+						for(i=0; i<20; i++)
+							Mor_input[0][i] = 0;
+						break;
+					}
+					else
+						Gori = 1;
+				}
+				flags = 0;
+			}
+			if(input == 32){
+					printf("  ");								// 스페이스바(공백) 2칸(왜냐하면 50 라인에 마지막에 한칸 띄움)
+					count = 0;
+					flag_sp++;									// 부호(... --- ...), 띄어쓰기 확인  
+			}
+			
+			/* 문자와 숫자 사용시(문자를 모스 부호로 출력)*/
+			if(isalpha(input) != 0 || isdigit(input) != 0){
+				input = toupper(input);							//소문자를 대문자로.
+				sp1 = sp2++;
+				temp_flag = 1;
+				for(i=0; i<36; i++)
+					if(Ap[i] == input){
+						Gori = 0;
+						printf("%s ", Mor[i]);
+						break;
+					}
+					else
+						Gori = 1;
+			}
+			/* 모스 부호 사용시*/
+			else if(input != 32){
+				Mor_input[0][count] = input;
+				count++;
+				flag = 1, flags=1;										//부호 사용했음을 알린다.
+				temp1_flag = 1;
+				sp2 = sp1++;
+			}
+			/* 부호를 사용했고, 스페이스바(공백) 3칸을 띄었을 경우 한칸 띄우기.(기존 3칸 띄우기에서 한칸 지움)*/	
+			if(	flag == 1 && flag_sp >= 3)
+				printf("\b");
+			/* 부호를 사용했고, 한칸 띄었을 경우 문자를 붙여서 나타냄.(기존 3칸 띄우기에서 두칸 지움)*/
+			else if(flag == 1 && input == 32)
+				printf("\b\b");
+			sp_delete++;
+
+			/*존재하지 않는 값일 경우, 에러 메시지 발생.*/
+			reset_2 = error_2(Gori);
+
+			/* 띄어쓰기 오류 */
+			reset_1 = error_1(input, flag, flag_sp);
+			if(reset_1 == 1)
+				flag_sp = 0;
+			else if(reset_1 == 2 || reset_2 == 1)
+				exit = 1;
+
+			/*모스부호에 3칸을 띄었을시에 한칸 띄움*/
+			if(flag_sp == 3 && flag == 1)
+				printf(" ");
+
+			/* 잘못입력되었으므로, 더이상 찾지 말고 이 do while문을 나가라.*/
+			if(exit == 1)
+				break;
+		}while(input != '\n');									//엔터값까지 반복
+
+		printf("\n");
+		/* 아무런 에러없이 완료 되었으므로 무한루프를 빠져나간다.*/
+		if(exit == 0)
+			break;
+		/* 초기화 */
+		system("cls");
+		input = 0;
+		count=0;
+		log=0;
+		flag_sp=0;
+		temp_flag=0;
+		temp1_flag=0;
+		sp_delete=0;
+		sp1=0;
+		sp2=0;
+		flag = 0;
+		flags=0;
+		exit=0;
+		Gori=0;
+		reset_1=0;
+		reset_2=0;
+		reset_3=0;
+		reset_4=0;
+		for(i=0; i<20; i++)
+			Mor_input[0][i] = 0;
+	}
+	printf("<<완료>> 종료합니다 Enter..\n");
+	getch();
+}
+/* 스페이스 오류 메시지 */
+int error_1(char input, int flag, int flag_sp)
+{
+	/* 모스부호 스페이스바(공백) 오류 메시지 */
+	if(input != ' ' && flag == 1 && input !='\n'){
+		if(flag_sp > 3 || flag_sp == 2){
+			system("cls");
+			printf("<<실패>>모스부호에서는 띄어쓰기 1칸 혹은 3칸만이 유효합니다...(3칸에 1칸)\n  Enter...\n");
+			getch();
+			return 2;
+		}
+		return 1;
+	}
+	/* 문자 스페이스바(공백) 오류 메시지 */
+	else if(input != ' ' && flag == 0 && input !='\n'){
+		if(flag_sp > 1){
+			system("cls");
+			printf("<<실패>>문자에서는 띄어쓰기 1칸만이 유효합니다...(1칸에 3칸)\n  Enter...\n");
+			getch();
+			return 2;
+		}
+		return 1;
+	}
+	return 0;
+}
+/* 존재여부 오류 메시지 */
+int error_2(int Gori)
+{
+	if(Gori == 1){
+		system("cls");
+		printf("<<실패>>존재하지 않는 값을 입력하셨거나, 잘못 입력하셨습니다.\n  Enter...\n");
+		getch();
+		return 1;
+	}
+	return 0;
+}
+/* 문자오류 메시지 */
+int error_3(int temp_flag, int temp1_flag, int Gori, int sp1, int sp2)
+{
+	if(temp_flag == 1 && temp1_flag == 1 || Gori == 1)
+	{												  //오류 메시지 입력.
+		system("cls");
+		if(sp1 > sp2)
+			printf("<<실패>>문자에 모스부호가 입력 하셨거나, 잘못된 문자가 입력되었습니다.");
+		else
+			printf("<<실패>>모스부호에 문자를 입력하셨거나, 잘못된 문자가 입력되었습니다.");
+		printf("\n  Enter....\n");
+		getch();
+		return 1;
+	}
+	return 0;
+}
+/* 첫글자 오류 메시지 */
+int error_4(char input, int log)
+{
+	if((input == ' ' || input == '\n') && log == 0)
+	{
+		printf("<<실패>>첫 글자에 공백이나 엔터가 있기 때문에 무효합니다.\n 초기호면으로 넘어갑니다...\n Enter...\n");
+		getch();
+		return 1;
+	}
+	return 0;
+}

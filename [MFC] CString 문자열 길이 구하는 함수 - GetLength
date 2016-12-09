@@ -1,0 +1,20 @@
+#include <atlstr.h>       //CString
+
+#define print( nNum ) printf( "%d\n", nNum )
+
+int main( )
+{
+	CString strText1;
+	CString strText2;
+	CString strText3;
+
+	strText1 = "abcdef13579";
+	strText2 = "12345";
+	strText3 = "TestText";
+	
+	print( strText1.GetLength( ) );
+	print( strText2.GetLength( ) );
+	print( strText3.GetLength( ) );
+
+	return 0;
+}

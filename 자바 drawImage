@@ -1,0 +1,31 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class GraphicsDrawImageEx2 extends JFrame{
+    GraphicsDrawImageEx2(){
+        this.setTitle("drawImage 사용 예제2");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        MyPanel panel = new MyPanel();
+        this.add(panel, BorderLayout.CENTER);
+        this.setLocationRelativeTo(null);
+        this.setSize(300,400);
+        this.setVisible(true);
+    }
+    class MyPanel extends JPanel{
+        ImageIcon icon = new ImageIcon("image0.jpg");
+        Image img = icon.getImage();
+        
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+        }
+    }
+}
+
+public class JavaApplication13 {
+    public static void main(String[] args) {
+        new GraphicsDrawImageEx2();
+    }
+}

@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+void printTree(int *idx, int *post, int rootIdx, int n) {
+    int root = post[rootIdx];
+
+    printf("%d", root);
+
+    if(root == n-1 || idx[root+1] > rootIdx) return;
+    
+    printf(" { ");
+        printTree(idx, post, idx[root+1], n);
+    printf(" ; ");
+        printTree(idx, post, rootIdx - 1, n);
+    printf(" }");
+}
+
+int main() {
+    int post[] = {2,3,1,6,7,5,8,4,0};
+    const int n = sizeof(post)/sizeof(*post);
+    int idx[n], i;
+
+    for(i = 0; i < n; ++i) idx[post[i]] = i;
+    printTree(idx, post, n-1, n);
+
+    return 0;
+}

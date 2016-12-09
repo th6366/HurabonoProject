@@ -1,0 +1,24 @@
+package practice;
+
+public class Main {
+	public static void main(String[] args) {
+		String str = "I heard that you're settled down That you found a girl and you're married now.";
+		String strTemp = str.toUpperCase(); //str 변수의 문자를 모두 대문자로 변경.
+		
+		char ch = 'A';
+		int count = 0; //문자마다 문자갯수를 셀 변수 count.
+		for(int i = 0; (ch + i) >= 'A' && (ch + i) <= 'Z'; i++) { //A ~ Z까지 반복. 
+			for(int j = 0; j < strTemp.length() - 1; j++) { 
+				if(strTemp.charAt(j) == ch + i) {
+					count++;
+				}
+			}
+			System.out.print((char)(ch+i) + ": "); 
+			for(int k = 0; k < count; k++) {
+				System.out.print("=");
+			}
+			System.out.println();
+			count = 0;
+		}
+	}
+}

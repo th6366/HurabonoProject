@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
+void mymemcpy(void *dst, void *src, unsigned int size)
+{
+  int i;
+  char *a = (char *)src;
+  int pad = size%sizeof(int);
+  for(i = 0; i < size/sizeof(int); i++)
+  {
+    *(int *)dst = *(int *)src;
+    dst +=4;
+    src +=4;
+  }
+  for (i = 0; i < pad; i++)
+  {
+    *(char *)dst = *(char *)src;
+    dst++;
+    src++;
+  }
+}

@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+float claculate_F(float c) {
+	float f;
+	f = (9 / 5) * c + 32;
+	return f;
+}
+
+int main() {
+	float c;
+	printf("화씨로 변환할 섭씨를 입력하시오");
+	scanf("%f", &c);
+
+	printf("%f", claculate_F(c));
+	
+	return 0;
+}

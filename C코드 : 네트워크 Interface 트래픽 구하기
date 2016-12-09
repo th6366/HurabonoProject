@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <string.h>
+
+// 네트워크 인터페이스 정보를 저장한 proc(:12) 파일
+const char *ProcDev = "/proc/net/dev";
+const char *Format = "%s %s %s %s %s %s %s %s %s %s";
+
+// 트래픽 정보를 저장하기 위한 구조체
+struct traffic
+{
+  char bytes[16];
+  char packets[16];
+  char errs[16];
+};
+
+int GetTraffic(struct traffic *in, struct traffic *out, char *ifname);
+
+int main(int argc, char **argv)
+{
+  struct traffic in, out;
+  int rtv;
+  rtv = GetTraffic(&in, &out, "eth0");
+  if (rtv == 1)
+    printf("Traffic eth0 OK | inbps=%s inpps=%s outbps=%s outpps=%s\n",
+            in.bytes, in.packets, out.bytes, out.packets);
+}
+
+int GetTraffic(struct traffic *in, struct traffic *out, char *ifname)
+{
+  FILE *fp;
+  char *hp;
+  char buf[256];
+  char ifheader[16];
+  sprintf(ifheader, "%s:", ifname);
+  fp = fopen(ProcDev,"r");
+  int noused[16];
+  char tell[12];
+
+  if (fp == NULL)
+    return -1;
+
+  while(fgets(buf, 255, fp)!=NULL)
+  {
+    if ((hp  = strstr(buf, ifheader)) != NULL)
+    {
+      hp = hp + strlen(ifheader);
+      sscanf(hp, Format, in->bytes, in->packets, in->errs,
+                         noused, noused, noused, noused, noused,
+                         out->bytes, out->packets, out->errs);
+      break;
+    }
+  }
+  fclose(fp);
+  return 1;
+}

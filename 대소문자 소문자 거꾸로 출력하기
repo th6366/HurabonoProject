@@ -1,0 +1,30 @@
+#include <stdio.h>
+ 
+int main()
+{
+    char ch[6];
+ 
+    int i;
+ 
+    printf ("문자 5개를 입력하세요 : ");
+    scanf ("%s", ch);
+ 
+ 
+    for (i=0; i<6; i++) {
+        if (ch[i] >= 'A' && ch[i] <='Z') {
+            ch[i] = ch[i] + ('a' - 'A');
+ 
+        }
+ 
+        else if (ch[i] >= 'a' && ch[i] <='z') {
+            ch[i] = ch[i] - ('a' - 'A');
+ 
+        }
+    }
+ 
+    printf ("%s", ch);
+ 
+    return 0;
+ }
+[출처] C언어 소스, 문자 5개를 입력받아서 입력받아서 소문자면 대문자로, 대문자면 소문자로 출력하는 프로그램|작성자 위컴 온라인
+

@@ -1,0 +1,72 @@
+
+
+
+ 
+
+
+
+
+
+1 #include<stdio.h> 
+2 #include<stdlib.h> 
+3 #define SIZE 5 
+4 
+ 
+5 int stack[SIZE]; 
+6 int top = 0; 
+7 
+ 
+8 void stack_push(); 
+9 void stack_pop(); 
+10 void stack_print(); 
+11 
+ 
+12 void main() { 
+13 	int input; 
+14 	while (1){ 
+15 		printf("\n\n1.Push (max 5) \n2.pop\n"); 
+16 		scanf("%d", &input); 
+17 		switch (input) { 
+18 		case 1:stack_push(); break; 
+19 		case 2:stack_pop(); break; 
+20 		}  
+21 		stack_print(); 
+22 	} 
+23 } 
+24 
+ 
+25 void stack_push() { 
+26 	int n; 
+27 	if (top >= SIZE){ 
+28 		printf("스택 오버 플로우\n\n"); 
+29 	} 
+30 	else 
+31 	{ 
+32 		printf("\ninput : "); 
+33 		scanf("%d", &n); 
+34 		stack[top++] = n; 
+35 	} 
+36 } 
+37 
+ 
+38 
+ 
+39 void stack_pop() { 
+40 	if (top == 0) { 
+41 		printf("Empty\n\n"); 
+42 	} 
+43 	else 
+44 	{ 
+45 		top--; 
+46 		printf("pop : %d\n\n", stack[top]); 
+47 	} 
+48 } 
+49 
+ 
+50 
+ 
+51 void stack_print() { 
+52 	int i; 
+53 	for (i = 0; i < top; i++) 
+54 		printf("%d ", stack[i]); 
+55 } 

@@ -1,0 +1,14 @@
+/**DB연결 메소드*/
+    public Connection getConn(){
+        Connection con = null;
+       
+        try {
+            Class.forName(DRIVER); //1. 드라이버 로딩
+            con = DriverManager.getConnection(URL,USER,PASS); //2. 드라이버 연결
+           
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       
+        return con;
+    }

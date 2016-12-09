@@ -1,0 +1,20 @@
+int Delete( int nIndex, int nCount = 1 );
+//nIndex : 문자가 삭제될 시작 위치. 첫 문자의 위치는 0
+//nCount : 삭제될 문자의 수
+//반환값 : 삭제된 후의 문자열 길이
+
+#include <atlstr.h>       //CString
+
+#define print( str ) printf( "%s\n", str )
+
+int main( )
+{
+	CString strText = "Visual Studio C++ 2013";
+
+	print( strText );
+
+	strText.Delete( 14, 4 );
+	print( strText );
+
+	return 0;
+}

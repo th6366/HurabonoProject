@@ -1,0 +1,50 @@
+package com.tansanc.tistory;
+ 
+import java.awt.BorderLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+ 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+ 
+class MyFrame extends JFrame implements KeyListener
+{
+    public MyFrame()
+    {
+        this.setSize(300, 200);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setTitle("이벤트 예제");
+        JLabel staticText = new JLabel("Hello World");
+        add(staticText, BorderLayout.NORTH);
+        JTextField inputText = new JTextField("입력창");
+        add(inputText, BorderLayout.CENTER);
+        JLabel resultText = new JLabel("Hello World");
+        add(resultText, BorderLayout.SOUTH);
+         
+        inputText.addKeyListener(this);
+         
+        setVisible(true);
+    }
+    @Override
+    public void keyPressed(KeyEvent e)
+    {       
+    }
+    @Override
+    public void keyReleased(KeyEvent e)
+    {       
+    }
+    @Override
+    public void keyTyped(KeyEvent e)
+    {       
+    }
+}
+ 
+public class Test
+{
+    public static void main(String[] args)
+    {
+        MyFrame t = new MyFrame();
+    }
+}

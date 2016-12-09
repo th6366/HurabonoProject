@@ -1,0 +1,36 @@
+/*
+ Copyright (C) Information Equipment co.,LTD.
+ All rights reserved.
+ Code by JaeHyuk Cho <mailto:minzkn@infoeq.com>
+ CVSTAG="$Header: /usr/local/mutihost/joinc/modules/moniwiki/data/text/RCS/Code_2fC_2fterminal_5fsize,v 1.1 2007/01/09 02:46:10 root Exp root $"
+*/
+
+#include <sys/types.h>
+#include <sys/ioctl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+
+int main(void)
+{
+ int s_check, s_width = 0, s_height = 0;
+ char *s_env;
+ struct winsize s_window_size;
+ s_env = getenv("COLUMNS"); if(s_env != ((char *)0))s_width = atoi(s_env);
+ s_env = getenv("LINES");   if(s_env != ((char *)0))s_height = atoi(s_env);
+ if((s_width <= 0) || (s_height <= 0))
+ {
+  if(isatty(STDOUT_FILENO) == 1)
+  {
+   do{ s_check = ioctl(STDOUT_FILENO, TIOCGWINSZ, &s_window_size); }while((s_check == (-1)) && (errno == EINTR));
+   if(s_check == 0)s_width = s_window_size.ws_col, s_height = s_window_size.ws_row;
+  }
+  if(s_width <= 0)s_width = 80;
+  if(s_height <= 0)s_height = 24;
+ }
+ (void)fprintf(stdout, "terminal window size : %d x %d\n", s_width, s_height);
+ return(0);
+}
+
+/* End of source */

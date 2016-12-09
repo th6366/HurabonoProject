@@ -1,0 +1,11 @@
+로케일 이름을 출력한다. 
+#include <iostream>
+#include <locale>
+using namespace std;
+
+int main () 
+{
+    locale current = cout.getloc();
+    cout << current.name() << endl; // 현재 로케일 이름을 출력한다. 
+    return 0;
+}

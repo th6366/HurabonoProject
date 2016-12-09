@@ -1,0 +1,163 @@
+#include <stdio.h>
+
+#include <stdlib.h>
+
+ 
+
+#define MAPSIZE 10
+
+#define INIT_X 5
+
+#define INIT_Y 5
+
+ 
+
+typedef struct Player{
+
+    int x;
+
+    int y;
+
+    int coin;
+
+}Player;
+
+ 
+
+/* You have to use double pointer */  
+
+void Initialize(Player** player){
+
+    (*player) = (Player*) malloc(sizeof(Player));
+
+    (*player)->x = INIT_X;  // You have to use (*player) not just *player  
+
+    (*player)->y = INIT_Y;
+
+    (*player)->coin = 0;
+
+}
+
+ 
+
+void MenuPrint (){
+
+    
+
+    printf("------메뉴------\n");
+
+    printf("1. 게 임 시 작\n");
+
+    printf("2. 게 임 정 보\n");
+
+    printf("3. 현 재 시 간\n"); 
+
+    printf("4. 게 임 종 료\n");
+
+    printf("----------------\n"); 
+
+      
+
+}
+
+void MapPrint (Player* player){
+
+    int i,j;
+
+    for(i=0;i<MAPSIZE;i++)
+
+    {
+
+        printf("#");
+
+        for(j=1;j<MAPSIZE-1;j++)
+
+        {
+
+            if(i==0 || i==MAPSIZE-1)
+
+            {
+
+                printf("#");
+
+            }
+
+            else if(i==player->x && j==player->y)
+
+            {
+
+                printf("@");
+
+            }
+
+            else
+
+            {
+
+                printf(" ");
+
+            }
+
+            
+
+        }
+
+        printf("#\n");
+
+    }
+
+}
+
+ 
+
+int main(int argc, char *argv[]) {
+
+    int select;
+
+    Player* player;
+
+    
+
+    MenuPrint();
+
+    scanf("%d",&select);
+
+    switch(select){
+
+        case 1:
+
+            system("cls");
+
+            Initialize(&player);
+
+            MapPrint(player);
+
+            break;
+
+        case 2:
+
+            break;
+
+        case 3:
+
+            break;
+
+        case 4:
+
+            printf("게임을 종료합니다...\n");
+
+            return 0;
+
+        default:
+
+            break;    
+
+    } 
+
+        
+
+    return 0;
+
+}
+
+[출처] [C언어 게임프로젝트] 동전먹기게임 1일차 - Map , Player 만들기 |작성자 테드
