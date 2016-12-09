@@ -1,0 +1,48 @@
+#include "tail.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <vector>
+using namespace std;
+int main(int argc, char **argv)
+{
+  vector<TAIL *> tflist;
+  TAIL *tf;
+  char *buf;
+  int n, i;
+
+  // 2개 이상의 파일에 대해서 tail 가능하다.
+  for(i = 1; i < argc; i++)
+  {
+    if((tf = opentail(argv[i])) == NULL)
+    {
+      perror("error ");
+      exit(1);
+    }
+    tflist.push_back(tf);
+  }
+
+  buf = (char *)malloc(1024);
+  int issleep = 0;
+  while(1)
+  {
+    issleep = 0;
+    for(i = 0; i < tflist.size(); i++)
+    {
+      n = readtail(tflist[i], buf, 1023, 1);
+      if(n > 0)
+        printf("%d : %s", i, buf);
+      issleep |= n;
+    }
+
+    if (issleep == 0)
+    {
+      sleep(1);
+      printf("Sleep\n");
+      continue;
+    }
+  }
+  //closetail(tf);
+  free(buf);
+}

@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+int main()
+{
+    unsigned int num, me, t=1, range;   //음수 값은 사용하지 않으니 unsinged로 했습니다.
+    srand((int)time(NULL));
+    
+    printf("Up Down 게임을 시작합니다.\n");
+    printf("범위를 설정하세요 \n");
+    printf("1부터~~~");
+    scanf("%d", &range);
+    
+    num=rand()%range+1;    // 사용자가 입력한 범위만큼 난수 하나를 출력합니다.
+    printf("1부터 %d까지 숫자를 맞춰보세요!", range);
+    while(1)                       // 사용자가 입력한 숫자와 랜덤으로 뽑힌 숫자가 같을떄 탈출합니다.
+    {
+        scanf("%d", &me);
+        if(num>me)
+        printf("Up\n");
+        if(num<me)
+        printf("Down\n");
+        if(num==me)
+                break;
+        t++;
+    }
+    
+    printf("축하합니다 %d회 만에 성공하셨습니다", t);
+    return 0;
+}
+[출처] C언어 게임/ UP&DOWN 게임!|작성자 Mr 월계수
+

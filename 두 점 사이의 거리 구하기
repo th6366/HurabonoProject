@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <math.h>
+ 
+typedef struct tagPoint
+{
+    double x;
+    double y;
+}_Point;
+ 
+double GetDistance( const _Point p1, const _Point p2 );
+ 
+int main( )
+{
+    _Point p1 = { 432, 189 };
+    _Point p2 = { 38, 392 };
+ 
+    double dDistance = GetDistance( p1, p2 );
+ 
+    return 0;
+}
+ 
+double GetDistance( const _Point p1, const _Point p2 )
+{
+    return sqrt( (p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y) );
+}

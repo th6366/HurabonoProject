@@ -1,0 +1,7 @@
+#include <cstdlib>
+using namespace std;
+ 
+int main()
+{
+        system("dir");  //execute the "dir" command
+} 

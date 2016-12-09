@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+ 
+int main( )
+{
+    char *strInt     = "123456789";
+    char *strInt64   = "1234567890123456789";
+    char *strLong    = "123456789";
+    char *strDouble  = "3.14e+100";
+    char *strStrInt  = "value = 123456789";
+ 
+    int nInt;
+    __int64 nInt64;
+    long lLong;
+    double dDouble;
+     
+    nInt = atoi( strInt );
+    printf( "%d\n", nInt );
+ 
+    nInt = atoi( strStrInt );
+    printf( "%d\n", nInt );
+     
+    nInt = atoi( &strStrInt[8] );
+    printf( "%d\n", nInt );
+ 
+    nInt64 = _atoi64( strInt64 );
+    printf( "%I64d\n", nInt64 );
+ 
+    lLong = atol( strLong );
+    printf( "%ld\n", lLong );
+ 
+    dDouble = atof( strDouble );
+    printf( "%.2e\n", dDouble );
+     
+    dDouble = atof( strInt );
+    printf( "%.2e\n", dDouble );
+ 
+    return 0;
+}

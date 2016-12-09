@@ -1,0 +1,80 @@
+#include <stdio.h>
+
+void main_interface(void) {
+	printf("triangle 1\nsquare 2\ncirle 3\nrectangle 4\ntrapezoid 5\nquit 6\n");
+		
+}
+
+void triangle(){
+	double a, b;
+	printf("밑변, 높이를 입력하시오");
+	scanf_s("%lf %lf", &a, &b);
+	printf("%lf", a * b * 0.5);
+}
+
+void square() {
+	double a;
+	printf("한변의 길이를 입력하시오");
+	scanf_s("%lf", &a);
+	printf("%lf", a * a);
+}
+
+void cirle() {
+	double a;
+	printf("반지릅을입력하시오");
+	scanf_s("%lf", &a);
+	printf("%lf", 3.14*(a*a));
+}
+
+void rectangle() {
+	double a, b;
+	printf("밑변, 옆변를 입력하시오");
+	scanf_s("%lf %lf", &a, &b);
+	printf("%lf", a*b);
+}
+
+void trapezoid() {
+	double a, b;
+	printf("윗변, 아랫변를 입력하시오");
+	scanf_s("%lf %lf", &a, &b);
+	printf("%lf", (a + b) * 0.5);
+}
+
+void quit() {
+	return 0;
+}
+
+int main() {
+
+	int n;
+	main_interface();
+	printf("면적을 구할 도형을 입력하시오(숫자입력)\n");
+	scanf("%d", &n);
+
+	switch (n)
+	{
+	case 1:
+		triangle();
+		break;
+	case 2:
+		square();
+		break;
+	case 3:
+		cirle();
+		break;
+	case 4:
+		rectangle();
+		break;
+	case 5:
+		trapezoid();
+		break;
+	case 6:
+		quit();
+		break;
+	}
+
+	
+	
+
+	return 0;
+}

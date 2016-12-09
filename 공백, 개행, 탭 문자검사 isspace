@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <ctype.h>
+ 
+int main( )
+{
+    bool bCheck = false;
+    char strTemp[] = " \n\t5";
+ 
+    bCheck = isspace( strTemp[0] );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    bCheck = isspace( strTemp[1] );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    bCheck = isspace( strTemp[2] );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    bCheck = isspace( strTemp[3] );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    bCheck = isspace( '\n' );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    return 0;
+}

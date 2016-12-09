@@ -1,0 +1,85 @@
+int connectWithTimeout(int fd,struct sockaddr *remote, int len, int secs, int *err)
+{
+	int saveflags,ret,back_err;
+	fd_set fd_w;
+	struct timeval timeout;
+ 
+	saveflags = fcntl(fd,F_GETFL,0);
+	if(saveflags<0) 
+	{
+		perror("fcntl1");
+		*err=errno;
+		return -1;
+	}
+
+	/* Set non blocking */
+	if( fcntl(fd,F_SETFL,saveflags|O_NONBLOCK)<0 ) 
+	{
+		perror("fcntl2");
+		*err=errno;
+		return -1;
+	}
+
+	/* This will return immediately */
+	*err = connect(fd,remote,len);
+	back_err=errno;
+
+	/* restore flags */
+	if( fcntl(fd,F_SETFL,saveflags)<0 ) 
+	{
+		perror("fcntl3");
+		*err=errno;
+		return -1;
+	}
+
+	/* return unless the connection was successful or the connect is
+	still in progress. */
+	if(*err<0 && back_err!=EINPROGRESS) 
+	{
+		perror("connect");
+		*err=errno;
+		return -1;
+	}
+
+
+	timeout.tv_sec = (long)secs;
+	timeout.tv_usec = 0L;
+
+	FD_ZERO(&fd_w);
+	FD_SET(fd,&fd_w);
+
+	*err= select(FD_SETSIZE,NULL,&fd_w,NULL,&timeout);
+	if(*err<0) 
+	{
+		perror("select");
+		*err=errno;
+		return -1;
+	}
+
+	/* 0 means it timeout out & no fds changed */
+	if(*err==0) 
+	{
+		perror("timeout...");
+		*err=ETIMEDOUT;
+		return -1;
+	}
+
+	/* Get the return code from the connect */
+	len= sizeof(ret);
+	*err= getsockopt(fd,SOL_SOCKET,SO_ERROR,&ret,&len);
+	if(*err<0) 
+	{
+		perror("getsockopt");
+		*err=errno;
+		return -1;
+	}
+
+	/* ret=0 means success, otherwise it contains the errno */
+	if(ret) 
+	{
+		*err=ret;
+		return -1;
+	}
+	*err=0;
+	return 0;
+} 

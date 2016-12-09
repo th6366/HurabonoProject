@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <string.h>
+void Reverse(char * original, char * rev)
+{
+ char * temp = original;
+ while(*temp)
+  temp++;
+ temp-=2;
+ while(temp >= original)
+ {
+  *rev = *temp;
+  rev++;
+  *rev = *(temp+1);
+  rev++;
+  temp-=2;
+ } 
+ *rev = '\0';
+}
+void main()
+{
+ int i, answer;
+ char *EXAMPLE[50] =
+ {
+  "바보야", "야보바", "병시낭"
+ };
+ char Input[50];
+ char rev[50] = {0, };
+ printf("한글 3글자 입력 : ");
+ scanf("%s", Input);
+ Reverse(Input, rev); 
+ for(i = 0; i < 3; i++)
+  printf("%d. %s ", i+1, EXAMPLE[i]);
+ printf("답 :");
+ scanf("%d", &answer);
+ for(i = 0; i < 3; i++)
+ {
+  if(strcmp(rev, EXAMPLE[answer-1]) == 0)
+  {
+   printf("답을 맞추셨습니다.\n");
+   break;
+  }
+ }
+ if(i == 3)
+  printf("답이 틀렸습니다.\n");
+}
+ 

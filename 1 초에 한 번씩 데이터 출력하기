@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <windows.h>
+ 
+#define ONE_SECOND 1000
+ 
+int main(int argc, char* argv[]){
+    while (1){
+        printf("1 초에 한번씩 출력\n");
+        Sleep(ONE_SECOND);
+    }
+    return 0;
+}

@@ -1,0 +1,92 @@
+#include "stdafx.h"
+#include "stdlib.h"
+
+typedef struct student {
+	int num; //학번.
+	char name[20], answer[20]; //이름, 답.
+	int count, score, stand; //맞은 개수, 점수, 등수.
+	struct student *next; //연결리스트 포인터 변수.
+}STUDENT;
+
+void main()
+{
+	FILE *ifp, *ofp; //입출력 파일 포인터 선언.
+	STUDENT *list, *temp, *standTemp; //연결리스트 포인터 변수.
+	char *rightAnswer = "13214"; //정답.
+	int result; //fscanf()함수의 반환 값.
+	int i, j;
+
+	if ((ifp = fopen("source.txt", "r")) == NULL) { //반환 값이 NULL값이면 프로그램 종료.
+		printf("입력 파일을 열지 못했습니다.\n");
+		system("pause");
+		exit(-1);
+	}
+
+	if ((ofp = fopen("result.txt", "w")) == NULL) { //반환 값이 NULL값이면 프로그램 종료.
+		printf("출력 파일을 열지 못했습니다.\n");
+		system("pause");
+		exit(-1);
+	}
+
+	list = (STUDENT *)malloc(sizeof(STUDENT)); //STUDENT구조체 크기만큼의 포인터 변수 동적메모리 할당.
+
+	temp = list;
+	while (1) {
+		result = fscanf(ifp, "%d%s%s", &temp->num, temp->name, temp->answer); //fscanf()함수의 반환값 저장 및 텍스트 파일에 있는 값을 한줄씩 각 변수에 값 저장.
+		if (result == EOF) break; //반환값이 EOF이면 반복문 종료.
+		temp->count = 0; //맞은 개수 0으로 초기화.
+		temp->score = 0; //점수 0으로 초기화.
+		temp->stand = 11; //등수(본인과도 비교하기 때문에 1더 큰 수로 초기화).
+		temp->next = (STUDENT *)malloc(sizeof(STUDENT)); //next 구조체 포인터 변수에 메모리 동적 할당.
+		temp = temp->next; //할당된 next 구조체 포인터 변수의 값을 temp 포인터에 대입.
+	}
+	temp->next = NULL; //연결된 마지막 next 구조체 포인터 변수의 값에 NULL값 대입.
+
+	temp = list; //연결리스트의 맨 앞의 값 대입.
+	for (i = 0; i < 10; i++) { //맞은 개수, 점수 계산 반복문.
+		for (j = 0; j < 5; j++) {
+			if (rightAnswer[j] == temp->answer[j]) { //5개 정답과 5개의 답이 일치하는지 비교.
+				temp->count++; //정답이면 맞은 개수 증가.
+				temp->score += 20; //정답이면 점수 20점 증가.
+			}
+		}
+		temp = temp->next;
+	}
+
+	temp = list; 
+	standTemp = list; //연결리스트의 맨 앞의 값 대입.
+	for (i = 0; i < 10; i++) { //등수 체크 반복문.
+		for (j = 0; j < 10; j++) {
+			if (temp->score >= standTemp->score) { //다른 점수들과 비교(본인과도 비교하므로 stand 변수 값을 1더 큰수로 초기화).
+				temp->stand--; //다른 점수가 더 낮거나 같으면 등수 감소.
+			}
+			standTemp = standTemp->next;
+		}
+		temp = temp->next;
+		standTemp = list; //등수를 다시 비교하기 위해 처음의 값으로 초기화.
+	}
+
+	temp = list;
+	for (i = 0; i < 10; i++) { //출력 파일에 출력.
+		fprintf(ofp, "%2d%10s%5d%5d%5d\n", temp->num, temp->name, temp->count, temp->score, temp->stand);
+		temp = temp->next;
+	}
+
+	fclose(ifp); //입력 파일 닫기.
+	fclose(ofp);//출력 파일 닫기.
+
+	system("pause");
+}
+
+------------------------------------------
+source.txt
+1 PARK 13334
+2 NAM 13224
+3 CHOI 11214
+4 KIM 12224
+5 YUM 11234
+6 LEE 14414
+7 YANG 11314
+8 KWON 12131
+9 CHUNG 12131
+10 HYNG 13214

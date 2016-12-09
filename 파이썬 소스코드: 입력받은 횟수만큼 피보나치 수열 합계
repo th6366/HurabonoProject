@@ -1,0 +1,28 @@
+#피보나치 첫 숫자
+f1=1;
+f2=1;
+
+#피보나치 수열 3번째부터 시작
+fnumber_cnt=2;
+
+#첫 숫자 미리 누적
+sum=2;
+
+#피보나치 반복횟수 입력
+fnumber_limit=int(input("반복할 횟수를 정하세요."));
+
+#피보나치 1,2번째 먼저 출력(반복횟수에 안 들어가기에..
+print("Fibonacci number list ",f1," ",f2," ",end='');
+
+#피보나치 값 누적과 출력
+while(fnumber_cnt<fnumber_limit):
+    temp=f1+f2;
+    print(temp,end=" ");
+    sum+=temp;
+    f1=f2;
+    f2=temp;
+    fnumber_cnt+=1;
+print();
+
+#피보나치 합계 출력
+print("sum=",sum);

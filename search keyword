@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <string.h> //strstr함수 쓰기위한 정의
+
+int main() {
+//입력한 단어가 키워드인지 아닌지 찾는 프로그램
+	char *keyword[7] = { "if","while","else","for","int","float","double" };
+	char add[10];
+	gets(add);
+
+	for (int i = 0; i < 7; i++) {
+		if (strstr(keyword[i], add) != NULL) {
+			printf("키워드입니다\n");
+			return 0;
+		}
+	}
+	printf("키워드가 아닙니다\n");
+
+	return 0;
+}

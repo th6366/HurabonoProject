@@ -1,0 +1,24 @@
+/**회원정보 삭제 :
+     *tip: 실무에서는 회원정보를 Delete 하지 않고 탈퇴여부만 체크한다.*/
+    public boolean deleteMember(String id, String pwd){
+       
+        boolean ok =false ;
+        Connection con =null;
+        PreparedStatement ps =null;
+       
+        try {
+            con = getConn();
+            String sql = "delete from tb_member where id=? and pwd=?";
+           
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            ps.setString(2, pwd);
+            int r = ps.executeUpdate(); // 실행 -> 삭제
+           
+            if (r>0) ok=true; //삭제됨;
+           
+        } catch (Exception e) {
+            System.out.println(e + "-> 오류발생");
+        }      
+        return ok;
+    }

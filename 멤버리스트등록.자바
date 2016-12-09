@@ -1,0 +1,48 @@
+/**멤버리스트 출력*/
+    public Vector getMemberList(){
+       
+        Vector data = new Vector();  //Jtable에 값을 쉽게 넣는 방법 1. 2차원배열   2. Vector 에 vector추가
+       
+           
+        Connection con = null;       //연결
+        PreparedStatement ps = null; //명령
+        ResultSet rs = null;         //결과
+       
+        try{
+           
+            con = getConn();
+            String sql = "select * from tb_member order by name asc";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+           
+            while(rs.next()){
+                String id = rs.getString("id");
+                String pwd = rs.getString("pwd");
+                String name = rs.getString("name");
+                String tel = rs.getString("tel");
+                String addr = rs.getString("addr");
+                String birth = rs.getString("birth");
+                String gender = rs.getString("gender");
+                String job = rs.getString("job");
+                String email = rs.getString("email");
+                String intro = rs.getString("intro");
+               
+                Vector row = new Vector();
+                row.add(id);
+                row.add(pwd);
+                row.add(name);
+                row.add(tel);
+                row.add(addr);
+                row.add(birth);
+                row.add(job);
+                row.add(gender);
+                row.add(email);
+                row.add(intro);
+               
+                data.add(row);             
+            }//while
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return data;
+    }//getMemberList()

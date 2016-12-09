@@ -1,0 +1,31 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.event.*;
+import javax.swing.*;
+class RadioEx extends JFrame{
+    JRadioButton[] rb=new JRadioButton[3];
+    String[] names={"사과", "배", "체리"};
+    
+    RadioEx(){
+        this.setTitle("라디오버튼 생성");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+        ButtonGroup group=new ButtonGroup();
+        
+        for(int i=0; i<rb.length; i++){
+            rb[i]=new JRadioButton(names[i]);
+            group.add(rb[i]);
+            this.add(rb[i]);
+        }
+        
+        this.setSize(250,200);
+        this.setVisible(true);
+    }
+}
+public class JavaApplication32 {
+
+    public static void main(String[] args) {
+        new RadioEx();
+    }
+    
+}
