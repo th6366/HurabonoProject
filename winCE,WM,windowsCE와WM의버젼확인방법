@@ -1,0 +1,1 @@
+OSVERSIONINFO ver;ver.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);GetVersionEx(&ver);if ((ver.dwMajorVersion == 5) && (ver.dwMinorVersion == 1)){ RETAILMSG(1, (TEXT("Test App run WM!!!!!!!!!!!!!!!!!!!!!\r\n")));}else{ RETAILMSG(1, (TEXT("Test App run CE!!!!!!!!!!!!!!!!!!!!!\r\n")));}

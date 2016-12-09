@@ -1,0 +1,75 @@
+#include <stdio.h>
+ 
+#ifdef WIN32    //윈도우 환경이면 windows.h를 추가(윈도우 환경이어도 컴파일 환경에 따라 WIN32가 없을 수 있음)
+#include <windows.h>
+#else           //윈도우 환경이 아닐 경우 WinDef.h나 WinGDI.h에 선언, 정의된 내용 중 필요한 것들을 아래에 작성
+//아래의 DWORD, WORD, BYTE, COLORREF는 WinDef.h에 선언된 내용
+typedef unsigned long       DWORD;
+typedef unsigned short      WORD;
+typedef unsigned char       BYTE;
+typedef DWORD               COLORREF;
+ 
+//아래의 RGB, GetRValue, GetGValue, GetBValue는 WinGDI.h에 선언된 내용
+#ifndef RGB
+#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+#endif
+ 
+#ifndef GetRValue                           //GetRValue가 선언되어 있지 않다면
+#define GetRValue(rgb)      ( (BYTE)(rgb) ) ⁄⁄GetRValue를 내가 선언
+#endif
+#ifndef GetGValue
+#define GetGValue(rgb)      ( (BYTE)(((WORD)(rgb))>>8) )
+#endif
+#ifndef GetBValue
+#define GetBValue(rgb)      ( (BYTE)((rgb)>>16) )
+#endif
+#endif
+ 
+//아래 3개의 함수들은 int대신 BYTE형으로 내부 처리 및 반환을 해도 상관없지만
+//32비트 CPU의 기본 처리 단위는 4byte이므로 int형으로 처리하는 게 더 낫다.
+int REF2R( COLORREF rgb );
+int REF2G( COLORREF rgb );
+int REF2B( COLORREF rgb );
+ 
+int main( )
+{
+    DWORD dwTemp = RGB( 56, 128, 108 );
+ 
+    int nR1 = REF2R( dwTemp );
+    int nG1 = REF2G( dwTemp );
+    BYTE nB1 = BYTE( REF2B(dwTemp) ); //int형을 반환하지만, 반환하는 값의 범위가 BYTE형 범주이므로 상관없음
+ 
+    //int로 받아도 되고 BYTE로 받아도 된다.
+    BYTE nR2 = GetRValue( dwTemp );
+    BYTE nG2 = GetGValue( dwTemp );
+    BYTE nB2 = GetBValue( dwTemp );
+ 
+    printf( "R:%d, G:%d, B:%d\n", nR1, nG1, nB1 );
+    printf( "R:%d, G:%d, B:%d\n", nR2, nG2, nB2 );
+ 
+    return 0;
+}
+ 
+int REF2R( COLORREF rgb )
+{
+    int nBitmaskRed = 0x0000ff;  //255
+    int nRed = rgb & nBitmaskRed;
+ 
+    return nRed;
+}
+ 
+int REF2G( COLORREF rgb )
+{
+    int nBitmaskGreen = 0x00ff00; //65280
+    int nGreen = ( rgb & nBitmaskGreen ) >> 8;
+ 
+    return nGreen;
+}
+ 
+int REF2B( COLORREF rgb )
+{
+    int nBitmaskBlue = 0xff0000;  //16711680
+    int nBlue = ( rgb & nBitmaskBlue ) >> 16;
+ 
+    return nBlue;
+}

@@ -1,0 +1,33 @@
+int Replace( TCHAR chOld, TCHAR chNew );
+//chOld : 교체될 문자
+//chNew : 교체할 문자
+//반환값 : 교체한 문자 또는 문자열의 수
+ 
+int Replace( LPCTSTR lpszOld, LPCTSTR lpszNew );
+//lpszOld : NULL로 종결되는 교체될 문자
+//lpszNew : NULL로 종결되는 교체할 문자
+//반환값 : 교체한 문자 또는 문자열의 수
+
+#include <atlstr.h>       //CString
+ 
+#define print( str ) printf( "%s\n", str )
+ 
+int main( )
+{
+    CString strText1;
+    CString strText2;
+ 
+    strText1 = "String";
+    strText2 = "C⁄C++";
+ 
+    print( strText1 );
+    print( strText2 );
+ 
+    strText1.Replace( "Str", "Play" );
+    strText2.Replace( "C++", "Java" );
+ 
+    print( strText1 );
+    print( strText2 );
+ 
+    return 0;
+}

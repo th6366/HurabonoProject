@@ -1,0 +1,37 @@
+#include <stdio.h>
+int vowel(void); //모음의 갯수를 알아내는 함수.
+main(){
+ int n;
+ n = vowel(); //n은 모음의 갯수.
+ printf("모음의 갯수는 %d개 입니다.\n",n);
+}
+/*
+int vowel(void){ 
+ int cnt=0; //cnt는 모음의 개수
+ char a;
+ while((a=getchar())&&a!='\n'){
+  if(a=='a'||a=='A'||a=='i'||a=='I'||a=='o'||a=='O'||a=='u'||a=='U'||a=='e'||a=='E')
+   x++;
+  
+  else if(getchar()=='\n')
+   break;
+ }
+  return cnt;
+}
+*/
+int vowel(void){
+ char c;
+ int cnt = 0;
+ 
+ while(1){
+  scanf("%c", &c); //한개한개씩 입력을 받는다.
+  
+  if(c=='a'||c=='A'||c=='e'||c=='E'||c=='i'||c=='I'||c=='o'||c=='O'||c=='u'||c=='U')
+   cnt++; //모음을 입력하면 cnt를 증가시킨다.
+  
+  else if(c=='\n')
+   break; // 엔터키가 들어올때까지 무한루프시킨다.
+ }
+ return cnt;
+}
+ 

@@ -1,0 +1,89 @@
+import java.util.Random;
+
+public class QuickSort {
+
+    /**
+     * 퀵 소트 처리
+     * 
+     * @param array
+     * @param left
+     * @param right
+     */
+    public void sort(Integer[] array, int left, int right) {
+
+        if(left >= right){
+            printArray(array);
+            return;
+        } 
+        
+       int low = left + 1; // low 는 left 의 한칸 옆
+        int high = right;   // high 는 right 와 동일함
+        int pivot = array[left];
+        
+        while (low <= high) {
+            while (low <= right && array[low] <= pivot) {
+                low++;
+            }
+
+            while (left + 1 <= high && pivot <= array[high]) {
+                high--;
+            }
+
+            if (low <= high) {
+                int temp = array[low];
+                array[low] = array[high];
+                array[high] = temp;
+            } else {
+                array[left] = array[high];
+                array[high] = pivot;
+            }
+        }
+
+        sort(array, left, high - 1 );
+        sort(array, high + 1, right );
+    }
+
+    /**
+     * 배열 출력
+     * 
+     * @param array
+     */
+    public <E> void printArray(E[] array) {
+        for (E value : array) {
+            System.out.print(value);
+            System.out.print(" ");
+        }
+        System.out.println("");
+    }
+    
+    /**
+     * 무작위 Int 배열 생성
+     * 
+     * @param capacity
+     * @param randomBound
+     * @return
+     */
+    public Integer[] initArray(int capacity, int randomBound) {
+        Integer[] array = new Integer[capacity];
+        Random random = new Random();
+        for (int i = 0; i < capacity; i++)
+            array[i] = random.nextInt(randomBound);
+        
+        return array;
+    }
+
+    public static void main(String[] args) {
+
+        int capacity = 10;
+        int randomBound = 100;
+        QuickSort quick = new QuickSort();
+        
+        // 정렬 대상 생성
+        Integer[] array = quick.initArray(capacity, randomBound);
+        quick.printArray(array);
+        
+        System.out.println("------------ start -------------");
+        
+        quick.sort(array, 0, array.length - 1);
+    }
+}

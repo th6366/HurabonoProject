@@ -1,0 +1,90 @@
+#include "stdafx.h"
+#include "stdlib.h"
+#define Q_SIZE 4
+
+typedef char element; //큐 원소(element)의 자료형을 char로 정의.
+typedef struct {
+	element queue[Q_SIZE];
+	int front, rear;
+}QueueType;
+
+//공백 순차 큐를 생성하는 연산.
+QueueType *createQueue() {
+	QueueType *q;
+	q = (QueueType *)malloc(sizeof(QueueType));
+	q->front = -1;
+	q->rear = -1;
+	return q;
+}
+
+//순차 큐가 공백 상태인지 검사하는 연산.
+int isEmpty(QueueType *q) {
+	if (q->front == q->rear) {
+		printf("Queue is Empty!");
+		return 1;
+	}
+	else return 0;
+}
+
+//순차 큐가 포화 상태인지 검사하는 연산.
+int isFull(QueueType *q) {
+	if (q->rear == Q_SIZE - 1) {
+		printf("Queue is Full!");
+		return 1;
+	}
+	else return 0;
+}
+
+//순차 큐의 rear에 원소를 삽입하는 연산.
+void enQueue(QueueType *q, element item) {
+	if (isFull(q)) return;
+	else q->queue[++q->rear] = item;
+}
+
+//순차 큐의 front에서 원소를 삭제하는 연산.
+element deQueue(QueueType *q) {
+	if (isEmpty(q)) return 0;
+	else q->queue[++q->front];
+}
+
+//순차 큐의 가장 앞에 있는 원소를 검색하는 연산.
+element peek(QueueType *q) {
+	if (isEmpty(q)) exit(1);
+	else return q->queue[q->front + 1];
+}
+
+//순차 큐의 원소를 출력하는 연산.
+void printQ(QueueType *q) {
+	int i;
+
+	printf(" Queue : [");
+	for (i = q->front + 1; i <= q->rear; i++)
+		printf("%c ", q->queue[i]);
+	printf("]");
+}
+
+void main()
+{
+	QueueType *q1 = createQueue();
+	element data;
+
+	printf("순차 큐 연산\n");
+	printf("\n삽입 A>>"); enQueue(q1, 'A'); printQ(q1);
+	printf("\n삽입 B>>"); enQueue(q1, 'B'); printQ(q1);
+	printf("\n삽입 C>>"); enQueue(q1, 'C'); printQ(q1);
+
+	data = peek(q1); printf("peek item : %c\n", data);
+
+	printf("\n삭제 >>"); data = deQueue(q1); printQ(q1);
+	printf("\t삭제 데이터 : %c", data);
+	printf("\n삭제 >>"); data = deQueue(q1); printQ(q1);
+	printf("\t삭제 데이터 : %c", data);
+	printf("\n삭제 >>"); data = deQueue(q1); printQ(q1);
+	printf("\t삭제 데이터 : %c", data);
+
+	printf("\n삽입 D>>"); enQueue(q1, 'D'); printQ(q1);
+	printf("\n삽입 E>>"); enQueue(q1, 'E'); printQ(q1);
+	printf("\n");
+
+	system("pause");
+}

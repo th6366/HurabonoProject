@@ -1,0 +1,48 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.event.*;
+import javax.swing.*;
+
+class Ex1 extends JFrame{
+    Ex1(){
+        this.setTitle("CheckBox Pratice");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+        
+        JCheckBox cb = new JCheckBox("버튼 비활성화");
+        JCheckBox cb1 = new JCheckBox("버튼 감추기");
+        JButton btn = new JButton("test button");
+        
+        cb.addItemListener(new ItemListener(){
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange()==ItemEvent.SELECTED)
+                    btn.setEnabled(false);
+                else
+                    btn.setEnabled(true);
+            }
+        });
+        cb1.addItemListener(new ItemListener(){
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange()==ItemEvent.SELECTED)
+                    btn.setVisible(false);
+                else
+                    btn.setVisible(true);
+            } 
+        });
+        
+        this.add(cb);
+        this.add(cb1);
+        this.add(btn);
+        this.setSize(300,200);
+        this.setVisible(true);
+    }
+}
+public class JavaApplication47 {
+
+    public static void main(String[] args) {
+        new Ex1();
+    }
+    
+}

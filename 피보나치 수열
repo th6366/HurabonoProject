@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int fiboFunc(int, int);
+
+void main()
+{
+ int a=1, b=1;
+ printf("%d %d %d\n", fiboFunc(a, b), b, a);
+ 
+ system("pause");
+}
+
+int fiboFunc(int a, int b)
+{
+ if(a+b < 100)
+ {
+     printf("%d ", fiboFunc(b, a+b));
+ }
+ return a + b;
+}

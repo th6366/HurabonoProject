@@ -1,0 +1,34 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class GraphicsClipEx extends JFrame{
+    GraphicsClipEx(){
+        this.setTitle("Clip 사용 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        MyPanel panel = new MyPanel();
+        this.add(panel, BorderLayout.CENTER);
+        this.setLocationRelativeTo(null);
+        this.setSize(300,400);
+        this.setVisible(true);
+    }
+    class MyPanel extends JPanel{
+        ImageIcon icon = new ImageIcon("image0.jpg");
+        Image img = icon.getImage();
+        
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.setClip(100,20,150,150);
+            g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+            g.setColor(Color.yellow);
+            g.setFont(new Font("Arial", Font.ITALIC, 40));
+            g.drawString("Go Gator!", 10, 150);
+        }
+    }
+}
+public class JavaApplication15 {
+    public static void main(String[] args) {
+        new GraphicsClipEx();
+    }
+}

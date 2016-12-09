@@ -1,0 +1,70 @@
+import java.nio.CharBuffer;
+import java.nio.ByteBuffer;
+import java.io.FileInputStream;
+
+public class BufferTest {
+
+        /**
+         * @param args
+         */
+        public static void main(String[] args) {
+                // TODO Auto-generated method stub
+        
+                int buffsize = 1024;
+                
+                CharBuffer cb = CharBuffer.allocate(buffsize);
+                
+                try {
+                        cb.put("방");
+                        cb.put("가와요~");        
+                        
+                        //버퍼의 처음으로 이동
+                        cb.rewind();
+                        
+                        System.out.print(cb.get());
+                        System.out.print(cb.get());
+                        System.out.print(cb.get());
+                        System.out.print(cb.get());
+                        System.out.print(cb.get());
+                        
+                        //Buffer Clear
+                        cb.clear();
+                        
+                        /*
+                         * 이번엔 ByteBuffer를 이용한 예 입니다.
+                         */
+                        ByteBuffer bb = ByteBuffer.allocate(buffsize);
+                        
+                        bb.putChar('O');
+                        bb.putChar('R');
+                        bb.putChar('A');
+                        bb.putChar('C');
+                        bb.putChar('L');
+                        bb.putChar('E');
+                        bb.putInt(100);
+                        bb.putChar('\n');
+                        
+                        //버퍼의 처음으로 이동
+                        bb.rewind();
+                        
+                        System.out.print(bb.getChar());
+                        System.out.print(bb.getChar());
+                        System.out.print(bb.getChar());
+                        System.out.print(bb.getChar());
+                        System.out.print(bb.getChar());
+                        System.out.print(bb.getChar());
+                        System.out.print(bb.getInt());
+                        System.out.print(bb.getChar());
+                        
+                        //BufferClear
+                        bb.clear();
+                        
+                        
+                        
+                }
+                catch(Exception e) {
+                        e.printStackTrace();
+                }
+        }
+
+}

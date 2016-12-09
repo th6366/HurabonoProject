@@ -1,0 +1,10 @@
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+    char buf[80];
+    while(fgets(buf, 80, stdin)!= NULL)
+    {
+        (atoi(buf)&1)?printf("홀수\n"):printf("짝수\n");
+    }
+}

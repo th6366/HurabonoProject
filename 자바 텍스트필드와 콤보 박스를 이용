@@ -1,0 +1,45 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.event.*;
+import javax.swing.*;
+
+class Ex2 extends JFrame{
+    JTextField tf=new JTextField(10);
+    JComboBox box=new JComboBox();
+    int x;
+    Ex2(){
+        this.setTitle("JTextField and JComboBox");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+        
+        tf.addKeyListener(new KeyListener(){
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    box.addItem(tf.getText());
+                    tf.setText("");
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+            
+        });
+        this.add(tf);
+        this.add(box);
+        this.setSize(300,200);
+        this.setVisible(true);
+    }
+}
+public class JavaApplication48 {
+
+    public static void main(String[] args) {
+        new Ex2();
+    }
+    
+}

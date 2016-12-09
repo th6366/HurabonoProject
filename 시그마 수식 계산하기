@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <math.h>
+double J1(double x);
+int main()
+{
+    double x;
+    double exact;
+    int k;
+    printf(" x-coor Exactn\n");
+    for (k = 0; k <= 100; k = k + 1)
+    {
+        x = (double)k / 10.0;
+        exact = J1(x);
+        printf("%7.3f %12.6f \n", x, exact);
+    }
+}
+ 
+double Factorial(int n);
+//J1(x) = 시그마 m = 0부터 무한대까지(-1) ^ m / m!(m + 1)!*(x / 2) ^ 2m + 1
+double J1(double x)
+{
+    int m = 0;
+    double value = 0;
+    double value2 = 1;//의도적으로 value와 다르게 초기화
+    for (m = 0; value != value2; m++)
+    {
+        value += pow((-1), m) / Factorial(m)*Factorial(m + 1)*pow((x / 2), 2*m + 1);
+        value2 = value;
+    }
+    return value;
+}
+double Factorial(int n)
+{
+    if (n <= 1)
+    {
+        return 1;
+    }
+    return n*Factorial(n-1);
+}

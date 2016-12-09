@@ -1,0 +1,122 @@
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <net/if.h>
+
+#include <arpa/inet.h>
+
+typedef struct _ifinfo
+{
+    struct sockaddr_in *sin;
+	char ifname[40];
+	int  fd;	
+    struct ifreq *ifr;
+	struct ifconf ifcfg;
+	int  ifnum;
+} IF; 
+
+IF  *ifopen();
+IF  *ifget(IF *);
+int ifclose(IF *);
+
+IF *ifopen()
+{
+    struct sockaddr_in *sin;
+    int numreqs = 30;
+	IF *LIF;
+
+	LIF = (IF *)malloc(sizeof(&LIF));
+	memset((void *)LIF, 0x00,sizeof(&LIF));
+
+    LIF->fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+    memset(&ifcfg, 0, sizeof(ifcfg));
+    ifcfg.ifc_buf = NULL;
+    ifcfg.ifc_len = sizeof(struct ifreq) * numreqs;
+    ifcfg.ifc_buf = malloc(ifcfg.ifc_len);
+    ifcfg.ifc_len = sizeof(struct ifreq) * numreqs;
+    ifcfg.ifc_buf = realloc(ifcfg.ifc_buf, ifcfg.ifc_len);
+    if (ioctl(LIF->fd, SIOCGIFCONF, (char *)&ifcfg) < 0)
+    {
+        perror("SIOCGIFCONF ");
+		return (IF *)NULL;
+    }
+    //printf("%d : %d \n", ifcfg.ifc_len, sizeof(struct ifreq));
+    LIF->ifr = ifcfg.ifc_req;
+	return LIF;
+}
+
+IF *ifget(IF *AIF)
+{
+	if (AIF->ifnum > 0)
+	{
+		AIF->ifr++;
+	}
+	if (AIF->ifnum < AIF->ifr.ifc_len)
+	{
+		AIF->ifnum += sizeof(struct ifreq);
+		strncpy(AIF->ifname, AIF->ifr->ifr_name, 40);
+		AIF->sin = (struct sockaddr_in *)&AIF->ifr->ifr_addr; 
+		return AIF->ifr;
+	}
+	else
+		return (IF *)NULL;
+		
+	/*
+    for (n = 0; n < ifcfg.ifc_len; n+= sizeof(struct ifreq))
+    {
+        printf("%s\n", ifr->ifr_name);
+        sin = (struct sockaddr_in *)&ifr->ifr_addr;
+        printf("IP    %s\n", inet_ntoa(sin->sin_addr) );
+		if ( (sin->sin_addr.s_addr) == INADDR_LOOPBACK)
+		{
+			printf("Loop Back\n");
+		}
+    
+        ioctl(fd,  SIOCGIFBRDADDR, (char *)ifr);
+        sin = (struct sockaddr_in *)&ifr->ifr_broadaddr;
+        printf("BROD  %s\n", inet_ntoa(sin->sin_addr));
+
+        ioctl(fd, SIOCGIFNETMASK, (char *)ifr);
+        sin = (struct sockaddr_in *)&ifr->ifr_addr;
+        printf("MASK  %s\n", inet_ntoa(sin->sin_addr));
+
+        ioctl(fd, SIOCGIFMTU, (char *)ifr);
+        printf("MTU   %d\n", ifr->ifr_mtu);
+
+        ioctl(fd, SIOCGIFINDEX, (char *)ifr);
+        printf("BAND  %d %d\n", ifr->ifr_ifindex, ifr->ifr_bandwidth);
+
+        printf("\n");
+        ifr++;
+    }
+	*/
+}
+
+int infget(IF *AIF)
+{
+	close(AIF->fd);
+	free(AIF);
+}
+
+int main()
+{
+	IF *ifp;
+
+	ifp = ifopen();
+	if (ifp == NULL)
+	{
+		perror("error ");
+	}
+	while((ifp = ifget(ifp)) != NULL)
+	{
+		printf("GET GET\n");
+	}
+}

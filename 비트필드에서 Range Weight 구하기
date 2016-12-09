@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+float AndOrValue(int a, int b)
+{
+  int n = 0;
+  int Orflag = 0;
+  int Andflag = 0;
+  for (n = 0; n < 16; n++)
+  {
+    if ( a >> 30 && b >> 30)
+    {
+      Andflag++;
+    }
+    if (((a >> 30) || (b >> 30)))
+    {
+      Orflag++;
+    }
+
+    a = a << 2;
+    b = b << 2;
+  }
+  return (float)Andflag/(float)Orflag;
+}
+int main(int argc, char **argv)
+{
+  printf("%f\n", AndOrValue(1000, 5000));
+}

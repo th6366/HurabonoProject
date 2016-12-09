@@ -1,0 +1,177 @@
+프로그램 설명: 
+1) 가우스 조던 소거법을 이용하여 연립방정식의 근을 구하는 프로그램입니다.
+2) n by n 행렬을 만들고 n의 범위는 (2<= n && 10>=n ) 의 조건을 가집니다.
+ 
+구현 설명:
+1) 이차배열 matrix[10][11]을 선언 후 값을 입력합니다.
+2) 이 프로그램의 모든 함수의 아규먼트는 행렬의 범위 n과 이차배열의 포인터 (*matrix)[11] 입니다.
+3) 이 프로그램의 함수는 총 4개로 이루어져 있습니다. 
+ - JordanElimination : 조던 소거법을 실행합니다.
+ - GaussElimination : 가우스 소거법을 실행합니다.
+ - InputMatrix : 행렬의 값들을 입력합니다.
+ - PrintMatrix : 행렬의 연산 결과를 출력합니다.
+4) main 함수에서 n의 값을 범위 내에 입력하지 못할 시 무한 루프를 실행합니다.
+5) 해가 무수히 많거나 해가 없을 경우 해가 없음을 보여주고 프로그램은 종료됩니다.
+6) 가우싀 조던의 세가지 연산이 모두 포함됩니다.
+ - 두 개 방정식(행) Ri와 Rj를 교환한다(Ri <-> Rj)
+ - 방정식 Ri에 0이 아닌 수 a를 곱한다.(a * Ri)
+ - 방정식 Ri에 0이 아닌 수 a를 곱하고, 그 결과를 다른 방정식 Rj에 더한다. (a*Ri+Rj)
+7) 각 함수의 설명은 함수 위의 주석으로 설명하겠습니다.
+ 
+구현날짜: 2011년 10월 31일(월요일)
+ 
+제출일자: 2011년 11월  2일(수요일)
+*/
+ 
+#include <stdio.h>
+#include <stdlib.h>
+ 
+/* function prototype */
+void JordanElimination(int n, double (*matrix)[11]);
+void GaussElimination(int n, double (*matrix)[11]);
+void InputMatrix(int n, double (*matrix)[11]);
+void PrintMatrix(int n, double (*matrix)[11]);
+ 
+/*main*/
+int main()
+{
+    double matrix[10][11]; // double형 이차원 배열 선언
+    int n;  
+    int i=0;
+ 
+    do //n 의 값을 2부터 10까지 구현받기 위해 while문을 선언함, 범위 밖 입력 시 무한 루프 실행
+    {   
+        printf("Matrix size : ");
+        scanf("%d",&n);
+        if(n>10||n<2)
+            printf("2이상 10이하의 수를 입력하십시오\n");
+    }while(n>10||n<2);
+         
+     
+ 
+    InputMatrix(n, matrix); // 행렬의 값을 입력합니다
+    GaussElimination(n, matrix); // 가우스 소거법을 실행합니다.
+    JordanElimination(n, matrix); // 조던 소거법을 실행합니다.
+    PrintMatrix(n, matrix); // 연산 결과를 출력합니다.
+ 
+    return 0;
+}
+ 
+ 
+/* 가우스 소거법 함수
+만약 matrix[a][a] (0<=a<n)행렬요소 중에 0 이 있거나 연산 중 0이 생겼을 경우
+ - 두 개 방정식(행) Ri와 Rj를 교환한다(Ri <-> Rj)
+의 연산을 통해 그 다음 행과 값을 교환합니다. 이는 요소가 0이 나타나지 않을 때 까지 반복됩니다.
+모든 행과의 교환 후에도 모든 요소가 0일 시 프로그램은 종료됩니다.
+ 
+*/
+void GaussElimination(int n, double (*matrix)[11])
+{
+    int i, j, x;
+     
+    for(i=0; i<n; i++)
+    {
+        double temp = matrix[i][i]; // i행의 모든 원소를 i행i열 원소로 나누어 주기 위해 값을 입력 받습니다.
+                                    // 또는 이 값이 0 일 경우 값을 교환하기 위한 용도로 사용합니다.
+        double temp2; // 만약 i행 i열 원소가 0이 생길 시 i행을 그 다음 행과 바꾸기 위해 사용할 임시 변수입니다.
+        int z = 1; // temp 값의 입력이 0을 방지하기 위해 사용할 check용 변수, 처음 초기 검사를 위해 1로 초기화합니다
+        while(temp==0&&z!=0) // matrix[a][a] (0<=a<n) 행렬요소가 0일 경우 문제가 생겨 그 다음 행과 교환합니다.
+        {
+            if(matrix[n-1][n-1] == 0 || z+i==n) // 모든  matrix[a][a]이 계속 0 이거나 루프가 범위를 초과 경우
+            {   
+                printf("해가 없습니다\n");
+                exit(0); // 프로그램 종료
+            }
+            for(j=0; j<n+1; j++) // 그 다음 행과 값들을 교환
+            {
+                double temp = matrix[i][j];
+                matrix[i][j] = matrix[i+z][j];
+                matrix[i+z][j] = temp;
+            }
+            temp = matrix[i][i]; // 다시 matrix[a][a]가 0이 아닌지 확인하기 위해 
+            if(temp!=0) // 0이 아닐 경우 check 변수 z를 0으로 만들어서 while문 탈출
+                z = 0;
+            else if(temp==0) //0일 경우 그 다음 행과 다시 교환하기 위해 z값을 1 추가
+                z++;
+        }
+ 
+ 
+        for(j=0; j<n+1; j++)
+        {
+            matrix[i][j] = matrix[i][j]/temp; //i행의 모든 원소들을 i행i열의 원소의 값으로 나누어서 i행i열을 1로 만들어 줍니다.    
+        }
+        if(i<n-1)    // 미리 그 다음 행을 지금 계산한 루프와 값과 계산합니다 아래 주석에 있는 연산을 합니다.
+        {           // 방정식 Ri에 0이 아닌 수 a를 곱하고, 그 결과를 다른 방정식 Rj에 더한다. (a*Ri+Rj)
+            for(x=1; x<n; x++)
+            {   
+                temp2 = matrix[i+x][i];
+                for(j=0; j< n+1; j++)
+                {
+                    matrix[i+x][j] -=(temp2*matrix[i][j]);
+                }
+            }
+        }
+    }
+}
+ 
+/*  조던 소거법 함수
+n by n 행렬의 마지막을 행을 제외한 행렬의 가장 오른쪽 열부터 모든 행을 모두 0으로 만들어 줍니다.
+이 0으로 만들어주는 작업을 왼쪽 열로 한칸 씩 와서 같은 작업을 반복합니다. 단 제거의 제외는 마지막 행의 그 위 행까지 늘어납니다.
+이 작업에서 연립방정식의 해를 담고 있는 오른 쪽 열(n)을 위 작업의 0으로 만들어주면서 빼주는 값을 같이 빼줍니다. 
+*/
+void JordanElimination(int n, double (*matrix)[11])
+{
+    int i, j; // for루프를 위한 변수
+    for(i=n-1; i>0; i--) // 마지막 열부터 왼쪽으로 옵니다.
+    {
+        double temp = matrix[i][n]; // 연립방정식의 해을 담고 있는 열을 임시 저장합니다.
+        for(j=0; j<i; j++) // 행은 가장 위에 있는 행부터 시작합니다. 
+        {
+            double temp2;
+            temp2 = matrix[j][i];
+            matrix[j][i] = 0; // 지금 있는 열의 값을 0으로 만들어줍니다.
+            matrix[j][n] = matrix[j][n]-temp*temp2; // 0으로 만들면서 빼준 값을 해를 담고 있는 열에 함께 빼줍니다.
+        }
+    }
+}
+/* 입력 함수
+n by n 행렬을 만든 후
+이 행렬의 원소 값을 입력해줍니다.
+*/
+ 
+ 
+void InputMatrix(int n, double (*matrix)[11])
+{
+    int i, j;
+    printf("input elements : \n");
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n+1; j++)
+        {
+            int x;
+            scanf("%d",&x);
+            matrix[i][j] = x;
+        }
+    }
+}
+ 
+/* 출력함수
+계산결과를 출력합니다.
+계산결과를 double 형으로 계산 했기 때문에 미세한 오차가 생길 수 있어서
+단위행렬의 출력은 int형으로 출력합니다.
+그리고 연립방정식의 해를 담고 있는 열은 소수점 6자리 까지 출력합니다.
+*/
+void PrintMatrix(int n, double (*matrix)[11]) 
+{
+    int i, j; // for루프를 위한 원소
+    printf("output result : \n");
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<n; j++)
+        {
+            printf("%d ",(int)matrix[i][j]); // int형으로 출력합니다.
+        }
+        printf("%.6g ",matrix[i][n]); // 소수점 6자리 까지 출력합니다.
+        printf("\n");
+    }
+}

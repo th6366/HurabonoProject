@@ -1,0 +1,9 @@
+<script type="text/javascript">
+
+var d = new Date();
+
+var week = new Array('일', '월', '화', '수', '목', '금', '토');
+
+document.write('오늘 요일: ' + week[d.getDay()] + '요일' + '<br />');
+
+</script>

@@ -1,0 +1,12 @@
+ Point P1 = new Point(iOldX, iOldY); //회전하려고 하는 좌표
+  Point P2 = new Point(2, 2);             //시키기 위한 기준 좌표
+  double dSetDegree = Math.toRadians(newDegree);
+  double cosq = Math.cos(dSetDegree);
+  double sinq = Math.sin(dSetDegree);
+  double sx = P1.x - P2.x;
+  double sy = P1.y - P2.y;
+  double rx = (sx * cosq - sy * sinq) + P2.x; //결과 좌표 x
+  double ry = (sx * sinq + sy * cosq) + P2.y; //결과 좌표 y
+  
+  int iResultX = (int) Math.round(rx);
+  int iResultY = (int) Math.round(ry);

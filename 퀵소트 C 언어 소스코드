@@ -1,0 +1,124 @@
+
+
+
+void quicksort(int left, int right){
+
+int i = left, j = right;
+
+int tmp;
+
+int pivot = arr[(left+right)/2];    //피봇을 중심값으로 하고, 바로 값을 저장
+
+
+
+
+while (i<=j){
+
+while(arr[I] <pivot) i++;     //피봇과 값을 비교하면서 인덱스를 변경함
+
+while(arr[j] > pivot) j--;
+
+
+
+
+if(i<=j){                            //인덱스 이동이 멈추면 두 값을 변경
+
+tmp = arr[i];
+
+arr[i] = arr[j];
+
+arr[j] = tmp;
+
+i++; j--;                    //인덱스 이동을 멈추게 하기 위해서 한번더 i값을 증가시키고 j는 감소시킴
+
+}
+
+}
+
+
+
+
+if(left<j) quicksort(left,j);            //남은 범위를 재귀 호출하여 소팅 반복함. 
+
+if(i<right) quicksort(right,i);
+
+}
+
+
+
+
+
+
+#include <stdio.h>
+
+int arr[1000];
+
+ 
+
+void qsort(int left, int right){                        //배열을 파라미터로 받는건 생략하였음. 
+     int i, j, pivot, temp;
+     i = left; j = right; pivot = i;                        //제일 첫번째를 pivot으로 함
+
+ 
+
+     if (i < j){
+          while (i < j){
+               while (arr[i] < arr[pivot] && i < j) i++;    //pivot 과 비교하면서 인덱스를 옮김
+               while (arr[j] >= arr[pivot] && i < j) j--;
+
+  
+
+               temp = arr[i];                                     //인덱스 이동이 멈추면 i,j를 교체
+               arr[i] = arr[j];
+               arr[j] = temp;
+          }
+
+
+          temp = arr[i];                                      //인덱스 이동이 전체 영역에서 끝나면 pivot과 i를 교체
+          arr[i] = arr[pivot];
+          arr[pivot] = temp;
+
+ 
+
+          qsort(left, i-1);                                    //재귀호출
+          qsort(i + 1, right);
+     }
+}
+
+ 
+
+ 
+
+아래쪽은 별 의미 없음..
+
+ 
+
+int main(void)
+{
+ //freopen("input.txt", "r", stdin);
+ int T;                //TC의 개수
+ int N;                //정렬할 숫자들의 개수
+ int i, j, k;
+
+ scanf("%d", &T);
+ for (i = 0; i < T; i++)                
+ {
+  scanf("%d", &N);                
+  for (j = 1; j <= N; j++)
+  {
+   scanf("%d", &arr[j]);
+  }
+  qsort(0, N);
+
+  for (j = 1; j <= N; j++)
+  {
+   printf("%d ", arr[j]);
+  }
+
+  printf("\n");
+
+ }
+}
+
+
+ 

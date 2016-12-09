@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+
+void main(void)
+{
+
+	int i, j;
+	int ch;
+	int a, b, c;
+	int aa, bb ,cc;
+
+	printf("<q> 키를 누르면 종료됩니다. \n");
+	printf("진행할려면 아무키나 누르세요. : ");
+	ch = getchar();
+
+	while(ch !='q')
+	{
+		srand(time(0));
+		a = rand()%9 + 1;
+		b = rand()%9 + 1;
+		c = rand()%9 + 1;
+		printf("기억력 테스트 게임 입니다. \n");
+		printf("화면에 보이는 숫자들을 기억하였다가 다시 쓰면 됩니다. \n");
+		printf("%5d%5d%5d 곧 사라짐", a, b, c);
+		Sleep(3000);
+		for(i = 0; i < 10; i++)
+			for(j = 0; j < 10; j++)
+				printf("\r \n");
+			printf("답을 입력하시오 : \n");
+			scanf("%d", &aa);
+			scanf("%d", &bb);
+			scanf("%d", &cc);
+
+			if(a == aa && b == bb && c == cc)
+				printf("정답은 3개입니다 \n");
+			else if(a == aa && b == bb)
+				printf("정답은 2개입니다 \n");
+			else if(a == aa && c == cc)
+				printf("정답은 2개입니다 \n");
+			else if(b == bb && c == cc)
+				printf("정답은 2개입니다 \n");
+			else if(a == aa)
+				printf("정답은 1개입니다 \n");
+			else if(b == bb)
+				printf("정답은 1개입니다 \n");
+			else if(c == cc)
+				printf("정답은 1개입니다 \n");
+			else
+				printf("정답이 아닙니다 \n");
+			printf("\n");
+			printf("<q> 키를 누르면 종료됩니다. \n");
+		ch = getchar();
+		}
+}

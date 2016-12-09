@@ -1,0 +1,18 @@
+
+
+이 예제는
+http://www.cplusplus.com/reference/iostream/ios_base/imbue/
+에서 가져왔습니다.
+
+*/
+#include <iostream>
+#include <locale>
+using namespace std;
+
+int main()
+{
+    locale mylocale("french");      // 로케일 객체를 '프랑스' 로 설정한다.
+    cout.imbue( mylocale );   // 이를 cout 로케일로 설정한다.
+    cout << (double) 3.14159 << endl; //프랑스에서는 . 대신 , 를 사용하므로 3,14159 로 표시된다. 
+    return 0;
+}

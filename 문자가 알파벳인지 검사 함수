@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <ctype.h>
+ 
+int main( )
+{
+    bool bCheck = false;
+    char strTemp[] = "2T3y4J";
+ 
+    //isupper
+    bCheck = isupper( '3' );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    bCheck = isupper( 97 );     //97은 문자로 'a'
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    bCheck = isupper( strTemp[1] );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    //islower
+    bCheck = islower( '3' );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    bCheck = islower( 97 );     //97은 문자로 'a'
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    bCheck = islower( strTemp[1] );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    //isalpha
+    bCheck = isalpha( '3' );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    bCheck = isalpha( 97 );     //97은 문자로 'a'
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    bCheck = isalpha( strTemp[1] );
+    printf( "%s\n", bCheck ? "True" : "False" );
+ 
+    return 0;
+}

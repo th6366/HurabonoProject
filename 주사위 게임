@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void main()
+{
+ int com=0, player=0, sumPlayer=0;
+ int money=1000, bet=10, betMoney;
+ int selBet, selMenu;
+ int i;
+ 
+ while(1)
+ {
+  system("cls");
+  printf("┏━━━━━━━━━━━━┓\n");
+  printf("┃     주사위 게임               ┃\n");
+  printf("┃                                    ┃\n");
+  printf("┃     1.게임 시작               ┃\n");
+  printf("┃     2.보유 점수               ┃\n");
+  printf("┃     0.종료                      ┃\n");
+  printf("┗━━━━━━━━━━━━┛\n");
+  printf(" Select > "); scanf("%d", &selMenu);
+  if(selMenu < 0 || selMenu > 2) continue;
+  switch(selMenu)
+  {
+  case 1:
+   srand(time(NULL));
+   rand();rand();rand();rand();
+   srand(rand());
+   com = rand()%16+3;
+   
+   for(i=0; i<3; i++)
+   {
+    srand(rand());
+    player = rand()%6+1;
+    sumPlayer += player;
+   }
+   
+   money = money - bet;
+   
+   system("cls");
+   printf("┏━━━━━━━━━━━┓\n");
+   printf("┃  보유 점수 : %4d         ┃\n", money);
+   printf("┃  게임 점수 : %4d         ┃\n", bet);
+   printf("┗━━━━━━━━━━━┛\n");
+   printf("주사위 합 : %d\n", sumPlayer);   
+   printf("1.베팅 함 or 0.베팅 안함 : "); scanf("%d", &selBet);
+   switch(selBet)
+   {
+   case 1:
+    printf("베팅 점수(최대 %d) > ", money); scanf("%d", &betMoney);
+    if (com > sumPlayer)
+    {
+     printf("▽ 졌습니다 ▽ - 베팅 점수 삭감합니다.\n");
+     money = money - betMoney;
+    }
+    else if (com < sumPlayer)
+    {
+     printf("☆ 이겼습니다 ☆ - 게임 점수 보전, 베팅 점수 추가합니다.\n");
+     money = money + betMoney + bet;
+    }
+    else
+    {
+     printf("◎ 비겼습니다 ◎ - 게임 점수 보전합니다.\n");
+     money = money + bet;
+    }
+    break;
+   case 0:
+    break;
+   default:
+    break;
+   }
+   com = 0;
+   sumPlayer = 0;
+   break;
+  case 2:
+   printf("보유 점수 : %d\n", money);
+   break;
+  case 0:
+   printf("다음 기회에...!!\n");
+   return;
+  default:
+   break;
+  }
+  system("pause");
+ }
+}
+

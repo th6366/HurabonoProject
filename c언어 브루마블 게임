@@ -1,0 +1,346 @@
+#include <stdio.h>
+#include <conio.h> // getch
+#include <stdlib.h> //system
+#include <time.h>//srand 함수
+#include <windows.h> //Sleep함수
+#include <string.h> // strlen 함수
+
+#define WID 17 // 가로의 길이
+#define LEN 9 // 세로의 길이
+int Player_money = 2856000;
+int Computer_money = 2856000;
+
+void map(int gab,int j);
+void World_List(int p,int a);
+void Computer_buy(int Buy1,int Buy2,int Buy3,int Buy4);
+void Player_buy(int Buy1,int Buy2,int Buy3,int Buy4);
+void Player_List(char ar,int b);
+void ExtendSize(char** pArr,int *pSz);
+int main()
+{
+int dab,dab2,dab3,dab4;
+int i;
+
+printf(“player 1 : *\nplayer 2 : #\n”);
+
+printf(“Are you ready?(Pass any key to continue)\n”);
+
+getch();
+system(“cls”);
+map(0,-2);
+
+while( 1 )
+{
+for(i=0;i<2;i++)
+{
+srand(time(NULL));
+if(i == 1){
+dab2 = rand() % 6+1;
+dab3 = rand() % 6+1;
+printf(“\n\t컴퓨터. %d칸, %d칸 이동 합니다.\n”,dab2,dab3);
+Sleep(1000);
+map(dab2+dab3,i);
+}
+else{
+printf(“\n주사위를 굴려주세요.(아무키나)\t\t”);
+getch();
+dab = rand() % 6+1;
+dab4 = rand() % 6+1;
+printf(“%d칸,%d칸 이동합니다.\n”,dab,dab4);
+Sleep(1000);
+map(dab+dab4,i);                         //컴퓨터와 사용자에게 주사위의 값을 입력받아 그 수만큼 이동.
+}
+}
+}
+return 0;
+}
+void map(int gab,int j)                     // 보드
+{
+int i,k;
+static int result=0,result2=0; //사용자의 주사위 합계:result, 컴퓨터의 주사위 합계:result2
+char player[2]={‘*’,’#’};
+
+if( j == 1 )
+result2 += gab;          // j가 1일 때는 컴퓨터의 주사위 값을 받는다.
+else
+result += gab;          // 다를 경우에는 사용자의 주사위 값을 받는다.
+
+if(result > WID+23 ){
+result %= 40;
+Player_money+=200000;
+printf(“시작점을 지났으므로 200,000원이 추가 됩니다.\n확인:Enter\n”);
+getch();
+}
+if(result2 > WID+23){
+result2 %= 40;          // result또는 result2가 시작 점을 지났을 때 그 값을 40으로 나누어 나머지 값을 result에 넣는다.
+Computer_money+=200000;
+printf(“컴퓨터.시작점을 지났으므로 200,000원이 추가\n확인:Enter\n”);
+getch();
+}
+system(“cls”);
+
+if( result == WID+13 ){            //만약 result가 17+13, 즉, 30이 되면 W를 지우고 적당한 플레이어를 화면에 표시
+printf(“%c”,player[0]);
+World_List(result,1);
+}
+else if( result2 == WID+13 )
+printf(“%c”,player[1]);
+else
+printf(” W”);                // W지점에 말이 화면에 표시되게함.
+
+for(i=WID+14;i<WID+23;i++){                  //윗줄 가로
+if( result == i ){
+printf(“─-%c”,player[0]);
+}                                    //result의 값과 숫자가 일치하면 말을 화면에 표시
+else if( result2 == i )
+printf(“─-%c”,player[1]);
+else
+printf(“─%d”,i);
+}
+if(result == 0 && result2 == 0)  // 말이 Start 점에 있을때의 시작 부분
+printf(“-* #”);
+else if( result == 0 )
+printf(“-* “);
+else if( result2 == 0 )
+printf(“-# “);
+else
+printf(“-Start”);
+puts(“”);
+
+for(i=WID+12,k=1;i>=LEN+9,k<=LEN;i–,k++)       // 세로
+{
+printf(“│\t\t\t\t\t│\n”);
+
+if( result == i ){
+printf(“%c\t\t\t\t\t%d\n”,player[0],k);
+}
+else if( result2 == i )
+printf(“%c\t\t\t\t\t%d\n”,player[1],k);
+else if( result == k ){
+printf(“%d\t\t\t\t\t%c\n”,i,player[0]);
+}
+else if( result2 == k )
+printf(“%d\t\t\t\t\t%c\n”,i,player[1]);
+else
+printf(“%d\t\t\t\t\t%d\n”,i,k);
+}
+
+printf(“│\t\t\t\t\t│\n”);
+if( result == WID+3 ) {
+printf(“%c”,player[0]);
+}
+else if( result2 == WID+3 )
+printf(“%c”,player[1]);
+else
+printf(“S”);                          // S지점에 말이 화면에 표시되게함.
+for(i=WID+2;i>10;i–){                      //아랫줄 가로
+if( result == i){
+printf(“─ %c”,player[0]);
+}
+else if( result2 == i )
+printf(“─-%c”,player[1]);
+else
+printf(“─%d”,i);
+}
+printf(“─  “);
+if( result == LEN+1 ){
+printf(“%c\n”,player[0]);
+}
+else if( result2 == LEN+1 )
+printf(“%c\n”,player[1]);
+else
+printf(“M\n”);                        // M지점에 말이 화면에 표시되게함.
+
+printf(“player가 현재 가지고 있는 돈:%d원\n”,Player_money);//이동한 거리에 맞는 나라와 정보를 출력
+printf(“컴퓨터가 현재 가지고 있는 돈:%d원\n\n”,Computer_money);
+printf(“대지: D, 별장:V, 빌딩: B, 호텔 H\n”);
+
+if(j == 0)
+World_List(result,1);
+else if(j == 1)
+World_List(result2,2);
+}
+
+void World_List(int p,int a)
+{
+int i;
+int len=0;
+int deji,vil,buil,hou;
+char Arr[41][100]={
+“”,
+“타이페이”,
+“마닐라”,
+“싱가폴”,
+“우리집”,
+“제주도”,
+“카이로”,
+“이스탄불”,
+“afgarg”,
+“백두산”,
+“ㅁㄱ도”,
+“ㅛㅛㅓㅡ”,
+“ㅁㄷ서”,
+“ㅁㄷㅅ”,
+“ㅁㄷ고ㅗ”,
+“ㄴㄹ흐”,
+“오ㅡ”,
+“ㅇ호ㅡ”,
+“오흐”,
+“오ㅡ”,
+“노ㅡㅡ”,
+“ㄴ르”,
+“ㄴㄹ흐”,
+“ㄶ른ㅀ”,
+“ㄴㄹ흐”,
+“ㄴㄹ흐”,
+“ㄴㄹ흐”,
+“ㄴ류ㅡㄴ릏”,
+“ㄴㄹ흐ㅠㄴ”,
+“ㄴ로ㅡ뉴”,
+“ㄴㄹ흐뉴ㅡ”,
+“ㄴ흐뉴ㅡㄹ”,
+“ㄴㄹ흐뉴ㅡ”,
+“ㄴㄹ흐뉴ㅡ”,
+“ㄴㄹ흐뉴ㅡ”,
+“ㅕㅕㄷ쇼,”,
+“ㄱ뇨ㅗㅎ”,
+“ㄴㄱㅎㄹ흐”,
+“ㄴㄹ흐”,
+“ㄴ른”,
+“논르”,
+};
+for(i=0;i<40;i++)
+{
+deji=rand() % 10+41;
+vil=rand() % 20+41;
+buil=rand() % 30+41;
+hou=rand() % 40+41;    // 여기 4줄 수정하기(가격)
+
+if(p == i)
+{
+while(Arr[i+1][len]!=’\0′)
+len++;
+printf(“%s\t\t”,Arr[i+1]);
+
+if(a == 1)
+Player_buy(deji*1000,vil*1000,buil*1000,hou*1000);
+if(a == 2)                        // Computer
+Computer_buy(deji*1000,vil*1000,buil*1000,hou*1000);
+}//end if
+} // end for
+} // end function
+void Computer_buy(int Buy1,int Buy2,int Buy3,int Buy4)     //Buy1부터 순서대로 대지료,별장,빌딩,호텔료
+{
+int temp;
+
+temp= rand()%10+1;
+
+switch(temp)
+{
+case 1:
+case 2:
+printf(“컴퓨터.구입하지 않음.\n”);  //  0.1 확률로 구입하지 않음.
+break;
+case 3:
+case 4:
+case 5:
+printf(“컴퓨터.대지를 구입.\n”);
+Computer_money-=Buy1;
+break;
+case 6:
+case 7:
+case 8:
+printf(“컴퓨터.별장을 구입.\n”);
+Computer_money-=Buy2;
+break;
+case 9:
+case 10:
+printf(“컴퓨터.빌딩을 구입.\n”);
+Computer_money-=Buy3;
+break;
+default:
+printf(“컴퓨터.호텔을 구입.\n”);
+Computer_money-=Buy4;
+break;
+}
+}
+void Player_buy(int Buy1,int Buy2,int Buy3,int Buy4)     // 사용자가 사는 목록 리스트
+{
+int input;
+int input2;
+
+printf(“\t\t구입 하시겠습니까?\n1.예 2.아니오\n”);
+printf(“입력:”);
+scanf(“%d”,&input);
+if(input == 1){
+printf(“\n****가격****\n1.대지료 :%d원\n2.별장 :%d원\n3.빌딩 :%d원\n4.호텔: %d원\n”,Buy1,Buy2,Buy3,Buy4);
+printf(“어떤 것을 구입하시겠습니까?:”);
+scanf(“%d”,&input2);
+
+switch(input2)
+{
+case 1:
+printf(“\n대지를 구입\n”);
+Player_List(‘D’,1);
+Player_money-=Buy1;
+break;
+case 2:
+printf(“\n별장을 구입.\n”);
+Player_money-=Buy2;
+Player_List(‘V’,1);
+break;
+case 3:
+printf(“\n빌딩을 구입.\n”);
+Player_money-=Buy3;
+Player_List(‘B’,1);
+break;
+case 4:
+printf(“\n호텔을 구입.\n”);
+Player_money-=Buy4;
+Player_List(‘H’,1);
+break;
+default:
+printf(“잘못입력\n”);
+break;
+}
+}
+else
+printf(“구입하지 않음.\n”);
+}
+
+void Player_List(char ar,int b)
+{
+static int size=0;
+char *arr;
+int i;
+static int index=0;
+
+size+=b;
+
+arr=(char*)malloc(size*sizeof(char)); // 메모리 할당
+
+if(size == index+1)
+ExtendSize(&arr,&size); // 메모리 늘려주는 함수
+index++;
+
+for(i=0;i<index;i++){
+arr[i] = ar;
+printf(“%c,  “,arr[i]);
+}
+printf(“을 보유중.확인:Enter\n”);
+getch();
+free(arr);
+}
+void ExtendSize(char **pArr,int *pSz) // Call-By-Refrence
+{
+int exSize=*pSz+1;
+char *temp=(char*)malloc(sizeof(char)*exSize);
+int i;
+
+for(i=0;i<*pSz;i++)
+temp[i] = (*pArr)[i];
+
+free(*pArr);
+*pArr = temp;
+*pSz += 1;
+}

@@ -1,0 +1,62 @@
+#include <stdio.h>
+#define SIZE 5
+struct market {
+ char name[20];
+ int price;
+ int stock; 
+};
+int main(void)
+{
+ struct market list[SIZE] = {
+ {"apple",1,5},
+ {"orange",2,7},
+ {"mango",3,2},
+ {"melon",5,10},
+ {"candy",1,100}
+ };
+ int i;
+ char input[20];
+ int result;
+ int found ;
+ int amount;
+ /*for (i = 0; i < SIZE; i++)
+ {
+  printf("product name : ");
+  scanf("%s", &list[i].name);
+  printf("price : ");
+  scanf("%d", &list[i].price);
+  printf("stock : ");
+  scanf("%d", &list[i].stock);
+ }*/
+ for (i = 0; i< SIZE; i++)
+  printf("product: %s, price: %d,  stock: %d\n", list[i].name, list[i].price, list[i].stock);
+ while (1) {
+  found = 0;
+  printf("which product?\n");
+  scanf("%s",input);
+  result = strcmp(input, "end");
+  if (result == 0)
+   break;
+  for (i = 0; i < SIZE; i++) {
+   result=strcmp(list[i].name, input);
+   if (result == 0) {
+    found = 1;
+    printf("product: %s, price: %d,  stock: %d\n", list[i].name, list[i].price, list[i].stock);
+    printf("how much?\n");
+    scanf("%d", &amount);
+    if (amount > list[i].stock){
+     printf("not enough in stock\n");
+    break;
+   }
+    else 
+     list[i].stock = list[i].stock - amount;
+    
+   }
+   
+    
+  }
+  if (found == 0)
+   printf("product does not exist\n");
+ }
+ return 0;
+}

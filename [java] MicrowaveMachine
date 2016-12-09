@@ -1,0 +1,52 @@
+// MicrowaveMachine
+// 전자렌지
+// usageVolt : 110 , 220		// 변수
+// doWork(CupNoodle or HotBar)		// 함수
+class MicrowaveMachine
+{
+	private int usageVolt;
+	public void setUsetageVolt(int usageVolt)
+	{
+		this.usageVolt = usageVolt;
+	}
+	public int getUsetageVolt()
+	{
+		return usageVolt;
+	}
+	public void doWork (CupNoodle mCupNoodle)
+	{
+		mCupNoodle.canEat = true;
+	}
+	public void doWork (HotBar mHotBar)
+	{
+		mHotBar.canEat = true;		
+	}
+}
+class CupNoodle
+{
+	boolean canEat = false;
+}
+class HotBar
+{
+	boolean canEat = false;
+}
+// CupNoodle
+// canEat			// 변수
+
+
+// HotBar
+// canEat			// 변수
+
+public class ComputerTest {
+	public static void main(String[] args) {
+		MicrowaveMachine mm = new MicrowaveMachine();
+		HotBar hb = new HotBar();
+		CupNoodle cn = new CupNoodle();
+		System.out.println("HotBar  : " + hb.canEat);
+		System.out.println("CupNoodle  : " + cn.canEat);
+		mm.doWork(hb);
+		mm.doWork(cn);
+		System.out.println("HotBar  : " + hb.canEat);
+		System.out.println("CupNoodle  : " + cn.canEat);
+	}
+}

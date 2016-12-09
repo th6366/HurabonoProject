@@ -1,0 +1,77 @@
+#include "stdafx.h"
+#include "stdlib.h"
+
+typedef struct {
+	int num; //학번.
+	char name[20], answer[20]; //이름, 답.
+	int count = 0, score = 0, stand = 11; //맞은 개수, 점수, 등수(본인과도 비교하기 때문에 1더 큰 수로 초기화).
+}Student;
+
+int main()
+{
+	FILE *ifp, *ofp; //입출력 파일 포인터 선언.
+	Student student[10]; //10개의 구조체 변수 선언.
+	char rightAnswer[6] = "13214"; //정답.
+	int result; //fscanf()함수의 반환 값.
+	int i = 0, j;
+
+	ifp = fopen("source.txt", "r"); //입력 파일 개방. 
+	if (ifp == NULL) { //반환 값이 NULL값이면 프로그램 종료.
+		printf("입력 파일을 열지 못했습니다.\n");
+		system("pause");
+		return 1;
+	}
+
+	ofp = fopen("result.txt", "w"); //출력 파일 개방.
+	if (ofp == NULL) { //반환 값이 NULL값이면 프로그램 종료.
+		printf("출력 파일을 열지 못했습니다.\n");
+		system("pause");
+		return 1;
+	}
+
+	while (1) {
+		result = fscanf(ifp, "%d%s%s", &student[i].num, student[i].name, student[i].answer); //fscanf()함수의 반환값 저장 및 텍스트 파일에 있는 값을 한줄씩 각 변수에 값 저장.
+		if (result == EOF) break; //반환값이 EOF이면 반복문 종료.
+		i++;
+	}
+
+	for (i = 0; i < 10; i++) { //맞은 개수, 점수 계산 반복문.
+		for (j = 0; j < 5; j++) {
+			if (rightAnswer[j] == student[i].answer[j]) { //5개 정답과 5개의 답이 일치하는지 비교.
+				student[i].count++; //정답이면 맞은 개수 증가.
+				student[i].score += 20; //정답이면 점수 20점 증가.
+			}
+		}
+	}
+
+	for (i = 0; i < 10; i++) { //등수 체크 반복문.
+		for (j = 0; j < 10; j++) {
+			if (student[i].score >= student[j].score) { //다른 점수들과 비교(본인과도 비교하므로 student.stand 구조체 변수 값을 1더 큰수로 초기화).
+				student[i].stand--; //다른 점수가 더 낮거나 같으면 등수 감소.
+			}
+		}
+	}
+
+	for (i = 0; i < 10; i++) { //출력 파일에 출력.
+		fprintf(ofp, "%d%10s%5d%5d%5d\n", student[i].num, student[i].name, student[i].count, student[i].score, student[i].stand);
+	}
+
+	fclose(ifp); //입력 파일 닫기.
+	fclose(ofp);//출력 파일 닫기.
+
+	system("pause");
+	return 0;
+}
+
+-------------------------------------
+source.txt
+1 PARK 13334
+2 NAM 13224
+3 CHOI 11214
+4 KIM 12224
+5 YUM 11234
+6 LEE 14414
+7 YANG 11314
+8 KWON 12131
+9 CHUNG 12131
+10 HYNG 13214

@@ -1,0 +1,14 @@
+#include <stdio.h>
+
+int main(){
+int hei,wei;
+float BMI,a;
+printf("Input the height: ");
+scanf("%d",&hei);
+printf("Input the weight: ");
+scanf("%d",&wei);
+a=(float)hei/100;
+BMI=(float)wei/(a*a);
+printf("The BMI value is: %.2f",BMI);
+return 0;
+}

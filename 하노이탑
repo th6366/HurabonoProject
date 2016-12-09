@@ -1,0 +1,70 @@
+#include<iostream>
+ 
+void PlateMoving(int *pl1, int* pl2)
+{
+    while (*pl1 != 'A' && *pl1 != 'B' && *pl1 != 'C')
+        pl1++;
+    while (*pl2 != 'A' && *pl2 != 'B' && *pl2 != 'C')
+        pl2++;
+    printf("접시를 타워 %c에서 타워 %c로 운반\n", *pl1, *pl2);
+}
+ 
+void HanoiTower(int num)
+{
+    int* twrA = new int[num + 2];
+    int* twrB = new int[num + 2];
+    int* twrC = new int[num + 2];
+    int *f, *m, *r, *tmp;
+ 
+    f = twrA;
+    num % 2 ? (m = twrB, r = twrC) : (m = twrC, r = twrB);
+  
+    twrA[num + 1] = 'A', twrB[num + 1] = 'B', twrC[num + 1] = 'C';
+    twrA[0] = twrB[0] = twrC[0] = num + 1;
+ 
+    int plate = 1;
+    for (int i = num; i >= 1; i--)
+        twrA[plate++] = i;
+   
+    f = twrA + num;
+ 
+    while (twrB[num - 1] != 1)
+    {
+        *++r = *f--, PlateMoving(f, r);
+        if (num==1)
+            break; 
+        *++m = *f--, PlateMoving(f, m);
+        *++m = *r--, PlateMoving(r, m);
+        if (num==2)
+            break; 
+        if (*f < *r)
+            *++r = *f--, PlateMoving(f, r);
+        else
+            *++f = *r--, PlateMoving(r, f);
+        tmp = f, f = m, m = r, r = tmp;
+    }
+    while (twrC[num] != 1)
+    {
+        *++r = *f--, PlateMoving(f, r);
+        *++m = *f--, PlateMoving(f, m);
+        *++m = *r--, PlateMoving(r, m);
+ 
+        if (*f < *r)
+            *++r = *f--, PlateMoving(f, r);
+        else if (*f > *r)
+            *++f = *r--, PlateMoving(r, f);
+        else
+            break;
+        tmp = f, f = m, m = r, r = tmp;
+    }
+    delete[]twrA;
+    delete[]twrB;
+    delete[]twrC;
+}
+int main(void)
+{
+    int n = 3; //접시의 개수
+    printf("하노이타워 %d단\n", n);
+    HanoiTower(n);
+}
+ 

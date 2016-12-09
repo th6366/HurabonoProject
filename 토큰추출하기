@@ -1,0 +1,31 @@
+#include "token.h"
+
+int main() {
+   char src[20];
+   char str[20];
+   char* next = &src[0];
+   strcpy(src, "ab1de12eoqd12dq");
+   while(next = token(str, next, "12")) {
+      printf("%s\n", str);
+   }
+   return(0);
+}
+
+#include <stdio.h>
+
+char* token(char* str, char* src, const char* sep) {
+   int i = 0;
+   if (*src == '\0') return(NULL);
+   while (1) {
+      if (sep[i] == '\0') {
+         str -= strlen(sep);
+         break;
+      } else if (*src == sep[i]) {
+         i++;
+      } else i = 0;
+      if (*src == '\0') break;
+      *str++ = *src++;
+   }
+   *str = '\0';
+   return(src);
+}

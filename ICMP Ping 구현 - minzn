@@ -1,0 +1,134 @@
+/* 
+ Copyright (c) Information Equipment co.,LTD. 
+ Code by JaeHyuk Cho <mailto:minzkn@infoeq.co.kr> 
+
+ - Simple is best !   (Sequence number check ping) 
+
+Bugreport : To JaeHyuk Cho 
+*/ 
+
+#include <stdio.h> 
+#include <string.h> 
+#include <sys/types.h> 
+#include <sys/param.h> 
+#include <sys/time.h> 
+#include <sys/socket.h> 
+#include <netinet/in.h> 
+#include <netinet/ip.h> 
+#include <netinet/ip_icmp.h> 
+#include <arpa/inet.h> 
+#include <netdb.h> 
+#include <unistd.h> 
+
+static int __MZ_ICMP_CheckSum__(void *s_Buffer, int s_Size) 
+{ 
+ int s_Return = 0; 
+ if(s_Size & 1)s_Return += (int)((*(unsigned char *)s_Buffer)++); 
+ s_Size >>= 1; 
+ while(s_Size-- > 0)s_Return += (int)(*(((unsigned short *)s_Buffer)++)); 
+ if(s_Size == 1)s_Return += (int)(*(unsigned char *)(s_Buffer)); 
+ s_Return  = (s_Return >> 16) + (s_Return & 0xFFFF); 
+ s_Return += (s_Return >> 16); 
+ return((~s_Return) & 0xffff); 
+} 
+
+int CORE_Ping(const char *s_HostName, unsigned int s_Index, unsigned int s_TimeOut) 
+{ 
+ int                 s_Return = (-1), s_Socket, s_SendBytes, s_RecvBytes, s_IsSelect; 
+ struct protoent    *s_ProtoEntry; 
+ struct hostent     *s_HostEntry; 
+ struct sockaddr_in  s_PingAddress, s_FromAddress; 
+ socklen_t           s_FromAddressLength; 
+ struct icmp        *s_ICMP; 
+ struct iphdr       *s_IPHeader; 
+ unsigned char       s_ICMP_Packet[ 60 + 76 + 56 ]; /* Packet assembly */ 
+ fd_set              s_FD; 
+ struct timeval      s_TimeVal; 
+ s_HostEntry = gethostbyname(s_HostName); 
+ if(s_HostEntry) 
+ { 
+  memset((void *)(&s_PingAddress), 0, sizeof(s_PingAddress)); 
+  s_PingAddress.sin_family = AF_INET; 
+  memcpy((void *)(&s_PingAddress.sin_addr), s_HostEntry->h_addr, sizeof(s_PingAddress.sin_addr)); 
+  memset((void *)(&s_ICMP_Packet[0]), 0, sizeof(s_ICMP_Packet)); 
+  s_ICMP = (struct icmp *)(&s_ICMP_Packet[0]); 
+  s_ICMP->icmp_type  = ICMP_ECHO; 
+  s_ICMP->icmp_seq   = s_Index; 
+  s_ICMP->icmp_id    = getpid() & 0xffff; 
+  gettimeofday((struct timeval *)(&s_ICMP_Packet[8]), (void *)0); 
+  s_ICMP->icmp_cksum = __MZ_ICMP_CheckSum__((void *)(&s_ICMP_Packet[0]), sizeof(s_ICMP_Packet)); 
+  s_ProtoEntry = getprotobyname("icmp"); 
+  s_Socket = socket(AF_INET, SOCK_RAW, s_ProtoEntry ? s_ProtoEntry->p_proto : 1); 
+  setuid(getuid()); /* Who are you ? */ 
+  if(s_Socket >= 0) 
+  { 
+   s_SendBytes = sendto(s_Socket, (void *)(&s_ICMP_Packet[0]), sizeof(s_ICMP_Packet), 
+                        MSG_NOSIGNAL, /* Ignore broken pipe */ 
+                        (struct sockaddr *)(&s_PingAddress), sizeof(s_PingAddress)); 
+   if(s_SendBytes == sizeof(s_ICMP_Packet)) 
+   { 
+    memset((void *)(&s_FromAddress), 0, sizeof(s_FromAddress)); 
+    s_FromAddressLength = sizeof(s_FromAddress); 
+    memset((void *)(&s_ICMP_Packet[0]), 0, sizeof(s_ICMP_Packet)); 
+    s_TimeVal.tv_sec = s_TimeOut, s_TimeVal.tv_usec = 0; 
+    FD_ZERO(&s_FD); FD_SET(s_Socket, &s_FD); 
+    s_IsSelect = select(s_Socket + 1, &s_FD, (fd_set *)0, (fd_set *)0, &s_TimeVal); 
+    if(s_IsSelect > 0 && FD_ISSET(s_Socket, &s_FD) != 0) 
+    { 
+     s_RecvBytes = recvfrom(s_Socket, (void *)(&s_ICMP_Packet[0]), sizeof(s_ICMP_Packet), 
+                           MSG_NOSIGNAL, /* Ignore broken pipe */ 
+                           (struct sockaddr *)(&s_FromAddress), (socklen_t *)(&s_FromAddressLength)); 
+    } 
+    else s_RecvBytes = 0; 
+    if(s_RecvBytes >= 76) 
+    { 
+     s_IPHeader = (struct iphdr *)(&s_ICMP_Packet[0]); 
+     s_ICMP = (struct icmp *)(&s_ICMP_Packet[ s_IPHeader->ihl << 2 ]); 
+     if(s_ICMP->icmp_type == ICMP_ECHOREPLY) 
+     { 
+      /* TODO: 
+              Packet check sum need 
+              Time compute 
+              Duplicate packet check 
+              Send packet & Recv packet -> Two thread or alarm 
+      */ 
+      s_Return = (int)s_ICMP->icmp_seq; 
+     } 
+    } 
+   } 
+   close(s_Socket); 
+  } 
+ } 
+ return(s_Return); 
+} 
+
+int main(int s_Argc, char *s_Argv[]) 
+{ 
+ int s_Return, s_Check, s_Index, s_ErrorCount, s_IsError, s_Count; 
+ printf("MZ_Ping v0.0.1 - Code by JaeHyuk Cho <minzkn@infoeq.co.kr>\n\n"); 
+ if(s_Argc > 1) 
+ { 
+  s_ErrorCount = 0, s_Index = 1; 
+  if(s_Argc > 2) s_Count = atoi(s_Argv[2]); 
+  else s_Count = 8; 
+  do 
+  { 
+   s_Check = CORE_Ping(s_Argv[1], s_Index /* Request sequence number */, 4u /* Timeout 4 second */); 
+   if(s_Check != s_Index)s_ErrorCount++, s_IsError = 1; 
+   else s_IsError = 0; 
+   printf("Ping[%s]: %s (Seq %d->%d) - ERR=%d\n", 
+           s_Argv[1], s_IsError == 0 ? "OK" : "LOSS", s_Index, s_Check, s_ErrorCount); 
+   usleep(10000); 
+  }while(s_Index++ < s_Count); 
+  printf("Total %d%% loss.\n", s_ErrorCount * 100 / s_Index); 
+  s_Return = s_ErrorCount; 
+ } 
+ else 
+ { 
+  printf("usage: ping <host> <count>\n"); 
+  s_Return = 0; 
+ } 
+ return s_Return; 
+} 
+
+/* End of source */

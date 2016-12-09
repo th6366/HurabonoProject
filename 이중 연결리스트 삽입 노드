@@ -1,0 +1,235 @@
+void insnode(int list[MAX])
+
+{
+
+DLIST *new, *pt;
+
+int flag=0;
+
+if (( new = (DLIST *)calloc(sizeof(DLIST),1)) == NULL) 
+
+{
+
+printf("\n* 기억 장소가 모자랍니다 !!! *\n");
+
+return;
+
+}
+
+printf("\n* 삽입할 번호를 입력하시오 : ");
+
+scanf("%3d", &new->number);
+
+new->rlink = new->llink = NULL;
+
+list[index] = new->number;
+
+index++;
+
+if ( head == NULL ) /* 리스트가 비어 있는 경우 최초의 노드를 생성한다 */
+
+{
+
+head = new;
+
+head->llink = head->rlink = NULL;
+
+}
+
+else
+
+{
+
+pt = head;
+
+while ( pt->number <= new->number ) /* 새로 입력할 노드의 위치를 */
+
+/* 찾기위한 while 문 */
+
+{
+
+if ( pt->rlink == NULL ) {
+
+flag = 2; break; }
+
+pt = pt->rlink;
+
+flag = 1;
+
+}
+
+if ( flag == 0 ) /*노드의 처음 위치에 삽입 */
+
+{
+
+new->llink = NULL;
+
+new->rlink = head;
+
+head->llink = new;
+
+head = new;
+
+}
+
+else if ( flag == 1 ) /* 노드의 중간 위치에 삽입 */
+
+{
+
+new->rlink = pt;
+
+new->llink = pt->llink;
+
+pt->llink->rlink = new;
+
+pt->llink = new;
+
+}
+
+else /* flag=2일 경우, 노드의 마지막 위치에 삽입 */
+
+{
+
+new->llink = pt;
+
+new->rlink = NULL;
+
+pt->rlink = new;
+
+}
+
+}
+
+}
+
+/* 이중 연결 리스트의 노드 삭제 함수 */
+
+void delnode(int list[MAX])
+
+{
+
+DLIST *pt = NULL;
+
+int i, j, dnum, flag=0 ;
+
+printf("\n* 삭제할 번호를 입력하시오 : ");
+
+scanf("%d", &dnum);
+
+pt = head;
+
+while (1) /* 삭제할 노드의 위치를 찾기위한 while문 */
+
+{
+
+if ( pt->number == dnum ) break;
+
+else if ( pt->rlink == NULL) {
+
+flag = 2; break; }
+
+pt = pt->rlink;
+
+flag = 1;
+
+}
+
+if ( flag == 2 )
+
+{
+
+printf("\n %d 번 노드는 존재하지 않습니다 !!! \n", dnum);
+
+return;
+
+}
+
+else if ( flag == 0 ) /* 삭제할 노드가 head 노드인 경우 */
+
+{
+
+head = pt->rlink;
+
+head->llink = NULL;
+
+free(pt);
+
+}
+
+else if ( flag == 1 )
+
+{
+
+if ( pt->rlink == NULL ) /* 마지막 노드 삭제 */
+
+{
+
+pt->llink->rlink = NULL;
+
+free(pt);
+
+}
+
+else /* 중간에 위치한 노드 삭제 */
+
+{
+
+pt->llink->rlink = pt->rlink;
+
+pt->rlink->llink = pt->llink;
+
+free(pt);
+
+}
+
+}
+
+printf("\n* %d 번 노드가 삭제 되었습니다 *\n", dnum);
+
+getch();
+
+}
+
+
+
+/* 이중 연결 리스트의 노드 출력 함수 -번호순 정렬- */
+
+
+
+void linklist()
+
+{
+
+DLIST *pt = NULL;
+
+clrscr();
+
+pt = head;
+
+if ( head == NULL ) {
+
+printf("** 자료가 존재하지 않습니다 !!! **");
+
+return;
+
+}
+
+clrscr();
+
+printf(" Double Linked List : ");
+
+do
+
+{
+
+printf(" %3d", pt->number);
+
+pt = pt->rlink;
+
+} while (pt->rlink != NULL);
+
+getch();
+
+clrscr();
+
+}

@@ -1,0 +1,306 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define Bar1 printf("==========================\n");
+#define Bar2 printf("- - - - - - - - - - - - - \n");
+
+void main()
+{
+ int selMenu, selGame;
+ int money=1000, betMoney;
+ int com[9], card[9];
+ int sumCom, sumCard;
+ int comIdx, cardIdx;
+ int i, dealerStandFlag = 0;
+ int winCnt=0, loseCnt=0, drawCnt=0;
+ 
+ while(1)
+ {
+  for(i=0; i<9; i++)
+  {
+   com[i] = 0;
+   card[i] = 0;
+  }
+  sumCom = 0;
+  sumCard = 0;
+  comIdx = 2;
+  cardIdx = 2;
+  
+  system("cls");
+  printf("┏━━━━━━━━━━━━┓\n");
+  printf("┃       블랙 잭                   ┃\n");
+  printf("┃                                    ┃\n");
+  printf("┃     1.게임 시작                ┃\n");
+  printf("┃     2.보유 금액                ┃\n");
+  printf("┃     0.종료                       ┃\n");
+  printf("┗━━━━━━━━━━━━┛\n");
+  printf(" 선택 > "); scanf("%d", &selMenu);
+  if(selMenu < 0 || selMenu > 2) continue;
+└ 접기
+  switch(selMenu)
+  {
+  case 1:
+   system("cls");
+   Bar1;
+   printf("베팅을 하세요(%d) > ", money);  scanf("%d", &betMoney);
+   if(betMoney < 0 || betMoney > money)
+   {
+    printf("베팅 오류\n");
+    break;
+   }
+   money -= betMoney;
+   
+   srand(time(NULL));
+   rand();rand();rand();rand();
+   srand(rand());
+   
+   card[1] = rand()%13+1;
+   com[1] = rand()%13+1;
+   
+   card[2] = rand()%13+1;
+   com[2] = rand()%13+1;
+   
+   if(com[1] > 10) com[1] = 10;        // J, Q, K
+   if(com[2] > 10) com[2] = 10;
+   if(card[1] > 10) card[1] = 10;
+   if(card[2] > 10) card[2] = 10;
+   
+   if(com[1]==1 && com[2]==1) {com[1]=11; com[2]=1;}  // 두장 모두 에이스
+   else if(com[1]==1)  {com[1]=11;}
+   else if(com[2]==1)  {com[2]=11;}
+   else     {}
+   
+   if(card[1]==1 && card[2]==1) {card[1]=11; card[2]=1;} // 두장 모두 에이스
+   else if(card[1]==1)   {card[1]=11;}
+   else if(card[2]==1)   {card[2]=11;}
+   else      {}
+ 
+   sumCard = 0;
+   sumCom = 0;
+   sumCard = card[1] + card[2];
+   sumCom = com[1] + com[2];
+   if(sumCard == 21 && sumCom != 21)
+   {
+    printf("☆☆☆ 플레이어 블랙 잭 ☆☆☆\n");
+    money = money + (betMoney * 3);                     // 베팅액 2배 +
+    winCnt++;
+    break;
+   }
+   else if(sumCard != 21 && sumCom == 21)
+   {
+    printf("▽▽▽ 딜러 블랙 잭 ▽▽▽\n");
+    money = money - betMoney;                           // 베팅액 2배 -
+    loseCnt++;
+    break;
+   }
+   else if(sumCard == 21 && sumCom == 21)
+   {
+    printf("◎◎◎ 플레이어&딜러 블랙 잭 ◎◎◎\n");
+    money = money + betMoney;                           // 베팅액 확보
+    drawCnt++;
+    break;
+   }
+   sumCard = 0;
+   sumCom = 0;
+   
+   
+   Bar2;
+   printf("[딜    러] 카드1:%2d  카드2: ?\n", com[1]);
+   printf("[플레이어] 카드1:%2d  카드2:%2d\n", card[1], card[2]);
+   
+   while(1)
+   {
+    Bar2;
+    printf("1.Hit 2.Stand\n");
+    printf("선택하세요 > "); scanf("%d", &selGame);
+    Bar1;           
+    
+    
+    switch(selGame)
+    {
+    case 1:   // hit  
+     card[++cardIdx] = rand()%13+1;
+     if(card[cardIdx] > 10) card[cardIdx] = 10;  // J, Q, K
+     if(card[cardIdx]==1)       // 에이스
+     {
+      for(i=1; i<cardIdx; i++) sumCard += card[i]; // 이전카드까지의 합
+      if(sumCard < 11) card[cardIdx] = 11;  // 이전카드까지의 합이 11미만
+      else    card[cardIdx] = 1;
+     }
+     sumCard = 0;
+     for(i=1; i<=cardIdx; i++) sumCard += card[i];  // 플레이어의 카드 합
+     
+     for(i=1; i<=comIdx; i++) sumCom += com[i];  // 딜러의 이전카드까지의 합
+     if(sumCom > 21)         // 21을 초과하고 그중 에이스가 있는 경우 11을 1로 변경
+     {
+                        for(i=1; i<=8; i++)                        
+      {
+          if(com[i] == 11)
+          {
+           sumCom -= 10;
+           break;
+       }
+      }
+     }
+     if(sumCom < 17)  // 딜러의 이전카드까지의 합이 17미만인 경우 카드 하나 더
+     {
+      com[++comIdx] = rand()%13+1; 
+      sumCom = 0;     
+      for(i=1; i<=comIdx; i++) sumCom += com[i];
+      printf("[딜러: ?  플레이어:%2d]\n", sumCard);
+     }
+     else // 딜러 stand
+     {
+      dealerStandFlag = 1;
+      printf("딜러 stand\n");
+      sumCard = 0;
+      sumCom = 0;
+      for(i=1; i<=comIdx; i++) sumCom += com[i];
+      for(i=1; i<=cardIdx; i++) sumCard += card[i];
+      printf("[딜러:%2d  플레이어:%2d]\n", sumCom, sumCard);
+      
+      if(sumCom > 21 && sumCard > 21)
+      {
+       printf("◎ 비겼습니다 ◎ (All bust)\n");
+       money = money + betMoney;
+       drawCnt++;
+      }
+      else if(sumCard > 21 && sumCom <= 21)
+      {
+       printf("▽ 졌습니다 ▽ (Player bust)\n");
+       loseCnt++;
+      }      
+      else if(sumCard <= 21 && sumCom > 21)
+      {
+       printf("☆ 이겼습니다 ☆ (Dealer bust)\n");
+       money = money + (betMoney * 2);
+       winCnt++;
+      }
+      else if(sumCom > sumCard)
+      {
+       printf("▽ 졌습니다 ▽\n");
+       loseCnt++;
+      }
+      else if(sumCom < sumCard)
+      {
+       printf("☆ 이겼습니다 ☆\n");
+       money = money + (betMoney * 2);     // 베팅액 만큼 추가
+       winCnt++;
+      }
+      else
+      {
+       printf("◎ 비겼습니다 ◎\n");
+       money = money + betMoney;           // 베팅액 확보
+       drawCnt++;
+      }
+     }          
+     break;
+    case 2:   // stand  
+     sumCom = 0;
+     sumCard = 0;
+     for(i=1; i<=comIdx; i++) sumCom += com[i];
+     for(i=1; i<=cardIdx; i++) sumCard += card[i];
+     
+     if(sumCom > 21)                             // 21을 초과하고 그중 에이스가 있는 경우 11을 1로 변경
+     {
+                        for(i=1; i<=8; i++)
+      {
+          if(com[i] == 11)
+          {
+           sumCom -= 10;
+           break;
+          }
+      }
+     }
+     if(sumCard > 21)                            // 21을 초과하고 그중 에이스가 있는 경우 11을 1로 변경
+     {
+                        for(i=1; i<=8; i++)
+      {
+          if(card[i] == 11)
+          {
+           sumCard -=10;
+           break;
+       }
+      }
+     }
+     
+     printf("[딜러:%2d  플레이어:%2d]\n", sumCom, sumCard);
+     
+     if(sumCom > 21 && sumCard > 21)
+     {
+      printf("◎ 비겼습니다 ◎ (All bust)\n");
+      money = money + betMoney;
+      drawCnt++;
+     }
+     else if(sumCard > 21 && sumCom <= 21)
+     {
+      printf("▽ 졌습니다 ▽ (Player bust)\n");
+      loseCnt++;
+     }
+     else if(sumCard <= 21 && sumCom > 21)
+     {
+      printf("☆ 이겼습니다 ☆ (Dealer bust)\n");
+      money = money + (betMoney * 2);
+      winCnt++;
+     }
+     else if(sumCom > sumCard)
+     {
+      printf("▽ 졌습니다 ▽\n");
+      loseCnt++;
+     }
+     else if(sumCom < sumCard)
+     {
+      printf("☆ 이겼습니다 ☆\n");
+      money = money + (betMoney * 2);         // 베팅액 만큼 추가
+      winCnt++;
+     }
+     else
+     {
+      printf("◎ 비겼습니다 ◎\n");
+      money = money + betMoney;               // 베팅액 확보
+      drawCnt++;
+     }
+     break;
+    case 3:   // Split
+     break;
+    case 4:   // Double down
+     break;
+    case 5:   // Surrender
+     break;
+    case 6:   // Insurance
+     break;
+    default:
+     break;
+    } 
+    
+    if(selGame == 2) break;  // stand일 경우 loop break
+    if(dealerStandFlag == 1) // dealer stand일 경우 loop break;
+    {
+     dealerStandFlag = 0;
+     break;
+    }
+   }
+   break;
+  case 2:
+   printf("보유 금액 : %d\n", money);
+   printf("%d승 %d무 %d패\n", winCnt, drawCnt, loseCnt); 
+   break;
+  case 0:
+   printf("다음 기회에...!!\n");
+   return;
+  default:
+   break;
+  }
+  if(money == 0)
+  {
+   printf("%d승 %d무 %d패\n", winCnt, drawCnt, loseCnt); 
+   printf("보유 금액이 0 입니다. 다음 기회에...!!\n");
+   system("pause");
+   break;
+  }
+  system("pause");
+ }
+}
+[출처] [소스코드 : C언어] 09.블랙잭 게임|작성자 근육빵빵코더
+
