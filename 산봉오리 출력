@@ -1,0 +1,84 @@
+/입력
+//5                - n
+ 
+//출력
+//                    *                          1                        공백(9+9),별1, 개행
+//                   ***                         2                        공백(9+8), 별3, 개행
+//                  *****                        3                        공백(9+7),별5, 개행
+//                 *******                       4                         공백(9+6), 별7, 개행
+//                *********                      5                         공백(9+5), 별9, 개행
+//     *         ***********          *          6  공백4, 별1, 공백4, 공백4, 별11, 공백4, 공백4, 별1, 개행
+//    ***      *************        ***          7  공백3, 별3, 공백3, 공백3, 별13, 공백3, 공백3, 별3, 개행
+//   *****    ***************     *****          8  공백2, 별5, 공백2, 공백2, 별15, 공백2, 공백2, 별5, 개행
+//  *******  *****************  *******          9  공백1, 별7, 공백1, 공백1, 별17, 공백1, 공백1, 별7, 개행
+// *************************************        10   공백0, 별9, 공백0, 공백0, 별19, 공백0, 공백 0, 별9,개행
+ 
+//line:1~2*n
+//조건(line<=n)이 참일 때
+//공백= (2*n-1)+(2*n-line) = 4*n -1-line
+//별 = 2*line-1
+//개행
+//조건(line<=n)이 거짓일 때
+//공백 = 2*n-line
+//별 = 2*(line-n)-1
+//공백 = 2*(2*n-line)     
+//별 = 2*line-1
+//공백 = 2*(2*n-line)
+//별 = 2*(line-n)-1
+//개행
+ 
+#include <stdio.h>
+ 
+int main(void)
+{
+    int n;
+    int line, space, star;
+ 
+    printf("높이:");
+    scanf_s("%d", &n);//입력
+ 
+    for (line = 1; line <= 2 * n; line++)//line: 1~2n
+    {
+        if (line <= n)//line is 1~n
+        {
+            for (space = 1; space <= (4 * n - 1 - line); space++)//공백 4*n - 1 - line개
+            {
+                putchar(' ');
+            }
+            for (star = 1; star <= (2 * line - 1); star++)//별 2*line -1개
+            {
+                putchar('*');
+            }
+            putchar('\n');//개행
+        }
+        else//line is n+1 ~ 2n
+        {
+            for (space = 1; space <= (2 * n - line); space++)//공백 2n-line개
+            {
+                putchar(' ');
+            }
+            for (star = 1; star <= 2 * (line - n) - 1; star++)//별 2*(line-n)-1개
+            {
+                putchar('*');
+            }
+            for (space = 1; space <= (2 * (2 * n - line)); space++)//공백 2*(2*n-line) 개
+            {
+                putchar(' ');
+            }
+            for (star = 1; star <= (2 * line - 1); star++)//별 2*line-1개
+            {
+                putchar('*');
+            }
+            for (space = 1; space <= (2 * (2 * n - line)); space++)//공백 2*(2*n-line) 개
+            {
+                putchar(' ');
+            }
+            for (star = 1; star <= 2 * (line - n) - 1; star++)//별 2*(line-n)-1개
+            {
+                putchar('*');
+            }
+            putchar('\n');//개행
+        }
+    }
+    return 0;
+}

@@ -1,0 +1,129 @@
+#include <stdio.h>
+ 
+#include <conio.h>
+ 
+#include <windows.h>
+ 
+  
+ 
+#define LEFT   75      // 좌측방향키
+ 
+#define RIGHT  77      // 우측방향키
+ 
+#define UP     72      // 위쪽방향키
+ 
+#define DOWN   80      // 아래방향키
+ 
+  
+ 
+int main()
+ 
+{
+ 
+        intvalue = 10;
+ 
+        intinterval = 1;
+ 
+        charinput = 0;
+ 
+        
+ 
+        printf("\t증감값: %d\t 현재값: %d \n\n",interval, value);
+ 
+        printf("\n\n");
+ 
+        printf("←왼쪽　방향키: 증감값감소\n");
+ 
+        printf("→오른쪽방향키: 증감값증가\n");
+ 
+        printf("\t(증감값최소값: 1)\n");
+ 
+        printf("↑위쪽　방향키: 숫자증가\n");
+ 
+        printf("↓아래쪽방향키: 숫자감소\n");
+ 
+        printf("\n\n");
+ 
+        printf("종료: esc키\n\n");
+ 
+        printf("\n\n");
+ 
+  
+ 
+        while (input != 27 )
+ 
+        {
+ 
+               input = getch();
+ 
+  
+ 
+               switch( input )
+ 
+               {
+ 
+                       case LEFT : // 왼쪽버튼 눌렀을 때, 증감값을 1 감소 시킨다.
+ 
+                              interval--;
+ 
+                              break;
+ 
+                       case RIGHT : // 오른쪽버튼 눌렀을 때, 증감값을 1 증가 시킨다.
+ 
+                              interval++;
+ 
+                              break;
+ 
+                       case UP : // 위쪽버튼 눌렀을 때, 기본값을 증감값만큼 증가 시킨다.
+ 
+                              value = value +interval;
+ 
+                              break;
+ 
+                       case DOWN : // 아래쪽버튼 눌렀을 때, 기본값을 증감값만큼 감소 시킨다.
+ 
+                              value = value -interval;
+ 
+                              break;
+ 
+               }
+ 
+               if( interval < 1 ) {  
+ 
+// 증감값이 1보다 작아지는 경우 1로 셋팅 (증감값의 최소값은 1
+ 
+                       interval = 1;
+ 
+               }
+ 
+               system("cls"); // 화면갱신 및 메뉴 출력
+ 
+               printf("\t증감값: %d\t 현재값: %d \n\n",interval, value);
+ 
+               printf("\n\n");
+ 
+               printf("←왼쪽　방향키: 증감값감소\n");
+ 
+               printf("→오른쪽방향키: 증감값증가\n");
+ 
+               printf("\t(증감값최소값: 1)\n");
+ 
+               printf("↑위쪽　방향키: 숫자증가\n");
+ 
+               printf("↓아래쪽방향키: 숫자감소\n");
+ 
+               printf("\n\n");
+ 
+               printf("종료: esc키\n\n");
+ 
+        }
+ 
+        printf("종료합니다.");
+ 
+  
+ 
+  
+ 
+        return 0;
+ 
+}

@@ -1,0 +1,10 @@
+#include <stdio.h>
+#include <Windows.h>
+ 
+int main(int argc, char* argv[]){
+    CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+    cursorInfo.dwSize = 1;
+    cursorInfo.bVisible = FALSE;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    return 0;
+}

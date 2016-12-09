@@ -1,0 +1,138 @@
+package javaapplication37;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.util.*;
+
+class Ex11 extends JFrame{
+    Ex11(){
+        this.setTitle("스레드를 가진 겜블링");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.add(new GamePanel());
+        this.setLocationRelativeTo(null);
+        this.setSize(300, 200);
+        this.setVisible(true);
+    }
+    
+    class GamePanel extends JPanel{
+        JLabel[] la=new JLabel[3];//숫자를 표시해주기위한 3개의 레이블
+        JLabel result=new JLabel("마우스를 클릭할 때 마다 게임합니다.");
+        GamblingThread th=new GamblingThread(la, result);
+        
+        GamePanel(){
+            this.setLayout(null);
+            //3개의 레이블의 위치를 설정하고 패널에 추가
+            for(int i=0; i<la.length; i++){
+                la[i]=new JLabel("0");
+                la[i].setSize(60, 30);
+                la[i].setLocation(30+80*i, 50);
+                la[i].setHorizontalAlignment(JLabel.CENTER);
+                la[i].setOpaque(true);
+                la[i].setBackground(Color.MAGENTA);
+                la[i].setForeground(Color.yellow);
+                la[i].setFont(new Font("Tahoma",Font.ITALIC,30));
+                this.add(la[i]);
+            }
+            
+            result.setHorizontalAlignment(JLabel.CENTER);
+            result.setBounds(0, 120, 290, 20);
+            this.add(result);
+            
+            th.start();
+            
+            this.addMouseListener(new MouseListener(){
+                @Override
+                public void mouseClicked(MouseEvent me) {}
+
+                @Override
+                public void mousePressed(MouseEvent me) {
+                    if(th.isReady())//스레드가 대기중이면 실행
+                        th.startGambling();
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent me) {}
+
+                @Override
+                public void mouseEntered(MouseEvent me) {}
+
+                @Override
+                public void mouseExited(MouseEvent me) {}
+            });
+        }
+    }
+    
+    class GamblingThread extends Thread{
+        JLabel[] la;
+        JLabel result;
+        static final long delay=200;
+        boolean gambling=false;
+        
+        GamblingThread(JLabel[] la, JLabel result){
+            this.la=la;
+            this.result=result;
+        }
+        //준비상태인지 확인하기 위한 메소드
+        boolean isReady(){
+            return !gambling;
+        }
+        
+        synchronized public void waitForGambling(){
+            if(!gambling){
+                try{
+                    this.wait();//현재 스레드가 실행중이면 기다리게 한다.
+                }
+                catch(Exception e){return;}
+            }
+        }
+        
+        synchronized public void startGambling(){
+            gambling=true;
+            this.notify();//현재 스레드가 끝났으니 다른 스레드를 실행한다.
+        }
+        
+        public void run(){
+            while(true){
+                waitForGambling();
+                try{
+                    //0~5까지 랜덤
+                    int x1=(int)(Math.random()*5);
+                    int x2=(int)(Math.random()*5);
+                    int x3=(int)(Math.random()*5);
+                    
+                    la[0].setForeground(Color.blue);
+                    sleep(delay);
+                    la[0].setForeground(Color.yellow);
+                    la[0].setText(Integer.toString(x1));
+                    
+                    la[1].setForeground(Color.blue);
+                    sleep(delay);
+                    la[1].setForeground(Color.yellow);
+                    la[1].setText(Integer.toString(x2));
+                    
+                    la[2].setForeground(Color.blue);
+                    sleep(delay);
+                    la[2].setForeground(Color.yellow);
+                    la[2].setText(Integer.toString(x3));
+                    
+                    //숫자가 전부 같은 경우, 다른 경우에 따라 출력 메세지 세팅
+                    if(x1==x2 && x2==x3)
+                        result.setText("축하합니다.");
+                    else
+                        result.setText("아쉽군요");
+                    
+                    gambling=false;
+                }
+                catch(Exception e){return;}
+            }
+        }
+    }
+}
+
+public class JavaApplication37 {
+    public static void main(String[] args) {
+        new Ex11();
+    }
+}

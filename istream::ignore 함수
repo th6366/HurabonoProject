@@ -1,0 +1,25 @@
+/*
+
+이 예제는
+http://www.cplusplus.com/reference/iostream/istream/ignore/
+에서 가져왔습니다.
+
+*/
+#include <iostream>
+using namespace std;
+
+int main ()
+{
+	char first, last;
+
+	cout << "Enter your first and last names: ";
+
+	first=cin.get();
+	cin.ignore(256,' '); // 스트림에서 ' ' 를 지워버린다.
+
+	last=cin.get();
+
+	cout << "Your initials are " << first << last;
+
+	return 0;
+}

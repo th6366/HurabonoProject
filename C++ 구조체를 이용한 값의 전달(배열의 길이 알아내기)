@@ -1,0 +1,29 @@
+#include<iostream>
+using namespace std;
+
+struct STUDENT
+{
+    char name[20];
+    int grade[5];
+    double average;
+};
+void Print(STUDENT s);
+
+int main() {
+    STUDENT s1 = { "장동건",100,90,80,99,98 };
+    Print(s1);
+
+    return 0;
+}
+
+void Print(STUDENT s) {
+    int sum=0;
+    int len = sizeof(s.grade) / sizeof(int);
+    cout << "이름:" << s.name<<"\n"<<len<<"개의 성적:";
+    for (int i = 0; i < len; i++) {
+        cout << s.grade[i]<<" ";
+        sum += s.grade[i];
+    }
+    s.average = sum / len;
+    cout << "\n평균: " << s.average << "\n";
+}

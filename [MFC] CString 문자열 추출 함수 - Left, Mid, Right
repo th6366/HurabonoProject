@@ -1,0 +1,32 @@
+CString  Left( int nCount ) const;
+//nCount : 왼쪽 기준 추출할 문자의 수
+//반환값 : 추출된 문자열을 포함하는 CString 임시 개체
+ 
+CString  Right( int nCount ) const;
+//nCount : 오른쪽 기준 추출할 문자의 수
+//반환값 : 추출된 문자열을 포함하는 CString 임시 개체
+ 
+CString  Mid( int nFirst ) const;
+CString  Mid( int nFirst, int nCount ) const;
+//nFirst : 추출을 시작할 문자열의 위치
+//nCount : 추출할 문자의 수
+//반환값 : 추출된 문자열을 포함하는 CString 임시 개체
+
+#include <atlstr.h>       //CString
+ 
+int main( )
+{
+    CString strDate( "2013-12-16" );
+     
+    CString strYear;
+    CString strMonth;
+    CString strDay;
+ 
+    strYear = strDate.Left( 4 );
+    strMonth = strDate.Mid( 5, 2 );
+    strDay = strDate.Right( 2 );
+     
+    printf( "%s년 %s월 %s일", strYear, strMonth, strDay );
+ 
+    return 0;
+}

@@ -1,0 +1,163 @@
+//client
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <winsock2.h>
+
+#define MAX_BUFFER 1024
+
+typedef struct USERINFO
+{
+	char ID;
+	char PASS;
+} USER;
+
+USER USERDATA = { { 0 },{ 0 } };
+
+void Crash_Call(char *msg);
+
+int main(int argc, char *argv[])
+{
+	WSADATA wsaData;
+	SOCKET hSocket;
+	int strLen;
+	SOCKADDR_IN servAdr;
+
+	if (argc != 3) {
+		printf("Usage : %s <IP> <port>\n", argv[0]);
+		exit(1);
+	}
+
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+		Crash_Call("WSAStartup() error!");
+
+	hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	if (hSocket == INVALID_SOCKET)
+		Crash_Call("socket() error");
+
+	memset(&servAdr, 0, sizeof(servAdr));
+	servAdr.sin_family = AF_INET;
+	servAdr.sin_addr.s_addr = inet_addr(argv[1]);
+	servAdr.sin_port = htons(atoi(argv[2]));
+
+	if (connect(hSocket, (SOCKADDR*)&servAdr, sizeof(servAdr)))
+		Crash_Call("connect() error!");
+	else
+		puts("Connected...........");
+
+	system("cls");
+	printf("ID / PASS : ");
+	scanf("%s %s", USERDATA.ID, USERDATA.PASS);
+
+	send(hSocket, USERDATA.ID, strlen(USERDATA.ID), 0);
+	send(hSocket, USERDATA.PASS, strlen(USERDATA.PASS), 0);
+
+	system("pause");
+	closesocket(hSocket);
+	WSACleanup();
+	return 0;
+}
+
+void Crash_Call(char *msg)
+{
+	fputs(msg, stderr);
+	fputc('\n', stderr);
+	exit(1);
+}
+
+//server.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <winsock2.h>
+
+#define MAX_BUFFER 256
+
+typedef struct useracc
+{
+	char ID[20];
+	char PASS[20];
+} USERACC;
+
+
+USERACC USER = { { 0 },{ 0 } };
+USERACC SUSER = { { 0 },{ 0 } };
+
+void Crash_Call(char * msg)
+{
+	fputs(msg, stderr);
+	fputc('\n', stderr);
+	exit(-1);
+}
+
+void Connect_Clntinfo(char * msg)
+{
+	return 0;
+}
+
+int main(int argc, char * argv[]) // 첫번째 인자에는 서버가 사용할 포트번호 기입
+{
+	FILE * userfp = NULL;
+	WSADATA	wsaData;
+	SOCKET hServSock, hClntSock;
+	SOCKADDR_IN servAddr, clntAddr;
+
+	int szClntAddr;
+
+	if (argc != 2)
+	{
+		printf("Usage : %s <port>\n", argv[0]); // 서버가 사용할 포트 입력
+		exit(1);
+	}
+
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+		Crash_Call("WSAStartup() error!");
+
+	hServSock = socket(PF_INET, SOCK_STREAM, 0);
+	if (hServSock == INVALID_SOCKET)
+		Crash_Call("socket() error");
+
+	memset(&servAddr, 0, sizeof(servAddr));
+	servAddr.sin_family = AF_INET;
+	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	servAddr.sin_port = htons(atoi(argv[1]));
+
+	if (bind(hServSock, (SOCKADDR*)&servAddr, sizeof(servAddr)) == SOCKET_ERROR)
+		Crash_Call("bind() error");
+
+	if (listen(hServSock, 5) == SOCKET_ERROR)
+		Crash_Call("listen() error");
+
+	szClntAddr = sizeof(clntAddr);
+	hClntSock = accept(hServSock, (SOCKADDR*)&clntAddr, &szClntAddr);
+	if (hClntSock == INVALID_SOCKET)
+		Crash_Call("accept() error");
+
+	if (recv(hClntSock, USER.ID, sizeof(USER.ID) - 1, 0)) {
+		Crash_Call("recv() error");
+	}
+	if (recv(hClntSock, USER.PASS, sizeof(USER.PASS) - 1, 0)) {
+		Crash_Call("recv() error");
+	}
+
+	userfp = fopen((char *)USER.ID, "rt");
+
+	if (userfp == NULL)
+	{
+		printf("누군가가 계정접속에 실패했습니다!");
+		return 0;
+	}
+
+	fgets(SUSER.PASS, 256, userfp);
+
+	if (!(strcmp(SUSER.PASS, USER.PASS))) {
+		puts("Login 성공!");
+		return 0;
+	}
+
+	else { puts("fuck!"); }
+	closesocket(hClntSock);
+	closesocket(hServSock);
+	WSACleanup();
+	return 0;
+}

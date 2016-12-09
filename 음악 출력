@@ -1,0 +1,11 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<MMSystem.h>
+#pragma comment(lib,"Winmm.lib")
+
+int main(void)
+{
+ sndPlaySoundA("C:\\a.wav",SND_ASYNC|SND_NODEFAULT); // 음악연주 C:\\~~~ 는 경로명을 입력합니다. (단, 폴더를 구분하는 역슬래쉬는 2번 써 줘야 합니다. 예) C:\test\aa.wav  일 경우 "C:\\test\\aa.wav"
+ system("pause");
+ return 0;
+}

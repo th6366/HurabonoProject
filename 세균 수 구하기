@@ -1,0 +1,12 @@
+#include <stdio.h> 
+int main() 
+{ 
+   int b=10; 
+   int i; 
+   for(i=0; i < 7; i++) 
+   { 
+      b*=4; 
+   } 
+   printf("7시간 뒤의 세균은 %d마리입니다.\n",b); 
+   return 0; 
+} 

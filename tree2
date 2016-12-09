@@ -1,0 +1,317 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+
+/*********************** TREE ************************/
+typedef struct _tnode{
+    int value;
+    struct _tnode *left;
+    struct _tnode *right;
+} tnode;
+
+typedef tnode Tree;
+
+tnode * newTNode(int X){
+
+    tnode * temp;
+    temp = (tnode *)malloc(sizeof(tnode));
+    temp->value = X;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+
+inline int Max(int a, int b){
+    return (a > b) ? a : b;
+}
+
+int HeightOfTree(Tree * T){
+
+    if(T == NULL)
+        return 0;
+
+    return 1 + Max(HeightOfTree(T->left),HeightOfTree(T->right));
+}
+
+tnode * FindMin(Tree * T){
+
+    if(T!=NULL)
+        while(T->left!=NULL)
+            T = T->left;
+    return T;
+}
+
+tnode * FindMax(Tree * T){
+
+    if(T!=NULL)
+        while(T->right!=NULL)
+            T = T->right;
+    return T;
+}
+
+Tree * SingleRotateWithLeft(Tree * T){
+
+    tnode * temp;
+    //printf("SingleRotateWithLeft at %d\n",T->value);
+    temp = T->left;
+    T->left = temp->right;
+    temp->right = T;
+    //printTree(T);
+    return temp;
+}
+
+Tree * SingleRotateWithRight(Tree * T){
+
+    tnode * temp;
+    //printf("SingleRotateWithRight at %d\n",T->value);
+    temp = T->right;
+    T->right = temp->left;
+    temp->left = T;
+    //printTree(T);
+    return temp;
+}
+
+Tree * DoubleRotateWithLeft(Tree * T){
+
+    //printf("DoubleRotateWithLeft at %d\n",T->value);
+    T->left = SingleRotateWithRight(T->left);
+    return SingleRotateWithLeft(T);
+}
+
+Tree * DoubleRotateWithRight(Tree * T){
+
+    //printf("DoubleRotateWithRight at %d\n",T->value);
+    T->right = SingleRotateWithLeft(T->right);
+    return SingleRotateWithRight(T);
+}
+
+inline int LeftMinusRight(Tree * T){
+
+    //printf("Checking Balance at %d\n",T->value);
+    return HeightOfTree(T->left) - HeightOfTree(T->right);
+
+}
+
+Tree * Insert(int X, Tree * T){
+
+if(T == NULL)
+    return newTNode(X);
+else{
+
+    if(X > T->value){
+        T->right = Insert(X, T->right);
+
+        if(LeftMinusRight(T) == -2){
+
+            if(X > T->right->value)
+                T = SingleRotateWithRight(T);
+            else
+                T = DoubleRotateWithRight(T);
+        }
+    }
+
+    else if(X < T->value) {
+        T->left = Insert(X, T->left);
+
+        if(LeftMinusRight(T) == 2){
+
+        if(X <  T->left->value)
+            T = SingleRotateWithLeft(T);
+        else
+            T = DoubleRotateWithLeft(T);
+
+        }
+    }
+
+}
+return T;
+}
+
+Tree * Delete(int X, Tree * T){
+
+    tnode * temp;
+
+    if(X > T->value)
+        T->right = Delete(X,T->right);
+
+    else if( X < T->value)
+        T->left = Delete(X,T->left);
+
+    else if( T->left && T->right)
+    {
+        temp = FindMax(T->left);
+        T->value = temp->value;
+        T->left = Delete(T->value,T->left);
+    }
+    else
+    {
+        temp = T;
+        if(T->left == NULL)
+            T = T->right;
+        else if(T->right == NULL)
+            T = T->left;
+
+        printf("Deleted %d \n", temp->value);
+
+        free(temp);
+
+    }
+
+    if(T == NULL){
+        //printf("NULL\n");
+        return T;
+    }
+
+    if(LeftMinusRight(T) == 2 && LeftMinusRight(T->left) >= 0 )
+        T = SingleRotateWithLeft(T);
+
+    if(LeftMinusRight(T) == 2 && LeftMinusRight(T->left) < 0)
+        T = DoubleRotateWithLeft(T);
+
+    if(LeftMinusRight(T) == -2 && LeftMinusRight(T->right) <= 0)
+        T = SingleRotateWithRight(T);
+
+    if(LeftMinusRight(T) == -2 && LeftMinusRight(T->right) > 0)
+        T = DoubleRotateWithRight(T);
+
+    return T;
+}
+
+/*********************** QUEUE ************************/
+
+typedef struct _qnode{
+    tnode * data;
+    int level;
+    struct _qnode *next;
+} qnode;
+
+typedef enum {false = 0, true} bool;
+
+bool isQEmpty(qnode **front, qnode **rear){
+
+        if( (*front == *rear) && (*rear == NULL) ){
+            //printf("Queue Empty\n");
+            return true;
+        }
+
+        //printf("Queue Not Empty\n");
+        return false;
+}
+
+void printQueue(qnode ** front){
+
+    qnode * temp;
+    temp = *front;
+    printf("Queue: ");
+    while(temp!=NULL){
+    printf("%d ", temp->data->value);
+    temp = temp->next;
+    }
+    printf("\n");
+}
+
+qnode * newQNode(tnode * data, int level){
+
+
+    qnode * temp;
+    temp = (qnode *)malloc(sizeof(qnode));
+    temp->data = data;
+    temp->level = level;
+    temp->next = NULL;
+
+    //printf("Prepared node %d for Enqueue\n",temp->data->value);
+
+    return temp;
+
+}
+
+void Enqueue(qnode **front, qnode **rear, qnode * ndata){
+
+    //printf("Adding %d to Queue\n",ndata->data->value);
+
+    if(*rear == NULL){
+         //printf("Queue is null\n");
+        *rear = ndata;
+        *front = *rear;
+    }
+    else{
+        (*rear)->next = ndata;
+        *rear = ndata;
+    }
+
+    //printQueue(&(*front));
+}
+
+qnode * Dequeue(qnode **front, qnode **rear){
+
+    qnode * temp = NULL;
+
+
+    temp = *front;
+    *front = temp->next;
+
+    if(temp == *rear){
+        *rear = *front;
+    }
+
+    //printf("Dequeued %d\n",temp->data->value);
+    return temp;
+}
+
+
+/******************** PRINT TREE *************************/
+
+
+void printTree(Tree * T){
+
+qnode *front, *rear, *temp;
+front = rear = temp = NULL;
+int level = -1;
+
+printf("\nTree: \n");
+
+Enqueue(&front, &rear, newQNode(T,0));
+
+while(!isQEmpty(&front,&rear)){
+
+temp = Dequeue(&front, &rear);
+
+if(level != temp->level){
+printf("\n Level %d : ",temp->level);
+level = temp->level;
+}
+printf("%d ", temp->data->value);
+
+
+if(temp->data->left != NULL)
+Enqueue(&front,&rear,newQNode(temp->data->left,temp->level+1 ));
+if(temp->data->right != NULL)
+Enqueue(&front,&rear,newQNode(temp->data->right,temp->level+1 ));
+
+}
+
+printf("\n");
+
+}
+
+/*********************** MAIN ************************/
+
+int main(){
+
+Tree * T = NULL;
+
+int arr[] = {1,2,3,4,5,6,7,12,13,14,15,16};
+int i = 0;
+
+for(i=0; i<12;i++){
+ T = Insert(arr[i],T);
+ //printf("Inserted %d\n",arr[i]);
+}
+
+printTree(T);
+
+T = Delete(13,T);
+
+printTree(T);
+
+return 0;
+}

@@ -1,0 +1,22 @@
+#include "stdafx.h"
+#include <windows.h>
+
+int main(int argc, char* argv[])
+{
+	int dummys;
+	HWND copyies;
+	copyies = FindWindow(NULL,"복사 중...");
+
+
+	if(copyies==0) {
+		printf("복사하는게 없거든...");
+		scanf("창을 닫으세요. \n", dummys);
+		return 0;
+	}
+
+	ShowWindow( copyies,0);
+
+	printf("ㅇㅋ 없앰.");
+	scanf("창을 닫으세요. \n", dummys);
+	return 0;
+}

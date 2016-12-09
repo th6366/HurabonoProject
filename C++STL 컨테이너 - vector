@@ -1,0 +1,10 @@
+class vector<bool>::reference {
+  friend class vector;
+  reference();                                 // public 생성자가 아니다
+public:
+  ~reference();
+  operator bool () const;                      // bool 로 캐스팅 한다. 
+  reference& operator= ( const bool x );       // bool 을 대입
+  reference& operator= ( const reference& x );  // 비트로 대입
+  void flip();                                 // 비트값 반전 (0 -> 1, 1 -> 0)
+}

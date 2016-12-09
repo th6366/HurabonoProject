@@ -1,0 +1,353 @@
+#include "small_libc_conf.h"
+#define NULL            0x0
+ 
+#if _USE_STRCPY_                        
+char *strcpy(char *dst, const char *src) {
+        char *dstSave=dst;
+        int c;
+ 
+        do {
+                c = *dst++ = *src++;
+        } while(c);
+ 
+        return dstSave;
+}
+#endif
+ 
+#if _USE_STRNCPY_                       
+char *strncpy(char *dst, const char *src, int count) {
+        int c = 1;
+        char *dstSave = dst;
+ 
+        while(count-- > 0 && c)
+                c = *dst++ = *src++;
+ 
+        *dst = 0;
+        return dstSave;
+}
+#endif
+ 
+ 
+#if _USE_STRCAT_                        
+char *strcat(char *dst, const char *src) {
+        int c;
+        char *dstSave=dst;
+ 
+        while(*dst)
+                ++dst;
+ 
+        do {
+                c = *dst++ = *src++;
+        } while(c);
+ 
+        return dstSave;
+}
+#endif
+ 
+ 
+#if _USE_STRNCAT_                       
+char *strncat(char *dst, const char *src, int count) {
+        int c = 1;
+        char *dstSave = dst;
+ 
+        while(*dst && --count > 0)
+                ++dst;
+        while(--count > 0 && c)
+                c = *dst++ = *src++;
+        *dst = 0;
+        return dstSave;
+}
+#endif
+ 
+ 
+#if _USE_STRCMP_                        
+int strcmp(const char *string1, const char *string2) {
+        int diff, c;
+        for(;;) {
+                diff = *string1++ - (c = *string2++);
+ 
+                if(diff) return diff;
+                if(c == 0) return 0;
+        }
+}
+#endif
+ 
+ 
+#if _USE_STRNCMP_                       
+int strncmp(const char *string1, const char *string2, int count) {
+        int diff, c;
+        while(count-- > 0) {
+                diff = *string1++ - (c = *string2++);
+ 
+                if(diff) return diff;
+                if(c == 0) return 0;
+        }
+        return 0;
+}
+#endif
+ 
+ 
+#if _USE_STRSTR_                        
+char *strstr(const char *string, const char *find) {
+        int i;
+        for(;;) {
+                for(i = 0; string[i] == find[i] && find[i]; ++i) ;
+ 
+                if(find[i] == 0) return (char*)string;
+                if(*string++ == 0) return NULL;
+        }
+}
+#endif
+ 
+ 
+#if _USE_STRLEN_                        
+int strlen(const char *string) {
+        const char *base=string;
+        while(*string++) ;
+        return string - base - 1;
+}
+#endif
+ 
+ 
+#if _USE_MEMCPY_                        
+void *memcpy(void *dst, const void *src, unsigned long bytes) {
+        if(((unsigned long)dst | (unsigned long)src | bytes) & 3) {
+                unsigned char *Dst = (unsigned char*)dst, *Src = (unsigned char*)src;
+                while((int)bytes-- > 0)
+                        *Dst++ = *Src++;
+        } else {
+                unsigned long *Dst32 = (unsigned long*)dst, *Src32 = (unsigned long*)src;
+                bytes >>= 2;
+                while((int)bytes-- > 0)
+                        *Dst32++ = *Src32++;
+        }
+ 
+        return dst;
+}
+#endif
+ 
+ 
+#if _USE_MEMMOVE_                       
+void *memmove(void *dst, const void *src, unsigned long bytes) {
+        unsigned char *Dst = (unsigned char*)dst;
+        unsigned char *Src = (unsigned char*)src;
+ 
+        if(Dst < Src) {
+                while((int)bytes-- > 0)
+                        *Dst++ = *Src++;
+        } else {
+                Dst += bytes;
+                Src += bytes;
+                while((int)bytes-- > 0)
+                        *--Dst = *--Src;
+        }
+        return dst;
+}
+#endif
+ 
+ 
+#if _USE_MEMCMP_                        
+int memcmp(const void *cs, const void *ct, unsigned long bytes) {
+        unsigned char *Dst = (unsigned char*)cs;
+        unsigned char *Src = (unsigned char*)ct;
+        int diff;
+ 
+        while((int)bytes-- > 0) {
+                diff = *Dst++ - *Src++;
+                if(diff) return diff;
+        }
+ 
+        return 0;
+}
+#endif
+ 
+ 
+#if _USE_MEMSET_
+void *memset(void *dst, int c, unsigned long bytes) {
+        unsigned char *Dst = (unsigned char*)dst;
+        while((int)bytes-- > 0)
+                *Dst++ = (unsigned char)c;
+        return dst;
+}
+#endif
+ 
+ 
+#if _USE_ABS_                           
+int abs(int n) {
+        return n>=0 ? n : -n;
+}
+#endif
+ 
+ 
+#if _USE_RAND_                          
+static unsigned int Rand1=0x1f2bcda3;
+int rand(void) {
+        Rand1 = 1664525 * Rand1 + 1013904223;  //from D.E. Knuth and H.W. Lewis
+        return Rand1;
+}
+ 
+ 
+void srand(unsigned int seed) {
+        Rand1 = seed;
+}
+#endif
+ 
+ 
+#if _USE_STRTOL_                        
+long strtol(const char *s, char **end, int base) {
+        int i;
+        unsigned long ch, value=0, neg=0;
+ 
+        if(s[0] == '-') {
+                neg = 1;
+                ++s;
+        }
+ 
+        if(s[0] == '0' && s[1] == 'x') {
+                base = 16;
+                s += 2;
+        }
+ 
+        for(i = 0; i <= 8; ++i) {
+                ch = *s++;
+                if('0' <= ch && ch <= '9')
+                        ch -= '0';
+                else if('A' <= ch && ch <= 'Z')
+                        ch = ch - 'A' + 10;
+                else if('a' <= ch && ch <= 'z')
+                        ch = ch - 'a' + 10;
+                else
+                        break;
+                value = value * base + ch;
+        }
+ 
+        if(end) *end = (char*)s - 1;
+        if(neg) value = -(int)value;
+        return value;
+}
+#endif
+ 
+ 
+#if _USE_ATOI_                          
+int atoi(const char *s) {
+        return strtol(s, NULL, 10);
+}
+#endif
+ 
+ 
+#if _USE_ITOA_                          
+char *itoa(int num, char *dst, int base) {
+        int digit, negate=0, place;
+        char c, text[20];
+ 
+        if(base == 10 && num < 0) {
+                num = -num;
+                negate = 1;
+        }
+ 
+        text[16] = 0;
+ 
+        for(place = 15; place >= 0; --place) {
+                digit = (unsigned int)num % (unsigned int)base;
+ 
+                if(num == 0 && place < 15 && base == 10 && negate) {
+                        c = '-';
+                        negate = 0;
+                } else if(digit < 10)
+                        c = (char)('0' + digit);
+                else
+                        c = (char)('a' + digit - 10);
+                text[place] = c;
+                num = (unsigned int)num / (unsigned int)base;
+                if(num == 0 && negate == 0)
+                        break;
+        }
+        strcpy(dst, text + place);
+        return dst;
+}
+#endif
+ 
+ 
+#if _USE_ISLOWER_                       
+int islower(int c) {
+        return (c >= 'a'  &&  c <= 'z');
+}
+#endif
+ 
+ 
+#if _USE_ISUPPER_                       
+int isupper(int c) {
+        return (c >= 'A' && c <= 'Z');
+}
+#endif
+ 
+ 
+#if _USE_TOUPPER_                       
+int toupper(int c) {
+        return (c & ~' ');
+}
+#endif
+ 
+ 
+#if _USE_TOLOWER_                       
+int tolower(int c) {
+        return (c | ' ');
+}
+#endif
+ 
+////////////////////////////// small_libc.h /////////////////////////////////////
+#ifndef __SMALL_LIBC_H_
+#define __SMALL_LIBC_H_
+ 
+char *strcpy(char *dst, const char *src);
+char *strncpy(char *dst, const char *src, int count);
+char *strcat(char *dst, const char *src);
+char *strncat(char *dst, const char *src, int count);
+int strcmp(const char *string1, const char *string2);
+int strncmp(const char *string1, const char *string2, int count);
+char *strstr(const char *string, const char *find);
+int strlen(const char *string);
+void *memcpy(void *dst, const void *src, unsigned long bytes);
+void *memmove(void *dst, const void *src, unsigned long bytes);
+int memcmp(const void *cs, const void *ct, unsigned long bytes);
+void *memset(void *dst, int c, unsigned long bytes);
+int abs(int n);
+int rand(void);
+void srand(unsigned int seed);
+long strtol(const char *s, char **end, int base);
+int atoi(const char *s);
+char *itoa(int num, char *dst, int base);
+int islower(int c);
+int isupper(int c);
+int toupper(int c);
+int tolower(int c);
+ 
+#endif
+ 
+////////////////////////////// small_libc_conf.h /////////////////////////////////////
+#ifndef __SMALL_LIBC_CONF_H__
+#define __SMALL_LIBC_CONF_H__
+ 
+#define _USE_STRCPY_                    1
+#define _USE_STRNCPY_                   1
+#define _USE_STRNCAT_                   1
+#define _USE_STRCMP_                    1
+#define _USE_STRNCMP_                   1
+#define _USE_STRSTR_                    1
+#define _USE_STRLEN_                    1
+#define _USE_MEMCPY_                    1
+#define _USE_MEMMOVE_                   1
+#define _USE_MEMCMP_                    1
+#define _USE_MEMSET_                    1
+#define _USE_ABS_                               1
+#define _USE_RAND_                              1
+#define _USE_SRAND_                             1
+#define _USE_STRTOL_                    1
+#define _USE_ATOI_                              1
+#define _USE_ITOA_                              1
+#define _USE_ISLOWER_                   1
+#define _USE_ISUPPER_                   1
+#define _USE_TOUPPER_                   1
+#define _USE_TOLOWER_                   1
+ 
+#endif

@@ -1,0 +1,21 @@
+/*
+
+이 예제는
+http://www.cplusplus.com/reference/iostream/ios/operator_voidpt/
+에서 가져왔습니다.
+
+*/
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main () 
+{
+    ifstream is;
+    is.open ("test.txt");
+
+    if ( (void*)is == 0)
+        cerr << "Error opening 'test.txt'\n";
+
+    return 0;
+}

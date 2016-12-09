@@ -1,0 +1,49 @@
+class Video
+{
+   String name;
+   String date;
+}
+ 
+public class RentVideo {
+   public static void main(String args[]) {
+      
+       Video[] v = new Video[10];
+      
+       int menu = ShowMenu();
+       while(true)
+       {
+          switch(menu)
+          {
+          case 1:
+             Regist();
+             // 등록
+          case 2:
+             PrintAll();
+             // 조회
+          }
+          if( menu != 3)
+          {
+             menu = ShowMenu();
+          }
+          else
+          {
+             System.exit(0);
+          }
+       }
+   }
+ 
+   private static void PrintAll() {
+       // TODO Auto-generated method stub
+      
+   }
+ 
+   private static void Regist() {
+       // TODO Auto-generated method stub
+      
+   }
+ 
+   private static int ShowMenu() {
+       // TODO Auto-generated method stub
+       return 0;
+   }
+}

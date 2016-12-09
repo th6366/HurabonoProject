@@ -1,0 +1,145 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <malloc.h>
+#include <string.h>
+struct _node {
+ char name[10];  // 이름
+ char phone[14];  // 전화번호
+ struct _node *link; // 다음 노드
+};typedef struct _node node;
+void membershipInsert(node*);  // 노드 삽입 함수
+void membershipDelete(node*);  // 노드 삭제 함수
+void membershipDisplay(node*); // 노드 정보 출력 함수
+void main() {
+ int choice, choise0, choise1, choise2;
+ 
+ node *ptr;
+printf(" Cven eleven \n");
+ printf("=============================================\n");
+ printf("1. 회원 관리 & 포인트 조회\n");
+ printf("2. 재고 관리\n");
+ printf("3. 종료\n");
+ printf("어떤 업무를 보시겠습니까?\n");
+ do {
+  scanf("%d", &choise0);
+  if (choise0 != 1 && choise0 != 2 && choise0 != 3) {
+   printf("번호를 잘못 입력하셨습니다.");
+  }
+ } while (choise0 != 1 && choise0 != 2 && choise0 != 3);
+ switch (choise0) {
+ case 1:
+  printf("          회원 관리 & 포인트 조회            \n");
+  printf("=============================================\n");
+  printf("1. 회원 관리\n");
+  printf("2. 포인트 조회\n");
+  printf("3. 종료\n");
+  printf("어떤 업무를 보시겠습니까?\n");
+  do{
+   scanf("%d", &choise1);
+   if (choise1 != 1 && choise1 != 2 && choise1 != 3) {
+    printf("번호를 잘못 입력하셨습니다.");
+   }
+  } while (choise1 != 1 && choise1 != 2 && choise1 != 3);
+  
+  switch(choise1){
+  case 1: 
+   /*
+   첫번째 노드 생성
+   동적할당을 통해 공간을 생성하여 노드를 만든다.
+   다음 노드 위치는 NULL로 초기화한다
+   */
+   ptr = (node *)malloc(sizeof(node));
+   ptr->link = NULL;
+   /*
+   do-while을 이용한 반복
+   4. 종료를 선택할 때까지 반복한다.
+   */
+   do {
+    // 메뉴 출력
+printf(" 회원관리 프로그램 \n");
+    printf("=============================================\n");
+    printf("1. 회원가입\n");
+    printf("2. 회원조회\n");
+    printf("3. 회원삭제\n");
+    printf("4. 종료\n");
+    do {
+     scanf("%d", &choice);
+     if (choice != 1 && choice != 2 && choice != 3 && choice != 4) {
+      printf("번호를 잘못 입력하셨습니다.");
+     }
+    } while (choice != 1 && choice != 2 && choice != 3 && choice != 4);
+    // 입력 버퍼 초기화
+    fflush(stdin);
+    /*
+    입력받은 숫자에 따라 분기
+    1 : 등록 -> Insert
+    2 : 출력 -> Display
+    3 : 삭제 -> Delete
+    */
+    switch (choice) {
+    case 1:
+     membershipInsert(ptr);
+     break;
+    case 2:
+     membershipDisplay(ptr->link);
+     break;
+    case 3:
+     membershipDelete(ptr);
+     break;
+    }
+
+   } while (choice != 4 || (1>choice && choice>4));
+   break;
+  }
+ case 2:
+printf(" 재고 관리 \n");
+  printf("=============================================\n");
+  printf("1. 회원 관리\n");
+  printf("어떤 업무를 보시겠습니까?\n");
+  scanf("%d", &choise2);
+  break;
+ case 3:
+  break;
+ }
+}
+void membershipInsert(node *ptr) {
+ while (ptr->link != NULL) {
+  ptr = ptr->link;
+ }
+ ptr->link = (node*)malloc(sizeof(node));
+ ptr = ptr->link;
+ printf("이름을 입력하시오: ");
+ gets(ptr->name);
+ printf("전화번호 입력하시오: ");
+ gets(ptr->phone);
+ ptr->link = NULL;
+ printf("\n");
+}
+void membershipDelete(node *ptr) {
+ node *prev;
+ char _phone[14];
+ printf("삭제할 전화번호를 선택하시오: ");
+ gets(_phone);
+ while (ptr->link != NULL) {
+  prev = ptr;
+  ptr = ptr->link;
+  /* 저장되어 있는 데이터중에서 전화번호를 기준으로 데이터를 삭제 */
+  if (strcmp(_phone, ptr->phone) == 0) {
+   prev->link = ptr->link;
+   free(ptr);
+   break;
+  }
+ }
+ return;
+}
+void membershipDisplay(node *ptr) {
+ printf("%6s", "이  름");
+ printf("%14s\n", "전화번호");
+ while (ptr != NULL) {
+  printf("%6s", ptr->name);
+  printf("%14s", ptr->phone);
+  ptr = ptr->link;
+  printf("\n");
+ }
+ printf("\n");
+}

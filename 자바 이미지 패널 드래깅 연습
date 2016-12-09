@@ -1,0 +1,68 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class ex4 extends JFrame{
+    ImageIcon i =new ImageIcon("apple.jpg");
+    Image im = i.getImage();
+    Point sp;
+    int x=10, y=10;
+    ex4(){
+        this.setTitle("이미지 패널 드래깅 연습");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(null);
+        
+        MyPanel panel= new MyPanel();
+        
+        panel.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {}
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                sp=e.getPoint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+            
+        });
+        panel.addMouseMotionListener(new MouseMotionListener(){
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                 if ((x <= e.getX() && x + i.getIconWidth() >= e.getX())&&(y <= e.getY()&& y + i.getIconHeight()>=e.getY())){
+                    Point ep = e.getPoint();
+                    Component panel1=(JComponent)(e.getSource());
+                    Point p = panel1.getLocation();
+                    panel1.setLocation(p.x + ep.x - sp.x, p.y + ep.y - sp.y);
+                 }
+            }
+            @Override
+            public void mouseMoved(MouseEvent e) {
+            }
+        });
+        this.setContentPane(panel);
+        this.setSize(400,400);
+        this.setVisible(true);
+    }
+    class MyPanel extends JPanel{
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.drawImage(im, x, y, i.getIconWidth(), i.getIconHeight(), this);
+        }
+    }
+}
+public class JavaApplication41 {
+
+    public static void main(String[] args) {
+        new ex4();
+    }
+    
+}

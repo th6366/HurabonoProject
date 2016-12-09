@@ -1,0 +1,42 @@
+#include <stdio.h>
+ 
+int main (void)
+{
+ int a;
+ int b;
+ int c;
+ int d;
+ 
+ printf("* 피라미드 만들기 프로그램\n몇 줄의 피라미드를 쌓을지 40 이하의 양의 정수를 입력하시오. ");
+ scanf("%d", &a);
+
+ while(a<=0 || a>40)
+ {
+  printf("40 이하의 양의 정수가 아닙니다. 다시 입력해주세요. \n");
+  scanf("%d", &a);
+ }
+ 
+ d=a;
+ printf("\n");
+ 
+ while(a!=0)
+ {
+
+  for(b=a-1 ; b>0 ; b--)
+  {
+   printf(" ");
+  }
+ 
+  for(c=2*d-1 ; c>=2*a-1 ; c--)
+  {
+   printf("*");
+  }
+ 
+  printf("\n");
+  a--;
+ }
+
+ printf("\n");
+ return 0;
+}
+[출처] [C언어] '*' 피라미드 쌓기|작성자 The Best

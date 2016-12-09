@@ -1,0 +1,216 @@
+프로그램 목표 :
+링크드리스트를 이용하여 전화번호 관리 프로그램을 작성합니다.
+한 노드에는 이름과, 전화번호가 포함됩니다.
+총 입력, 삭제, 검색, 출력, 종료가 메뉴에 구현됩니다.
+ 
+구현방법:
+구조체 링크드리스트로 만듭니다.
+입력한 노드는 기존 노드의 노드의 뒤쪽으로 연결됩니다.
+삭제는 맨 앞의 노드를 삭제합니다.
+검색은 이름으로 검색하여 결과를 출력합니다.
+출력은 지금 링크드리스트에 있는 내용을 출력합니다.
+종료는 동적할당을 헤제하며 프로그램이 종료됩니다.
+*/
+ 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+ 
+typedef struct TelNode
+{
+    char name[20]; // 이름
+    char phone[20];// 전화번호
+    struct Node *next;
+}TelNode;
+ 
+void Insert(TelNode *start); // 입력함수
+void Delete(TelNode *start); // 출력함수
+void Search(TelNode *start); // 검색함수
+void PrintAll (TelNode *start); // 출력함수
+ 
+int index(); // 메뉴
+ 
+int main()
+{  
+    TelNode *head = NULL;
+    head = malloc(sizeof(TelNode)); //처음 노드 동적할당
+    head->next = NULL; // 노드는 아무것도 연결되어 있지 않습니다.
+ 
+    while(1)
+    {
+        int choice = index(); // 메뉴에서 선택한 후
+        TelNode *current = head; // 현재 가리키는 노드는 헤드를 가리킵니다.
+         
+        switch(choice)
+            {
+                  case 1:
+                        Insert(head);
+                        break;
+                  case 2:
+                        Delete(head);
+                        break;
+                  case 3:
+                        Search(head);
+                        break;
+                  case 4:
+                        PrintAll(head);
+                        break;
+                  case 5:
+                        while(head->next!=NULL) //모든 링크드리스트의 동적할당을 헤제합니다.
+                        {
+                            current = head->next;
+                            head->next = current->next;
+                            free(current);
+                        }
+                        free(head); // 헤드노드의 동적할당을 헤제합니다.
+                        return 0;
+                  default:
+                        break;
+            }
+      }
+}
+ 
+ 
+// Insert 함수 
+void Insert(TelNode *start)
+{
+    TelNode *current=NULL;
+    TelNode *end=NULL;
+    current = malloc(sizeof(TelNode)); // 한 메모리를 동적할당합니다.
+    current->next=NULL;
+    printf("Input Name: ");
+    scanf("%s",current->name); //이름을 입력합니다.
+    printf("input Tel Number: ");
+    scanf("%s",current->phone);// 전화번호를 입력합니다.
+ 
+    if (start->next==NULL) //1번째 삽입
+    {
+        start->next = current; // 생성한 노드를 첫번째 노드 이후로 연결합니다.
+        printf("---------> Data Insert\n\n");
+        return;
+    }
+    else //2번째 삽입 이후
+    {   
+        end = start;
+        while(1)
+        {   
+            if(end->next == NULL)  // 노드의 맨 끝에 입력합니다.
+            {
+                end->next = current;
+                printf("---------> Data Insert\n\n");
+                return;
+            }
+            else
+                end = end->next; // 노드의 맨 끝으로 이동합니다.
+        }
+    }
+}
+ 
+ 
+ 
+ 
+// Delete 함수
+void Delete(TelNode *start)
+{
+    TelNode *delNode; 
+    if(start->next == NULL) // 지울 노드가 없을 경우
+    {
+        printf("list is empty\n"); //아무것도 삭제하지 않습니다.
+        printf("---------> Data Delete\n\n");
+        return;
+    }
+ 
+    else
+    {
+        delNode = start->next; //삭제할 노드
+        start->next = delNode->next; // 처음은 삭제할 노드의 다음 노드를 가리킵니다.
+        free(delNode);
+        printf("---------> Data Delete\n\n");
+        return;
+    }
+}
+ 
+// Search 함수
+void Search(TelNode *start)
+{
+    char name[20];
+    TelNode *current = start->next;
+    printf("Input Name: ");
+    scanf("%s",name);
+ 
+    if(current ==NULL) //입력한 것이 하나도 없는 경우
+    {
+        printf("list is empty\n");
+        printf("---------> Data Search\n\n");
+        return;
+    }
+    while(1)
+    {
+        if(!strcmp(current->name, name)) // 검색시 입력한 이름을 검색합니다.
+        {
+            printf("name : %s      /    Tel : %s\n", current->name, current->phone);
+            printf("---------> Data Search\n\n");
+            return;
+        }
+                 
+        else if (current->next == NULL)
+        {
+            printf("not exist\n"); // 검색한 이름은 리스트에 존재하지 않습니다.
+            printf("---------> Data Search\n\n");
+            return;
+        }
+ 
+        else
+        {
+            current = current->next; // 다음노드를 검색하기 위해 위치를 바꿔줍니다.
+        }
+    }
+     
+}
+ 
+// Print 함수
+// 주어진 링크드 리스트를 전부 출력합니다. 
+void PrintAll (TelNode *start)
+{
+    TelNode *current;
+ 
+    if(start->next == NULL) //리스트가 비워져있는 경우
+    {
+        printf("list is empty\n");
+        printf("---------> Print All\n\n");
+        return;
+    }
+ 
+    current = start->next; 
+ 
+    while(current!=NULL) //노드가 끝에 도달할때까지 출력합니다.
+    {
+        printf("name : %s      /    Tel : %s\n", current->name, current->phone);
+        current = current->next; // 다음노드로 이동
+    }
+    printf("---------> Print All\n\n");
+    return;
+}
+ 
+// 메뉴
+int index()
+{
+      int choice;
+ 
+      while(1)
+      {
+            printf("---------Menu--------\n");
+            printf("             1. Insert\n");
+            printf("             2. Delete\n");
+            printf("             3. Search\n");
+            printf("             4. Print All\n");
+            printf("             5. Exit\n");
+            printf("             Choose the item: ");
+            scanf("%d", &choice);
+ 
+            if(choice < 1 || choice > 5) // 입력값을 벗어나면 다시 입력합니다.
+                  printf("choose again\n");
+            else
+                  return choice;
+      }
+}

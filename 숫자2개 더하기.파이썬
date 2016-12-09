@@ -1,0 +1,17 @@
+import sys
+
+def sum(input_file, output_filename):
+	output_file = open(output_filename, 'w')
+
+	for line in input_file:
+		value1, value2 = line.split()
+
+		sum = float(value1) + float(value2)
+		new_line = str(value1) + ' + ' + str(value2) + ' = ' + str(sum) + '\n'
+		output_file.write(new_line)
+	output_file.close()
+
+if __name__ == "__main__":
+	input_file = open(sys.argv[1], 'r')
+	sum(input_file, sys.argv[2])
+	input_file.close()

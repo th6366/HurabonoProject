@@ -1,0 +1,66 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.util.*;
+
+class GraphicsDrawLineMouseEx extends JFrame{
+    GraphicsDrawLineMouseEx(){
+        this.setTitle("Drawing Line by Mouse 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        MyPanel panel = new MyPanel();
+        this.add(panel);
+        this.setLocationRelativeTo(null);
+        this.setSize(300,300);
+        this.setVisible(true);
+    }
+    class MyPanel extends JPanel{
+        Vector<Point> vStart = new Vector<Point>();
+        Vector<Point> vEnd = new Vector<Point>();
+        
+        public MyPanel(){
+            this.addMouseListener(new MouseListener(){
+                @Override
+            public void mouseClicked(MouseEvent me) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent me) {
+                Point startP = me.getPoint();
+                vStart.add(startP);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                Point endP = me.getPoint();
+                vEnd.add(endP);
+                
+                repaint();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent me) {
+            }
+            });
+        }
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+            g.setColor(Color.BLUE);
+            for(int i=0; i<vStart.size(); i++){
+                Point s = vStart.elementAt(i);
+                Point e = vEnd.elementAt(i);
+                
+                g.drawLine((int)s.getX(), (int)s.getY(), (int)e.getX(), (int)e.getY());
+            }
+        }
+    }
+}
+public class JavaApplication16 {
+    public static void main(String[] args) {
+        new GraphicsDrawLineMouseEx();
+    }
+}
