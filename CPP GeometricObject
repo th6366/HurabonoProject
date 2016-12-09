@@ -1,0 +1,59 @@
+#include <iostream>
+using namespace std;
+class Line
+{
+public:
+	double startX;
+	double startY;
+	double endX;
+	double endY;
+}
+
+
+class GeometricObject
+{
+	Line line1;
+	Line line2;
+
+	GeometricObject()
+	{
+		line1.startX = 0;
+		line1.startY = 0;
+		line1.endX = 0;
+		line1.endY = 0;
+		line2.startX = 0;
+		line2.startY = 0;
+		line2.endX = 0;
+		line2.endY = 0;
+	}
+	GeometricObject(Line a, Line b)
+	{
+		line1 = a;
+		line2 = b;	
+	}
+	void setLine1(Line a)
+	{
+		line1 = a;
+	}
+	void setLine2(Line a)
+	{
+		line2 = a;
+	}
+	Line getLine1()
+	{
+		return line1;
+	}
+	Line getLine2()
+	{
+		return line2;
+	}
+	double AreaCalculation() = 0;
+	double RoundCalculation() = 0;
+}
+int main()
+{
+	Line l1;
+	Line l2;
+	GeometricObject go(l1, l2);
+	return 0;
+}

@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+char **explode( char* str, char *need, int *count )
+{
+	int str_len;
+	char **ret;
+	char *cpy;
+	char *tmp;
+	int tmp_len = 0;
+	int i;
+
+	if ( str == (char *) 0 )
+	{
+		(*count) = 0;
+		return (char **) 0;
+	}
+
+	str_len = strlen( str );
+	if ( str_len == 0 )
+	{
+		(*count) = 0;
+		return (char **) 0;
+	}
+
+	(*count) = 1;
+
+	cpy = (char *) malloc( sizeof( char ) * str_len );
+	cpy = strncpy( cpy, str, str_len );
+	tmp = cpy;
+
+
+	while ( 1 )
+	{
+		tmp=strstr( tmp, need );
+		if ( tmp == (char *) 0)
+			break;
+		tmp[0] = '\0';
+		tmp++;
+		(*count)++;
+	}
+
+	ret = (char **) malloc( sizeof( char * ) * (*count) );
+
+	for ( i=0; i < (*count); i++ )
+	{
+		ret[i] = &cpy[ tmp_len ];
+		if ( ret[i] == (char *) 0 )
+			tmp_len += 1;
+		else
+			tmp_len += strlen( ret[i] ) + 1;
+	}
+
+	return ret;
+}

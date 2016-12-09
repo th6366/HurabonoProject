@@ -1,0 +1,92 @@
+struct BillingRec
+{
+        long cust_id;
+        long timestamp;
+ 
+        enum CallType
+        {
+                toll_free,
+                local,
+                regional,
+                long_distance,
+                international,
+                cellular
+        } type;
+ 
+        enum CallTariff
+        {
+                off_peak,
+                medium_rate,
+                peak_time
+        } tariff;
+};
+
+struct BillingRec
+{
+        long cust_id;
+        long timestamp;
+ 
+        enum CallType
+        {
+                toll_free,
+                local,
+                regional,
+                long_distance,
+                international,
+                cellular
+        };
+ 
+        enum CallTariff
+        {
+                off_peak,
+                medium_rate,
+                peak_time
+        };
+ 
+        unsigned call: 3;               // 세 개의 비트들
+        unsigned tariff: 2;             // 두 개의 비트들
+};
+
+struct BillingRec
+{
+        int cust_id: 24;                // 23 bits + 1 sign bit
+        int  timestamp: 24;
+ 
+        enum CallType
+        {//...
+        };
+ 
+        enum CallTariff
+        {//...
+        };
+ 
+        unsigned call: 3;
+        unsigned tariff: 2;
+};
+
+class PersonalDetails 
+{
+private:
+        char * name;
+        long ID;
+        //...
+public:
+        PersonalDetails(const char *nm);  // key is of type char * used
+        PersonalDetails(long id) : ID(id) {} //numeric key used 
+};
+
+class PersonalDetails 
+{
+private:
+        union  //anonymous
+        { 
+                char * name; 
+                long ID; 
+        };
+public:
+        PersonalDetails(const char *nm); 
+        PersonalDetails(long id) : ID(id) {/**/} //멤버에 대한 직접적인 액세스
+        //...
+};
+
+

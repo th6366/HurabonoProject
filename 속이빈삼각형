@@ -1,0 +1,56 @@
+//6. 반복문 연습 - 속이 빈 삼각형
+ 
+//입력
+//5                - n
+ 
+//출력
+//     *            공백 4, 별1, 개행
+//    * *           1- 공백 3, 별1, 공백1,별1, 개행
+//   *   *          2- 공백 2, 별1, 공백3,별1, 개행
+//  *     *         3- 공백 1, 별1, 공백5,별1, 개행
+// *********      공백0, 별9, 개행
+ 
+//공백 = n-1, 별1, 개행
+//line: 1~(n-2)
+//공백 = n-line-1
+//별1
+//공백 = 2*line-1
+//별1
+//개행=1
+//별 = 2*n -1, 개행
+ 
+#include <stdio.h>
+int main(void)
+{
+    int n;
+    int line, space, star;
+ 
+    printf("높이:");
+    scanf_s("%d", &n);//입력
+    for (space = 1; space <= (n - 1); space++)//공백 = n-line
+    {
+        putchar(' ');
+    }
+    putchar('*');//별1
+    putchar('\n');//개행
+    for (line = 1; line <= (n - 2); line++)//line: 1~(n-2)
+    {
+        for (space = 1; space <= (n - line - 1); space++) //공백 = n-line-1
+        {
+            putchar(' ');
+        }
+        putchar('*');//별1
+        for (space = 1; space <= 2 * line - 1; space++) //공백 = 2*line-1
+        {
+            putchar(' ');
+        }
+        putchar('*');//별1
+        putchar('\n');//개행=1
+    }
+    for (star = 1; star <= (2 * n - 1); star++)//별 = 2*n -1
+    {
+        putchar('*');
+    }
+    putchar('\n');//개행
+    return 0;
+}

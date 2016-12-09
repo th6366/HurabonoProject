@@ -1,0 +1,28 @@
+//이름 규칙 : 테이블명DAO , 테이블명DTO
+//CRUD : Create;insert , Read;Select, Update, delete
+ 
+import java.sql.*;
+import java.util.Vector;
+ 
+import javax.swing.table.DefaultTableModel;
+ 
+//DB 처리
+public class MemberDAO {
+ 
+    private static final String DRIVER
+        = "oracle.jdbc.driver.OracleDriver";
+    private static final String URL
+        = "jdbc:oracle:thin:@192.168.0.3:1521:ORCL";
+   
+    private static final String USER = "SCOTT"; //DB ID
+    private static final String PASS = "SCOTT"; //DB 패스워드
+    Member_List mList;
+   
+    public MemberDAO() {
+   
+    }
+   
+    public MemberDAO(Member_List mList){
+        this.mList = mList;
+        System.out.println("DAO=>"+mList);
+    }

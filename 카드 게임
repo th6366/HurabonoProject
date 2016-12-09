@@ -1,0 +1,946 @@
+//Dack.
+#include<stdio.h>
+#include<time.h>
+#include<stdlib.h>
+#include<windows.h>
+#include<conio.h>
+void red();//빨강색
+void white();//흰색
+void blue();//파랑색
+void maping();
+void mains();
+void picture(int *, int *, int *, int *);
+void gotoxy(int x,int y);
+void result_Dack(int, int, int, int *, int *);
+int  Map[23][36]={
+		{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+		{0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}};
+int score=0;
+int flag = 1;
+void mains()
+{
+	int i, j, y=16,key=0;
+	int ing[6][5] = {{2,1,1,1,3},
+						{6,0,0,0,6},
+						{6,0,0,0,6},
+						{6,0,0,0,6},
+						{6,0,0,0,6},
+						{4,1,1,1,5}};
+	system("cls");
+	white();
+	gotoxy(26, 5); printf("http://costnc.tistory.com/");
+	gotoxy(21, 7); printf("━━━━━━━━━━━━━━━━━");
+	gotoxy(23, 9); red(); printf("     포        카  ");
+	gotoxy(23, 11); blue(); printf("                 G a m e");
+	gotoxy(21, 13); white(); printf("━━━━━━━━━━━━━━━━━");
+
+
+	for(i=0; i<=5; i++){
+		gotoxy(27, 14+i);
+		for(j=0; j<5; j++){
+			if(ing[i][j] == 1)
+				printf("━━━");
+			else if(ing[i][j] == 2)
+				printf("┏");
+			else if(ing[i][j] == 3)
+				printf("┓");
+			else if(ing[i][j] == 4)
+				printf("┗");
+			else if(ing[i][j] == 5)
+				printf("┛");
+			else if(ing[i][j] == 6)
+				printf("┃");
+			else if(ing[i][j] == 0)
+				printf("　　　");
+		}
+		printf("\n");
+	}
+		gotoxy(35, 16); printf("S t a r t");
+		gotoxy(35, 17); printf(" E x i t");
+		red(); gotoxy(30, y); printf("☞");
+	while(1){
+		//up 72 down 80 enter 13
+		key = getch();
+		if(key == 72 && flag == 0){
+			gotoxy(31, y); printf("　");
+			y--;
+			gotoxy(31, y); printf("☞");
+			flag = 1;
+		}
+		else if(key == 80 && flag == 1){
+			gotoxy(31, y); printf("　");
+			y++;
+			gotoxy(31, y); printf("☞");
+			flag = 0;
+		}
+		else if(key == 13)
+			break;
+	}
+
+}
+void maping()
+{
+	int i, j;
+	white();
+	for(i=0; i<23; i++)
+	{
+		for(j=0; j<36; j++)
+		{
+			if(Map[i][j] == 1)
+				printf("▩");
+			else
+			printf("　");
+
+		}
+		printf("\n");
+	}
+	gotoxy(67, 3); white(); printf("*[Computer]*");
+	gotoxy(67, 5); white(); printf("*[Y   o  u]*");
+	gotoxy(67, 7); white(); printf("*[Sc o r e]*");
+	gotoxy(67, 8); white(); printf("%8d", score);
+	gotoxy(67, 9); white(); printf("*[Who win?]*");
+}
+void picture(int *num_rand, int *shape_rand, int *num_rand2, int *shape_rand2)
+{
+	int shape[5]={0,1,2,3,4};//spade,heart,cluber,diamonds
+	int number[14]={0,1,2,3,4,5,6,7,8,9,10,11,12,13};
+	int x=28,y=29;
+	int i,j,k,v=1, hide=0;		//hide 0 숨김, 1 표시
+	int get=3;
+	int num=0,num1=0;
+	for(k=0;k<2;k++)
+	{
+		if(k==0)
+		{
+			for(i=0;i<4;i++)
+			{
+				num=0;
+				for(j=0;j<25;j++)
+				{
+					Sleep(10);
+					gotoxy(x-num, 8);printf("┏━━━┓");
+					gotoxy(x-num, 9);printf("┃?     ┃");
+					gotoxy(x-num,10);printf("┃      ┃");
+					gotoxy(x-num,11);printf("┃   ?  ┃");
+					gotoxy(x-num,12);printf("┃      ┃");
+					gotoxy(x-num,13);printf("┃     ?┃");
+					gotoxy(x-num,14);printf("┗━━━┛");
+					num+=1;
+				}
+				x+=2;
+			}
+			num=0;
+			for(i=0;i<4;i++)
+			{
+				num=1;
+				if(i%2==1)
+				{
+					num*=-1;
+				}
+				for(j=0;j<7;j++)
+				{
+					Sleep(20);
+					if(i%2==0)
+					{
+						gotoxy(10-num1,15-num);printf("          ");
+					}
+					gotoxy(10-num1, 8-num);printf("┏━━━┓");
+					gotoxy(10-num1, 9-num);printf("┃?     ┃");
+					gotoxy(10-num1,10-num);printf("┃      ┃");
+					gotoxy(10-num1,11-num);printf("┃   ?  ┃");
+					gotoxy(10-num1,12-num);printf("┃      ┃");
+					gotoxy(10-num1,13-num);printf("┃     ?┃");
+					gotoxy(10-num1,14-num);printf("┗━━━┛");
+					if(i%2==1)
+					{
+						gotoxy(10-num1, 7-num);printf("          ");
+					}
+					if(i%2==0)
+						num+=1;
+					else
+						num-=1;
+				}
+				num1+=2;
+			}
+			system("cls");
+			maping();
+		}
+		else
+		{
+			gotoxy(5, 8); printf("computer");		//컴퓨터와 사용자를 표시.
+			gotoxy(5, 14); printf("Y  o  u");
+			num=0;
+			num1=0;
+			j=1;
+			for(i=0;i<10;i++)
+			{
+				if(i%2==0)
+				{
+					if(i>get)
+					{
+						get+=2;
+						hide = 1;
+						getch();
+					}
+					white();
+					gotoxy(4+num, 1);printf("┏━━━┓");
+					gotoxy(4+num, 2);printf("┃?     ┃");
+					gotoxy(4+num, 3);printf("┃      ┃");
+					gotoxy(4+num, 4);printf("┃   ?  ┃");
+					gotoxy(4+num, 5);printf("┃      ┃");
+					gotoxy(4+num, 6);printf("┃     ?┃");
+					gotoxy(4+num, 7);printf("┗━━━┛");
+//					if(hide != 1){
+						if(shape[shape_rand[j]]==4){
+							white();
+							gotoxy(6+num, 2);printf("♠");
+							gotoxy(10+num,6);printf("♠");}
+						else if(shape[shape_rand[j]]==2){
+							red();
+							gotoxy(6+num, 2);printf("♥");
+							gotoxy(10+num,6);printf("♥");}
+						else if(shape[shape_rand[j]]==1){
+							white();
+							gotoxy(6+num, 2);printf("♣");
+							gotoxy(10+num,6);printf("♣");}
+						else if(shape[shape_rand[j]]==3){
+							red();
+							gotoxy(6+num, 2);printf("◆");
+							gotoxy(10+num,6);printf("◆");}
+						if(number[num_rand[j]]==1){
+							gotoxy(9+num,4);printf("A");}
+						else if(number[num_rand[j]]==11){
+							gotoxy(9+num,4);printf("J");}
+						else if(number[num_rand[j]]==12){
+							gotoxy(9+num,4);printf("Q");}
+						else if(number[num_rand[j]]==13){
+							gotoxy(9+num,4);printf("K");}
+						else if(number[num_rand[j]]==num_rand[j]){
+							gotoxy(8+num,4);printf("%2d",num_rand[j]);}
+//					}
+					num+=12;
+					j++;			//배열을 1칸씩 증가 시킨다.
+				}
+				else
+				{
+					if(i>get)
+					{
+						getch();
+					}
+					Sleep(300);
+					white();
+					gotoxy(4+num1,15);printf("┏━━━┓");
+					gotoxy(4+num1,16);printf("┃      ┃");
+					gotoxy(4+num1,17);printf("┃      ┃");
+					gotoxy(4+num1,18);printf("┃      ┃");
+					gotoxy(4+num1,19);printf("┃      ┃");
+					gotoxy(4+num1,20);printf("┃      ┃");
+					gotoxy(4+num1,21);printf("┗━━━┛");
+					if(shape[shape_rand2[v]]==4){
+						white();
+						gotoxy(6+num1, 16);printf("♠");
+						gotoxy(10+num1,20);printf("♠");}
+					else if(shape[shape_rand2[v]]==2){
+						red();
+						gotoxy(6+num1, 16);printf("♥");
+						gotoxy(10+num1,20);printf("♥");}
+					else if(shape[shape_rand2[v]]==1){
+						white();
+						gotoxy(6+num1, 16);printf("♣");
+						gotoxy(10+num1,20);printf("♣");}
+					else if(shape[shape_rand2[v]]==3){
+						red();
+						gotoxy(6+num1, 16);printf("◆");
+						gotoxy(10+num1,20);printf("◆");}
+					if(number[num_rand2[v]]==1){
+						gotoxy(9+num1,18);printf("A");}
+					else if(number[num_rand2[v]]==11){
+						gotoxy(9+num1,18);printf("J");}
+					else if(number[num_rand2[v]]==12){
+						gotoxy(9+num1,18);printf("Q");}
+					else if(number[num_rand2[v]]==13){
+						gotoxy(9+num1,18);printf("K");}
+					else if(number[num_rand2[v]]==num_rand2[v]){
+						gotoxy(8+num1,18);printf("%2d",num_rand2[v]);}
+					num1+=12;
+					v++; //배열을 한칸씩 증가시킨다.
+				}
+			}
+		}
+	}
+}
+void result_Dack(int size, int count, int re, int *number, int *pattern)
+{
+	int i, jump=0;			//jump = 카드값 위치 바꾸기
+
+	if(count == 0){
+		for(i = 1; i <= size; i++){
+			white();
+			gotoxy(14+jump,4);printf("┏━━━┓");
+			gotoxy(14+jump,5);printf("┃      ┃");
+			gotoxy(14+jump,6);printf("┃      ┃");
+			gotoxy(14+jump,7);printf("┃      ┃");
+			gotoxy(14+jump,8);printf("┃      ┃");
+			gotoxy(14+jump,9);printf("┃      ┃");
+			gotoxy(14+jump,10);printf("┗━━━┛");
+			if(pattern[i-re]==4){
+				white();
+				gotoxy(16+jump, 5);printf("♠");
+				gotoxy(20+jump, 9);printf("♠");}
+			else if(pattern[i-re]==2){
+				red();
+				gotoxy(16+jump, 5);printf("♥");
+				gotoxy(20+jump, 9);printf("♥");}
+			else if(pattern[i-re]==1){
+				white();
+				gotoxy(16+jump, 5);printf("♣");
+				gotoxy(20+jump, 9);printf("♣");}
+			else if(pattern[i-re]==3){
+				red();
+				gotoxy(16+jump, 5);printf("◆");
+				gotoxy(20+jump, 9);printf("◆");}
+			if(number[i-re]==1){
+				gotoxy(19+jump,7);printf("A");}
+			else if(number[i-re]==11){
+				gotoxy(19+jump,7);printf("J");}
+			else if(number[i-re]==12){
+				gotoxy(19+jump,7);printf("Q");}
+			else if(number[i-re]==13){
+				gotoxy(19+jump,7);printf("K");}
+			else{
+				gotoxy(18+jump,7);printf("%2d",number[i-re]);}
+			jump+=10;
+		}
+	}
+	if(count == 1)
+	{
+		for(i = 1; i <= size; i++){
+		white();
+		gotoxy(14+jump,12);printf("┏━━━┓");
+		gotoxy(14+jump,13);printf("┃      ┃");
+		gotoxy(14+jump,14);printf("┃      ┃");
+		gotoxy(14+jump,15);printf("┃      ┃");
+		gotoxy(14+jump,16);printf("┃      ┃");
+		gotoxy(14+jump,17);printf("┃      ┃");
+		gotoxy(14+jump,18);printf("┗━━━┛");
+		if(pattern[i-re]==4){
+			white();
+			gotoxy(16+jump, 13);printf("♠");
+			gotoxy(20+jump, 17);printf("♠");}
+		else if(pattern[i-re]==2){
+			red();
+			gotoxy(16+jump, 13);printf("♥");
+			gotoxy(20+jump, 17);printf("♥");}
+		else if(pattern[i-re]==1){
+			white();
+			gotoxy(16+jump, 13);printf("♣");
+			gotoxy(20+jump, 17);printf("♣");}
+		else if(pattern[i-re]==3){
+			red();
+			gotoxy(16+jump, 13);printf("◆");
+			gotoxy(20+jump, 17);printf("◆");}
+		if(number[i-re]==1){
+			gotoxy(19+jump,15);printf("A");}
+		else if(number[i-re]==11){
+			gotoxy(19+jump,15);printf("J");}
+		else if(number[i-re]==12){
+			gotoxy(19+jump,15);printf("Q");}
+		else if(number[i-re]==13){
+			gotoxy(19+jump,15);printf("K");}
+		else{
+			gotoxy(18+jump,15);printf("%2d",number[i-re]);}
+		jump+=10;
+		}
+	}
+	if (count==0)					//결과 값 위치 지정
+		gotoxy(68, 4);
+	else if(count==1)
+		gotoxy(68, 6);
+}
+void red() 
+{ 
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED); 
+} 
+void white() 
+{ 
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED| FOREGROUND_GREEN| FOREGROUND_BLUE); 
+}
+void blue() 
+{ 
+SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_INTENSITY | FOREGROUND_BLUE); 
+} 
+void gotoxy(int x,int y)
+{
+	COORD XY={x,y};
+	HANDLE hHandle=GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleCursorPosition(hHandle,XY);
+}
+
+//card.
+#include<stdio.h>
+#include<windows.h>
+#include<time.h>
+#include<conio.h>
+#include"Dack.c"
+
+int Card();
+void array();
+void allotment();
+void card_back(int);
+void reset();
+void card_count();
+void print(int, int);
+int print_last(int, int, int, int);
+
+int Cards[5][14] = { 0 }, count = 0, row = 0, col = 0;
+const char shape[5][10] = { "null", "Cluber","Heart","Diamonds","spade" };
+const char Number[14][7] = { "null", "ACE", "Two", "three", "Four", "Five", "Six",
+"Seven", "Eight", "Nine", "Ten",
+"Jock", "Queen", "king" };
+int card_confirm[14] = { 0 };
+int pattern[6] = { 0 }, bon = 0;
+int Play_number[6] = { 0 }, Computer_number[6] = { 0 }, Play_pattern[6] = { 0 }, Computer_pattern[6] = { 0 };
+int card_one = 0, reset_count = 0, temp[8] = { 0 }, results[5] = { 0 }, patterns[5] = { 0 };
+int play[5][6] = { 0 }, computer[5][6] = { 0 }, number[6] = { 0 };
+
+void main()
+{
+	int card_result = 0, i, computer = 0, play = 0, win = 0;
+	int play_flag = 0, computer_flag = 0, temps = 0, count = 1;
+	char next;
+
+	srand(time(NULL));
+	while (1) {
+		mains();
+		if (flag == 1)
+		{
+			while (1) {
+
+				/*어느 쪽이 페어인지 구분*/
+				system("cls");
+				play_flag = 0, computer_flag = 0;
+
+				/*cards 배열 값 초기화*/
+				reset();
+
+				/*카드 분배*/
+				allotment();
+
+				/*	맵을 그린다.	*/
+				maping();
+
+				/* 카드를 출력한다. */
+				picture(Play_number, Play_pattern, Computer_number, Computer_pattern);
+
+				/*카드 확인*/
+				for (i = 0; i <= 1; i++) {
+					/*카드 초기화*/
+					reset();
+
+					/*컴퓨터와 플레이어로 나눈다.*/
+					card_back(i);
+
+					/*카드 정렬*/
+					array();
+
+					/*컴퓨터와 플레이어 동일 카드 갯수 확인*/
+					card_count();
+
+					/*플레이어, 컴퓨터 카드 종류 확인*/
+					card_result = Card();
+
+					/*플레이어와 컴퓨터를 구분하며, 만약 모두 노페어일 떄를 대비하여 큰 수와, 큰 패턴을 저장 시킨다*/
+					if (i == 0) {
+						/*노페어 일경우*/
+						temp[0] = number[5];
+						temp[1] = pattern[5];
+						/*비교할 카드가 존재한다면.*/
+						if (card_one != 0 || card_result != 0) {
+							if (card_one == 1) {								//원페어	
+								temp[0] = results[2], temp[1] = patterns[2];
+								temp[2] = results[2], temp[3] = patterns[2];
+							}
+							else if (card_one == 2) {							//투페어	
+								temp[0] = results[4], temp[1] = patterns[4];
+								temp[2] = results[4], temp[3] = patterns[4];
+							}
+							else {											//나머지
+								temp[0] = results[5], temp[1] = patterns[5];
+								temp[2] = results[5], temp[3] = patterns[5];
+							}
+						}
+					}
+					else {
+						/*노페어 일경우*/
+						//						temps = pattern[1];								//모양 첫번째것을 저장 시킨다.
+						//						temp[4] = number[5], temp[5] = pattern[5];
+						//						for(j = 2; j <= 5; j++)							//가장 큰 모양 찾기
+						//							if(temps < pattern[j]){
+						//								temps = pattern[j];
+						//								count = j;
+						//							}
+						temp[4] = number[5];
+						temp[5] = pattern[5];
+						/*비교할 카드가 존재한다면.*/
+						if (card_one != 0 || card_result != 0) {
+							if (card_one == 1) {
+								temp[4] = results[2], temp[5] = patterns[2];//원페어
+								temp[6] = results[2], temp[7] = patterns[2];
+							}
+							else if (card_one == 2) {
+								temp[4] = results[4], temp[5] = patterns[4];//투페어
+								temp[6] = results[4], temp[7] = patterns[4];
+							}
+							else {
+								temp[4] = results[5], temp[5] = patterns[5]; //나머지
+								temp[6] = results[5], temp[7] = patterns[5];
+							}
+						}
+					}
+
+					/*카드 결과값 출력*/
+					if (card_result != 0) {
+						print(card_result, i);
+					}
+					else {
+						if (card_one == 1) {
+							result_Dack(2, i, 0, results, patterns);
+							printf("원 페어\n");
+						}
+						else if (card_one == 2) {
+							result_Dack(4, i, 0, results, patterns);
+							printf("투 페어\n");
+						}
+					}
+
+					/* 카드 결과를 가진다. */
+					if (card_result != 0)
+						if (i == 0)
+							play = card_result;
+						else
+							computer = card_result;
+					else
+						if (i == 0) {
+							play = card_one;
+							play_flag = 1;
+						}
+						else {
+							computer = card_one;
+							computer_flag = 1;
+						}
+
+				}
+				/* 승부를 짖는다. */
+
+				win = print_last(play, computer, play_flag, computer_flag);
+				if (win == 0) {
+					gotoxy(67, 11); printf("*사용자 승!*");
+					score += 10;
+				}
+				else if (win == 1) {
+					gotoxy(67, 11); printf("*컴퓨터 승!*");
+				}
+				gotoxy(67, 14); white(); printf("계속?(Y/N)");
+				/* Y, N 문자를 받을 떄까지는 꿈쩍 하지 않는다.*/
+				while (1) {
+					next = getch();
+					if ((next == 'y' || next == 'Y') || (next == 'N' || next == 'n'))
+						break;
+				}
+				if (next == 'n' || next == 'N') {
+					break;
+				}
+			}
+		}
+		else
+			break;
+	}
+	system("cls");
+
+
+}
+/******************************************************************
+카드 썩고 출력 함수
+*******************************************************************/
+void allotment()
+{
+	int count = 0, row = 0, col = 0, flag = 0, i = 1;
+
+	/*랜덤 카드 썩기*/
+	for (count = 1; count <= 52; count++) {
+		do {
+			row = rand() % 4 + 1;
+			col = rand() % 13 + 1;
+		} while (Cards[row][col] != 0);
+		Cards[row][col] = count;
+		red(); printf("%8s of %-8s%3d\n", shape[row], Number[col], count);
+	}
+	white(); printf("%d장의 카드를 썩었습니다. <엔터>", count - 1);
+	getch();
+	system("cls");
+	/* 카드 5장씩 배분하기. Play, Computer*/
+
+	for (count = 1; count <= 10; count++) {
+		for (col = 1; col <= 4; col++) {
+			for (row = 1; row <= 13; row++) {
+				if (((count % 2) == 0) && (Cards[col][row] == count)) {
+					Play_number[count / 2] = row;
+					Play_pattern[count / 2] = col;
+				}
+				else if (Cards[col][row] == count) {
+					Computer_number[(count / 2) + 1] = row;
+					Computer_pattern[(count / 2) + 1] = col;
+				}
+			}
+		}
+	}
+
+
+	/*카드 출력*/
+	//	for(count=1; count<=5; count++){
+	//			printf("%5s of %-8s%c %5s of %-8s\n", Number[Play_number[count]], shape[Play_pattern[count]],
+	//					'\t', Number[Computer_number[count]], shape[Computer_pattern[count]]);
+	//	}
+
+}
+/******************************************************************
+정렬 함수
+*******************************************************************/
+void array()
+{
+	int i, j, temp = 0;
+
+	for (i = 1; i <= 5; i++) {
+		for (j = i + 1; j <= 5; j++) {
+			if (number[i] >= number[j])
+			{
+				temp = number[i];
+				number[i] = number[j];
+				number[j] = temp;
+
+				temp = pattern[i];
+				pattern[i] = pattern[j];
+				pattern[j] = temp;
+			}
+		}
+	}
+
+}
+/******************************************************************
+카드 썩고 카드 구분 짓는 함수
+*******************************************************************/
+int Card()
+{
+	int i = 0, j = 0, k = 0, cont = 1;
+	int card_mod = 0, min = 0, temp = 0;
+
+	/*최소값 받아오기*/
+	min = number[1];
+
+	for (i = 1; i <= 13; i++) {
+		/*원, 트리플, 포카인지 확인*/
+		if (card_confirm[i] == 2) {			//원페어, 투페어
+			card_one++;
+			for (k = 1; k <= 5; k++)
+				if (number[k] == i) {
+					patterns[cont] = pattern[k];
+					results[cont] = number[k];
+					cont++;
+				}
+		}
+		else if (card_confirm[i] == 3) {		//트리플
+												//results[0] = i,
+			card_mod = 2;
+			for (k = 1; k <= 5; k++)
+				if (number[k] == i) {
+					patterns[cont] = pattern[k];
+					results[cont] = number[k];
+					cont++;
+				}
+		}
+		else if (card_confirm[i] == 4) {		//포카
+												//results[0] = i,
+			card_mod = 8;
+			for (k = 1; k <= 5; k++)
+				if (number[k] == i) {
+					patterns[cont] = pattern[k];
+					results[cont] = number[k];
+					cont++;
+				}
+		}
+		/*풀 하우스 확인*/
+		if (card_mod == 2 && card_one == 1)
+			card_mod = 7;
+	}
+	/*스트레이트 확인*/
+	if (card_one == 0 && card_mod == 0) {
+		for (i = 1; i<5; i++) {
+			if (number[i + 1] != min + i)
+				break;
+		}
+		if (i == 5)
+			card_mod = 3;
+	}
+	/* 10, J, Q, K, A 확인*/
+	if (number[1] == 1)
+		for (j = 2; j <= 5; j++)
+			if (number[j] != 8 + j)
+				break;
+	/*로얄 스트레이트 || 플레쉬를 위한 모양 확인*/
+	for (i = 1; i <= 5; i++)
+		if (pattern[1] != pattern[i])
+			break;
+	/*A 2 3 4 5 확인*/
+	for (k = 1; k<5; k++) {
+		if (number[k + 1] != 1 + k)
+			break;
+	}
+	/*로얄 스트레이트 확인*/
+	if (card_mod == 3 || j == 6 || i == 6 || k == 5) {
+		if (j == 6 && i == 6 && k != 6)			//로얄 스트레이트 플러시
+			card_mod = 11;
+		else if (i != 6 && j == 6 && k != 6)		//마운틴
+			card_mod = 5;
+		else if (k == 5 && i == 6)				//백 스트레이트 플러시
+			card_mod = 10;
+		else if (card_mod == 3 && i == 6)		//스트레이트 플러쉬
+			card_mod = 9;
+		else if (card_mod != 3 && i == 6)		//플러시
+			card_mod = 6;
+
+		for (k = 1; k <= 5; k++) {
+			patterns[k] = pattern[k];	// 화면 출력을 위해 정렬된 값 저장.
+			results[k] = number[k];
+		}
+	}
+	bon = card_mod;
+	if (number[1] == 1) {						//만약 1(A)가 있으면 재일 큰 값으로 설정.
+		temp = number[1];
+		number[1] = number[5];
+		number[5] = temp;
+
+		temp = pattern[1];
+		pattern[1] = pattern[5];
+		pattern[5] = temp;
+	}
+
+	return card_mod;
+}
+/******************************************************************
+컴퓨터와 플레이어 구분
+*******************************************************************/
+void card_back(int flag)
+{
+	int i;
+
+	/* 1 은 컴퓨터, 0은 플레이어 */
+	if (flag == 0)
+	{
+		for (i = 1; i <= 5; i++) {
+			number[i] = Play_number[i];
+			pattern[i] = Play_pattern[i];
+		}
+	}
+	else {
+		for (i = 1; i <= 5; i++) {
+			number[i] = Computer_number[i];
+			pattern[i] = Computer_pattern[i];
+		}
+	}
+
+}
+
+/******************************************************************
+초기화 함수
+*******************************************************************/
+void reset()
+{
+	int row, col;
+
+	/*첫번째 카드값 초기화 번호 0번, 두번째 카드 중복 횟수 1번*/
+
+	if (reset_count == 0)
+		for (col = 1; col <= 4; col++)
+			for (row = 1; row <= 13; row++)
+				Cards[col][row] = 0;
+	else if (reset_count == 1 || reset_count == 2)
+		for (row = 1; row <= 13; row++)
+			card_confirm[row] = 0;
+
+	if (reset_count == 0)
+		reset_count = 1;
+	else if (reset_count == 1)
+		reset_count = 2;
+	else
+		reset_count = 0;
+
+	/*카드 페어 초기화*/
+	card_one = 0;
+	bon = 0;
+}
+/******************************************************************
+컴퓨터와 플레이어 동일 카드 갯수 확인
+*******************************************************************/
+void card_count() {
+	int i;
+
+	for (i = 1; i <= 5; i++)
+		if (number[i] != 0) {
+			card_confirm[number[i]]++;
+		}
+
+}
+/******************************************************************
+출력 함수
+*******************************************************************/
+void print(int result, int i)
+{
+	white();
+
+	switch (result)
+	{
+	case 2:
+		result_Dack(3, i, 0, results, patterns);
+		white(); printf("트리플\n");
+		break;
+	case 3:
+		result_Dack(5, i, 0, results, patterns);
+		white(); printf("스트레이트\n");
+		break;
+	case 4:
+		result_Dack(5, i, 0, results, patterns);
+		white(); printf("백 스트레이트\n");
+		break;
+	case 5:
+		result_Dack(5, i, 0, results, patterns);
+		white(); printf("마운틴\n");
+		break;
+	case 6:
+		result_Dack(5, i, 0, results, patterns);
+		white(); printf("플러시\n");
+		break;
+	case 7:
+		result_Dack(5, i, 0, results, patterns);
+		white(); printf("풀 하우스\n");
+		break;
+	case 8:
+		result_Dack(4, i, 0, results, patterns);
+		white(); printf("포카\n");
+		break;
+	case 9:
+		result_Dack(5, i, 0, results, patterns);
+		white(); printf("스트레이트 플러시\n");
+		break;
+	case 10:
+		result_Dack(5, i, 0, results, patterns);
+		white(); printf("백 스트레이트 플러시\n");
+		break;
+	case 11:
+		result_Dack(5, i, 0, results, patterns);
+		white(); printf("로얄 스트레이트 플러시\n");
+		break;
+	}
+
+
+
+
+}
+/******************************************************************
+승자 가려내기
+*******************************************************************/
+int print_last(int play, int computer, int play_flag, int computer_flag)
+{
+
+	/*1. 카드 승패*/
+	if ((play_flag == 1 && computer_flag == 1) || (play_flag == 0 && computer_flag == 0)) {
+		if (play < computer)
+			return 0;
+		else if (play > computer)
+			return 1;
+	}
+	else {
+		if (play_flag == 1)
+			return 0;
+		else
+			return 1;
+	}
+
+	gotoxy(23, 11); red(); printf("큰 숫자로 비교합니다.<엔터>");
+	getch();
+
+	system("cls");
+	maping();
+
+	gotoxy(5, 8); printf("computer");		//컴퓨터와 사용자를 표시.
+	gotoxy(5, 14); printf("Y  o  u");
+
+	/*2. 카드 중 큰 숫자로 승패내기*/
+	gotoxy(26, 11); red(); printf("숫자로 승패를 가립니다. <엔터>");
+
+	result_Dack(1, 0, 1, &temp[0], &temp[1]);
+	Sleep(300);
+	result_Dack(1, 1, 1, &temp[4], &temp[5]);
+
+	if (temp[0] == 1 && temp[4] != 1)						// A가 재일 높게 설정함.
+		return 1;
+	else if (temp[4] == 1 && temp[0] != 1)
+		return 0;
+	else if (temp[0] < temp[4])
+		return 0;
+	else if (temp[0] > temp[4])
+		return 1;
+	getch();
+
+	system("cls");
+	maping();
+
+	gotoxy(5, 8); printf("computer");		//컴퓨터와 사용자를 표시.
+	gotoxy(5, 14); printf("Y  o  u");
+
+	gotoxy(26, 11); red(); printf("모양으로 승패를 가립니다.<엔터>");
+
+	if (card_one == 0 || bon == 0)
+	{
+		result_Dack(1, 0, 1, &temp[0], &temp[1]);
+		Sleep(300);
+		result_Dack(1, 1, 1, &temp[4], &temp[5]);
+
+		if (temp[1] < temp[5])
+			return 1;
+		else if (temp[1] > temp[5])
+			return 0;
+		return 0;
+	}
+
+	result_Dack(1, 0, 1, &temp[2], &temp[3]);
+	Sleep(300);
+	result_Dack(1, 1, 1, &temp[6], &temp[7]);
+
+	/*3. 모양으로 승패내기*/
+	if (temp[3] < temp[7])
+		return 1;
+	else if (temp[3] > temp[7])
+		return 0;
+	return 0;
+}

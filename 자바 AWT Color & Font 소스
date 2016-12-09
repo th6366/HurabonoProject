@@ -1,0 +1,58 @@
+import java.awt.*;
+ 
+class Form extends Frame 
+{
+ private Button bt1 =  new Button("버튼1 ABCDabcd"); // 버튼 컴포넌트
+ private Button bt2 =  new Button("버튼2 ABCDabcd");
+ private Button bt3 =  new Button("버튼3 ABCDabcd");
+ 
+ private Color c1 = new Color(0, 0, 0);
+ private Font font1 = new Font("Serif", Font.PLAIN, 20) ;
+ private Font font2 = new Font("Serif", Font.BOLD, 20) ;
+ private Font font3 = new Font("Serif", Font.ITALIC, 20) ;
+ 
+ private FlowLayout layout1 = new FlowLayout(FlowLayout.LEFT); // 레이아웃 메니저
+ 
+ public Form(String title, int width, int height, boolean visible) {
+  super(title);
+  init();
+  super.setSize(width, height);  // 프레임 크기
+  
+  Dimension screen =Toolkit.getDefaultToolkit().getScreenSize(); // 모니터화면의 해상도 얻기
+  Dimension f1_size = super.getSize(); // 프레임크기
+  
+  // 프레임이 화면 중앙에 위치하도록 left, top 계산
+  int left = (screen.width / 2) - (f1_size.width / 2);
+  int top = (screen.height / 2) - (f1_size.height /2 );
+  
+  super.setLocation(left,  top); // left, top 설정
+  super.setResizable(true); // 크기조절
+  super.setVisible(visible);  // 프레임이 보이도록 설정
+ }
+ 
+ public void init() {
+  this.setLayout(layout1); // 레이아웃 설정
+  this.add(bt1);  // 버튼 컴포넌트 추가
+  this.add(bt2);
+  this.add(bt3);
+  
+  // 컬러&폰트 속성 변경
+  this.setBackground(c1);
+  bt1.setBackground(new Color(255,0,0));
+  bt1.setForeground(Color.WHITE);
+  bt1.setFont(font1);
+  bt2.setBackground(new Color(0,255,0));
+  bt2.setForeground(Color.WHITE);
+  bt2.setFont(font2);
+  bt3.setBackground(new Color(0,0,255));
+  bt3.setForeground(Color.WHITE);
+  bt3.setFont(font3);
+ }
+}
+ 
+public class FormTest {
+ public static void main(String[] args) {
+ 
+  Form f1 = new Form("컬러&폰트 예제입니다.", 320, 240, true);
+ }
+}

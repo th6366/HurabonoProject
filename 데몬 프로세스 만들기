@@ -1,0 +1,16 @@
+void makedaemon(int mode)
+{
+    pid_t pid;
+    if ((pid = fork()) < 0)
+        exit(0);
+
+    else if (pid != 0)
+        exit(0);
+
+    if (mode == 0)
+    {
+        close(0);
+        close(1);
+    }
+    setsid();
+}

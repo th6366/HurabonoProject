@@ -1,0 +1,1283 @@
+//CheckMove Class
+public class CheckMove {
+
+	public boolean CheackMalMove(int[][] board, int i, int[] preposition,
+			int[] nowposition) {
+		if (i == 1 || i == 6) {
+			if (checkOne(preposition, nowposition)) {
+				if (nowposition[0] >= 3 && nowposition[0] <= 5) {
+					if (nowposition[1] >= 0 && nowposition[1] <= 2) {
+						return true;
+					} else
+						return false;
+				} else
+					return false;
+			} else
+				return false;
+		} else if (i == 8 || i == 13) {
+			if (checkOne(preposition, nowposition)) {
+				if (nowposition[0] >= 3 && nowposition[0] <= 5) {
+					if (nowposition[1] >= 7 && nowposition[1] <= 9) {
+						return true;
+					} else
+						return false;
+				} else
+					return false;
+			} else
+				return false;
+
+		} else if (i % 7 == 2) {
+			if (countSomeDiagonal(board, preposition, nowposition, i) == 0) {
+				return true;
+			}else if (preposition[0] == nowposition[0]) {
+				if (countSomeRow(board, preposition, nowposition) == 0) {
+					return true;
+
+				} else
+					return false;
+			} else if (preposition[1] == nowposition[1]) {
+				if (countSomeCol(board, preposition, nowposition) == 0) {
+					return true;
+
+				} else
+					return false;
+			}
+			return false;
+
+		} else if (i % 7 == 3) {
+			if ((preposition[0] >= 3 && preposition[0] <= 5
+					&& preposition[1] >= 0 && preposition[1] <= 2)
+					|| (preposition[0] >= 3 && preposition[0] <= 5
+							&& preposition[1] >= 7 && preposition[1] <= 9)) {
+				if (checkCenter(board, preposition, nowposition)) {
+					return true;
+				}
+			}
+
+			if (preposition[0] == nowposition[0]) {
+				if (countSomeRow(board, preposition, nowposition) == 1) {
+					return true;
+
+				} else
+					return false;
+			} else if (preposition[1] == nowposition[1]) {
+				if (countSomeCol(board, preposition, nowposition) == 1) {
+					return true;
+
+				} else
+					return false;
+			}
+			return false;
+
+		} else if (i % 7 == 4) {
+			if (countSomeMa(board, preposition, nowposition) == 0) {
+				return true;
+			} else
+				return false;
+		} else if (i % 7 == 5) {
+			if (countSomeSang(board, preposition, nowposition) == 0) {
+				return true;
+			} else
+				return false;
+		} else if (i == 7) {
+			if (checkOne(preposition, nowposition)) {
+				if ((preposition[1] - nowposition[1]) <= 0) {
+					return true;
+				}
+			}
+			return false;
+		} else if (i == 14) {
+			if (checkOne(preposition, nowposition)) {
+				if ((preposition[1] - nowposition[1]) >= 0) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean checkOne(int[] preposition, int[] nowposition) {
+		int a, b;
+		if ((nowposition[0] >= 3 && nowposition[0] <= 5 && nowposition[1] >= 0 && nowposition[1] <= 2)
+				|| (nowposition[0] >= 3 && nowposition[0] <= 5
+						&& nowposition[1] >= 7 && nowposition[1] <= 9)) {
+			a = preposition[0] - nowposition[0];
+			b = preposition[1] - nowposition[1];
+
+			if ((a * a + b * b) == 2)
+				return true;
+			else {
+				a = preposition[0] - nowposition[0];
+				b = preposition[1] - nowposition[1];
+
+				if ((a * a + b * b) == 1)
+					return true;
+				else
+					return false;
+			}
+		} else {
+			a = preposition[0] - nowposition[0];
+			b = preposition[1] - nowposition[1];
+
+			if ((a * a + b * b) == 1)
+				return true;
+			else
+				return false;
+		}
+	}
+
+	public boolean checkCenter(int[][] board, int[] preposition,
+			int[] nowposition) {
+		int a, b;
+		a = preposition[0] - nowposition[0];
+		b = preposition[1] - nowposition[1];
+
+		if (nowposition[0] >= 3 && nowposition[0] <= 5 && nowposition[1] >= 0
+				&& nowposition[1] <= 2) {
+			if (board[4][1] != 0)
+				if ((a * a + b * b) == 8)
+					return true;
+		} else if (nowposition[0] >= 3 && nowposition[0] <= 5
+				&& nowposition[1] >= 7 && nowposition[1] <= 9) {
+			if (board[4][8] != 0)
+				if ((a * a + b * b) == 8)
+					return true;
+		}
+		return false;
+	}
+
+	public int countSomeDiagonal(int[][] board, int[] preposition,
+			int[] nowposition, int mal) {
+		int count = -1;
+
+		if ((preposition[0] >= 3 && preposition[0] <= 5 && preposition[1] >= 0 && preposition[1] <= 2)
+				&& (nowposition[0] >= 3 && nowposition[0] <= 5
+						&& nowposition[1] >= 0 && nowposition[1] <= 2)) {
+			if (preposition[0] == 3 && preposition[1] == 0) {
+				for (int i = preposition[0] + 1, j = preposition[1] + 1; i <= 5 ; i++, j++){
+					if(nowposition[0]==i && nowposition[1]==j)
+						return count+1;
+					if (board[i][j] != 0)
+						count++;
+				}
+			} else if (preposition[0] == 3 && preposition[1] == 2) {
+				for (int i = preposition[0] + 1, j = preposition[1] - 1; i <= 5 ; i++, j--){
+					if(nowposition[0]==i && nowposition[1]==j)
+						return count+1;
+					if (board[i][j] != 0)
+						count++;
+				}
+			} else if (preposition[0] == 5 && preposition[1] == 0) {
+				for (int i = preposition[0] - 1, j = preposition[1] + 1; i >= 3 ; i--, j++){
+					if(nowposition[0]==i && nowposition[1]==j)
+						return count+1;
+					if (board[i][j] != 0)
+						count++;
+				}
+			} else if (preposition[0] == 5 && preposition[1] == 2) {
+				for (int i = preposition[0] - 1, j = preposition[1] - 1; i >= 3 ; i--, j--){
+					if(nowposition[0]==i && nowposition[1]==j)
+						return count+1;
+					if (board[i][j] != 0)
+						count++;
+				}
+			}else if (preposition[0] == 4 && preposition[1] == 1) {
+				if (board[nowposition[0]][nowposition[1]] == 0 || board[nowposition[0]][nowposition[1]]/8 != mal/8)
+					return count+1;
+			} else
+				return 1;
+			return 1;
+		} else if ((preposition[0] >= 3 && preposition[0] <= 5
+				&& preposition[1] >= 7 && preposition[1] <= 9)
+				&& (nowposition[0] >= 3 && nowposition[0] <= 5
+						&& nowposition[1] >= 7 && nowposition[1] <= 9)) {
+			if (preposition[0] == 3 && preposition[1] == 7) {
+				for (int i = preposition[0] + 1, j = preposition[1] + 1; i <= 5 ; i++, j++){
+					if(nowposition[0]==i && nowposition[1]==j)
+						return count+1;
+					if (board[i][j] != 0)
+						count++;
+				}
+			} else if (preposition[0] == 3 && preposition[1] == 9) {
+				for (int i = preposition[0] + 1, j = preposition[1] - 1; i <= 5 ; i++, j--){
+					if(nowposition[0]==i && nowposition[1]==j)
+						return count+1;
+					if (board[i][j] != 0)
+						count++;
+				}
+			} else if (preposition[0] == 5 && preposition[1] == 7) {
+				for (int i = preposition[0] - 1, j = preposition[1] + 1; i >= 3 ; i--, j++){
+					if(nowposition[0]==i && nowposition[1]==j)
+						return count+1;
+					if (board[i][j] != 0)
+						count++;
+				}
+			} else if (preposition[0] == 5 && preposition[1] == 9) {
+				for (int i = preposition[0] - 1, j = preposition[1] - 1; i >= 3 ; i--, j--){
+					if(nowposition[0]==i && nowposition[1]==j)
+						return count+1;
+					if (board[i][j] != 0)
+						count++;
+				}
+			} else if (preposition[0] == 4 && preposition[1] == 8) {
+				if (board[nowposition[0]][nowposition[1]] == 0 || board[nowposition[0]][nowposition[1]]/8 != mal/8)
+					return count+1;
+			} else
+				return 1;
+			return 1;
+		} else
+			return 1;
+	}
+
+	public int countSomeRow(int[][] board, int[] preposition, int[] nowposition) {
+		int count = 0;
+		if (board[preposition[0]][preposition[1]] == 3) {
+			if (preposition[1] <= nowposition[1]) {
+
+				for (int i = preposition[1] + 1; i < nowposition[1]; i++) {
+					if (board[preposition[0]][i] % 7 == 3) {
+						return 0;
+					}
+				}
+			} else {
+				for (int i = preposition[1] - 1; i > nowposition[1]; i--) {
+					if (board[preposition[0]][i] % 7 == 3) {
+						return 0;
+					}
+				}
+
+			}
+
+		}
+		if (preposition[1] <= nowposition[1]) {
+
+			for (int i = preposition[1] + 1; i < nowposition[1]; i++) {
+				if (board[preposition[0]][i] != 0) {
+					count++;
+				}
+			}
+		} else {
+			for (int i = preposition[1] - 1; i > nowposition[1]; i--) {
+				if (board[preposition[0]][i] != 0) {
+					count++;
+				}
+			}
+
+		}
+
+		return count;
+	}
+
+	public int countSomeCol(int[][] board, int[] preposition, int[] nowposition) {
+		int count = 0;
+		if (board[preposition[0]][preposition[1]] == 3) {
+			if (preposition[0] <= nowposition[0]) {
+
+				for (int i = preposition[0] + 1; i < nowposition[0]; i++) {
+					if (board[i][preposition[1]] % 7 == 3) {
+						return 0;
+					}
+				}
+			} else {
+				for (int i = preposition[0] - 1; i > nowposition[0]; i--) {
+					if (board[i][preposition[1]] % 7 == 3) {
+						return 0;
+					}
+				}
+
+			}
+
+		}
+		if (preposition[0] <= nowposition[0]) {
+
+			for (int i = preposition[0] + 1; i < nowposition[0]; i++) {
+				if (board[i][preposition[1]] != 0) {
+					count++;
+				}
+			}
+		} else {
+			for (int i = preposition[0] - 1; i > nowposition[0]; i--) {
+				if (board[i][preposition[1]] != 0) {
+					count++;
+				}
+			}
+
+		}
+
+		return count;
+	}
+
+	public int countSomeMa(int[][] board, int[] preposition, int[] nowposition) {
+
+		if (nowposition[0] - preposition[0] == 1
+				&& nowposition[1] - preposition[1] == 2) {
+			return board[preposition[0]][preposition[1] + 1];
+		} else if (nowposition[0] - preposition[0] == -1
+				&& nowposition[1] - preposition[1] == 2) {
+			return board[preposition[0]][preposition[1] + 1];
+		} else if (nowposition[0] - preposition[0] == -2
+				&& nowposition[1] - preposition[1] == 1) {
+			return board[preposition[0] - 1][preposition[1]];
+		} else if (nowposition[0] - preposition[0] == -2
+				&& nowposition[1] - preposition[1] == -1) {
+			return board[preposition[0] - 1][preposition[1]];
+
+		} else if (nowposition[0] - preposition[0] == -1
+				&& nowposition[1] - preposition[1] == -2) {
+			return board[preposition[0]][preposition[1] - 1];
+		} else if (nowposition[0] - preposition[0] == 1
+				&& nowposition[1] - preposition[1] == -2) {
+			return board[preposition[0]][preposition[1] - 1];
+		} else if (nowposition[0] - preposition[0] == 2
+				&& nowposition[1] - preposition[1] == -1) {
+			return board[preposition[0] + 1][preposition[1]];
+		} else if (nowposition[0] - preposition[0] == 2
+				&& nowposition[1] - preposition[1] == +1) {
+			return board[preposition[0] + 1][preposition[1]];
+		} else
+			return 1;
+	}
+
+	public int countSomeSang(int[][] board, int[] preposition, int[] nowposition) {
+
+		if (nowposition[0] - preposition[0] == 2
+				&& nowposition[1] - preposition[1] == 3) {
+			return board[preposition[0]][preposition[1] + 1]
+					+ board[preposition[0] + 1][preposition[1] + 2];
+		} else if (nowposition[0] - preposition[0] == -2
+				&& nowposition[1] - preposition[1] == 3) {
+			return board[preposition[0]][preposition[1] + 1]
+					+ board[preposition[0] - 1][preposition[1] + 2];
+		} else if (nowposition[0] - preposition[0] == -3
+				&& nowposition[1] - preposition[1] == 2) {
+			return board[preposition[0] - 1][preposition[1]]
+					+ board[preposition[0] - 2][preposition[1] + 1];
+		} else if (nowposition[0] - preposition[0] == -3
+				&& nowposition[1] - preposition[1] == -2) {
+			return board[preposition[0] - 1][preposition[1]]
+					+ board[preposition[0] - 2][preposition[1] - 1];
+		} else if (nowposition[0] - preposition[0] == -2
+				&& nowposition[1] - preposition[1] == -3) {
+			return board[preposition[0]][preposition[1] - 1]
+					+ board[preposition[0] - 1][preposition[1] - 2];
+		} else if (nowposition[0] - preposition[0] == 2
+				&& nowposition[1] - preposition[1] == -3) {
+			return board[preposition[0]][preposition[1] - 1]
+					+ board[preposition[0] + 1][preposition[1] - 2];
+		} else if (nowposition[0] - preposition[0] == 3
+				&& nowposition[1] - preposition[1] == -2) {
+			return board[preposition[0] + 1][preposition[1]]
+					+ board[preposition[0] + 2][preposition[1] - 1];
+		} else if (nowposition[0] - preposition[0] == 3
+				&& nowposition[1] - preposition[1] == 2) {
+			return board[preposition[0] + 1][preposition[1]]
+					+ board[preposition[0] + 2][preposition[1] + 1];
+		} else
+			return 1;
+	}
+
+}
+
+//GameMenu Class
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
+@SuppressWarnings("serial")
+public class GameMenu extends JMenuBar {
+	GameMenu() {
+		JMenu fileMenu = new JMenu("File");
+		JMenuItem New = new JMenuItem("New");
+		JMenuItem Open = new JMenuItem("Open");
+		JMenuItem Save = new JMenuItem("Save");
+		JMenuItem Exit = new JMenuItem("Exit");
+
+		fileMenu.add(New);
+		fileMenu.addSeparator();
+		fileMenu.add(Open);
+		fileMenu.add(Save);
+		fileMenu.addSeparator();
+		fileMenu.add(Exit);
+		
+		JMenu editMenu= new JMenu("Edit");
+		JMenuItem Edit = new JMenuItem("Edit");
+		
+		editMenu.add("Edit");
+
+		add(fileMenu);
+		add(editMenu);
+		setVisible(true);
+	}
+}
+
+//Information Class
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+
+
+@SuppressWarnings("serial")
+public class Information extends JPanel {
+	JLabel RemainTime, PlayTime;
+	JButton Startbu;
+	JButton Endbu;
+	JPanel jp2;
+	JButton HansuBack;
+	JToggleButton[] Player;
+	PlayTimer PlayTimer;
+	RemainTimer RemainTimer;
+	JPanel[] PlayerPanel;
+	int hours, mins, secs, hours1, mins1, secs1;
+	double oo, xx, oo1, xx1;
+	boolean loop, first = true, TurnIsChange = false;
+	ImageIcon icon;
+	
+	boolean IsStart;
+	void setTurnIsChangeToTrue() {// TurnIsChange를 True로 만듬.턴이바뀌면 남은시간 초기화를 위해서
+		TurnIsChange = true;
+		SetTurn();
+	}
+	void SetTurn(){//턴이 바뀌면 토글버튼도 바뀌게
+		if(Player[0].isSelected()){
+			Player[0].setSelected(false);
+			Player[1].setSelected(true);
+		}
+		else{
+			Player[1].setSelected(false);
+			Player[0].setSelected(true);
+		}
+	}
+	void ResetTimer(){
+		PlayTime.setText("00:00:00");
+		RemainTime.setText("00:00:00");
+		HansuBack.setVisible(false);
+		Startbu.setVisible(true);
+		PlayTimer.suspend();
+		RemainTimer.suspend();
+		IsStart=false;
+	}
+	void setPlayerEatMal(int killedMal) {
+		String MalImg = null;
+		switch (killedMal) {
+		case 1:
+			MalImg = "images/chang.jpg";
+			break;
+		case 2:
+			MalImg = "images/cha.jpg";
+			break;
+		case 3:
+			MalImg = "images/po.jpg";
+			break;
+		case 4:
+			MalImg = "images/ma.jpg";
+			break;
+		case 5:
+			MalImg = "images/sang.jpg";
+			break;
+		case 6:
+			MalImg = "images/sa.jpg";
+			break;
+		case 7:
+			MalImg = "images/jol.jpg";
+			break;
+		case 8:
+			MalImg = "images/rchang.jpg";
+			break;
+		case 9:
+			MalImg = "images/rcha.jpg";
+			break;
+		case 10:
+			MalImg = "images/rpo.jpg";
+			break;
+		case 11:
+			MalImg = "images/rma.jpg";
+			break;
+		case 12:
+			MalImg = "images/rsang.jpg";
+			break;
+		case 13:
+			MalImg = "images/rsa.jpg";
+			break;
+		case 14:
+			MalImg = "images/rjol.jpg";
+			break;
+		}
+		PlayerPanel[KoreaChess.myTurn].add(new JLabel(new ImageIcon(MalImg)));
+	}
+
+	public Information() {
+		setLayout(null);
+		icon = new ImageIcon("Images/board.jpg");
+		jp2 = new JPanel();
+		jp2.setLayout(null);
+		add(jp2);
+		TitledBorder TB = new TitledBorder(new LineBorder(Color.black));
+		Font font = new Font("Arial", Font.ITALIC, 20);
+		RemainTime = new JLabel();
+		RemainTime.setBounds(0, 0, 200, 100);
+		RemainTime.setHorizontalAlignment(SwingConstants.CENTER);
+		RemainTime.setText("00:00:00");
+		RemainTime.setBorder(TB);
+		RemainTime.setFont(font);
+		PlayTime = new JLabel(){
+			public void paintComponents(Graphics g){
+				//super.paintComponents(g);
+				g.drawImage(icon.getImage(), 0, 0, 100, 80, null);
+			}
+		};
+		PlayTime.setBounds(0, 100, 200, 80);
+		PlayTime.setHorizontalAlignment(SwingConstants.CENTER);
+		PlayTime.setText("00:00:00");
+		PlayTime.setBorder(TB);
+		PlayTime.setFont(font);
+		
+		HansuBack = new JButton();
+		HansuBack.setBounds(0, 510, 100, 120);
+		HansuBack.setVisible(false);
+		HansuBack.setText("한수물리기");
+		HansuBack.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				KoreaChess.changeTurn();
+				setTurnIsChangeToTrue();
+			}
+		});
+
+		Player = new JToggleButton[2];
+		for (int i = 0; i < 2; i++) {
+			Player[i] = new JToggleButton();
+			Player[i].setText("Player " + (i + 1));
+			Player[i].setBorder(TB);
+			Player[i].setBounds(100 * i, 180, 100, 30);
+			Player[i].setEnabled(false);
+			add(Player[i]);
+		}
+		Player[0].setSelected(true);
+		
+		PlayerPanel = new JPanel[2];
+		for (int i = 0; i < 2; i++) {
+			PlayerPanel[i] = new JPanel();
+			PlayerPanel[i].setLayout(new FlowLayout());
+			PlayerPanel[i].setBounds(100 * i, 210, 100, 300);
+			PlayerPanel[i].setBorder(TB);
+			add(PlayerPanel[i]);
+		}
+
+		Startbu = new JButton();
+		Startbu.setBounds(0, 510, 100, 120);
+		Startbu.setText("시작");
+		Startbu.addMouseListener(new ButtonMouseListener());
+		Endbu = new JButton();
+		Endbu.setBounds(100, 510, 100, 120);
+		Endbu.setText("끝내기");
+		Endbu.addMouseListener(new ButtonMouseListener());
+		add(RemainTime);
+		add(PlayTime);
+		add(HansuBack);
+		add(Startbu);
+		add(Endbu);
+
+		setFocusable(false);
+		setLocation(655, 0);
+		setSize(200, 730);
+		setVisible(true);
+		PlayTimer = new PlayTimer();
+		RemainTimer = new RemainTimer();
+
+	}
+
+	class PlayTimer extends Thread {
+		void timer1() {// 플레이 시간
+			xx = (System.currentTimeMillis() - oo) / 1000d;
+			hours = ((int) xx % 86400) / 3600;
+			mins = ((int) xx % 3600) / 60;
+			secs = (int) xx % 60;
+			PlayTime.setText(String.format("%02d:%02d:%02d  ", hours, mins,
+					secs));
+			//le.repaint();
+		}
+
+		public void run() {
+			// while (true) {
+			while (true) {
+				try {
+					if (loop) {
+						Thread.sleep(100);
+						timer1();
+					} else {
+						Thread.sleep(1000 * 60 * 60 * 24); // 24시간 정지상태
+					}
+				} catch (InterruptedException e) {
+					break;
+				}
+			}
+			// }
+		}
+	}
+
+	class RemainTimer extends Thread {
+		void timer() {// 남은시간
+			xx1 = (oo1 + (60000d) - System.currentTimeMillis()) / 1000d;
+			hours1 = ((int) xx1 % 86400) / 3600;
+			mins1 = ((int) xx1 % 3600) / 60;
+			secs1 = (int) xx1 % 60;
+			RemainTime.setText(String.format("%02d:%02d:%02d  ", hours1, mins1,
+					secs1));
+			// 턴이 바뀌었거나 시간이 초과됐을때
+			if (oo1 + (60000d) - System.currentTimeMillis() <= 0d
+					|| TurnIsChange) {
+				if (oo1 + (60000d) - System.currentTimeMillis() <= 0d)// 만약 상태가
+																		// 시간초과라면
+					KoreaChess.changeTurn();// 턴을 바꾼다
+				oo1 = System.currentTimeMillis();
+				TurnIsChange = false;
+			}
+		}
+
+		public void run() {
+			// while (true) {
+			while (true) {
+				try {
+					if (loop) {
+						Thread.sleep(100);
+						timer();
+					} else {
+						Thread.sleep(1000 * 60 * 60 * 24); // 24시간 정지상태
+					}
+				} catch (InterruptedException e) {
+					break;
+				}
+				// }
+			}
+		}
+
+	}
+
+	class ButtonMouseListener implements MouseListener {
+
+		@SuppressWarnings("deprecation")
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if (e.getSource() == Startbu) {
+				
+				if (first) {// 처음 시작 눌렀을때(처음 실행할때)
+					loop = true;
+					oo = System.currentTimeMillis();//기준 시간을 정한다.
+					oo1 = System.currentTimeMillis();//기준 시간을 정함
+					PlayTimer.start();
+					RemainTimer.start();
+					first = false;
+				} else {// 끝내기 누른후 시작 눌렀을때(처음 실행이 아닐때)
+					oo = System.currentTimeMillis();
+					oo1 = System.currentTimeMillis();
+					PlayTimer.resume();
+					RemainTimer.resume();
+				}
+				IsStart=true;
+				HansuBack.setVisible(true);
+				Startbu.setVisible(false);
+			} else if (e.getSource() == Endbu) {
+				ResetTimer();
+				IsStart=false;
+			}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+		}
+
+	}
+}
+
+
+//KoreaChess Class
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+@SuppressWarnings("serial")
+public class KoreaChess {
+	final int NULL = 0;
+
+	final int chang = 1;
+	final int cha = 2;
+	final int pho = 3;
+	final int ma = 4;
+	final int sang = 5;
+	final int sa = 6;
+	final int jol = 7;
+
+	final int Rchang = 8;
+	final int Rcha = 9;
+	final int Rpho = 10;
+	final int Rma = 11;
+	final int Rsang = 12;
+	final int Rsa = 13;
+	final int Rjol = 14;
+
+	static int myTurn = 0;
+	boolean start = false;
+	boolean janggun = false;
+	Information information;
+	CheckStart check;
+
+	JFrame mainFrame;
+	JPanel panel = new JPanel();
+	JPanel gameZone = new JPanel() {
+		public void paintComponent(Graphics g) {
+			g.drawImage(icon.getImage(), 0, 0, 653, getHeight(), null);
+			setOpaque(false);
+			super.paintComponent(g);
+		}
+	};
+	ImageIcon icon;
+	GameMenu menu;
+	CheckMove checkmove = new CheckMove();
+	int[][] janggiBoard;
+	int[] malIndex, malIndextmp;
+	
+	//Sound killSound; 
+	//Sound endSound;
+	//Sound moveSound;
+	//Sound repeatSound;
+
+	public KoreaChess() {
+		mainFrame = new JFrame();
+		mainFrame.setTitle("!- Janggi. F -!");
+		mainFrame.setLayout(null);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		information = new Information();
+		icon = new ImageIcon("images/board.jpg");
+		menu = new GameMenu();
+		check = new CheckStart();
+
+		//killSound = new Sound("media/kill.wav", false);
+		//endSound = new Sound("media/end.wav", false);
+		//moveSound = new Sound("media/move.wav", false);
+		//repeatSound = new Sound("media/end.wav", true);
+
+		panel.setLayout(null);
+		gameZone.setLayout(null);
+		janggiBoard = init();
+		gameZone = Locate(janggiBoard, gameZone);
+		panel.add(gameZone);
+		panel.add(information);
+		check.start();
+
+		gameZone.setSize(653, 730);
+		mainFrame.setJMenuBar(menu);
+		mainFrame.setContentPane(panel);
+		mainFrame.setBounds(100, 100, 862, 790/*760*/);
+		mainFrame.setResizable(false);
+		mainFrame.setVisible(true);
+
+		//repeatSound.wakeup();
+	}
+	
+	class CheckStart extends Thread {
+		int count = 0;
+
+		public void run() {
+			// while (true) {
+			while (true) {
+				if(!information.IsStart && count==0){
+					janggiBoard = init();
+					gameZone.removeAll();
+					gameZone = Locate(janggiBoard, gameZone);
+					gameZone.repaint();
+					myTurn = 0;
+					information.Player[0].setSelected(true);
+					information.Player[1].setSelected(false);
+					count++;
+				}else if(information.IsStart && count != 0){
+					count = 0;
+				}
+					
+			}
+			// }
+		}
+	}
+
+	public class mal extends JButton {
+		int x;
+		int y;
+		ImageIcon icon;
+
+		public mal(int i, int j, String imagePath) {
+			setSize(40, 40);
+			setLocation((i * 72 + 20), (j * 72 + 20));
+			icon = new ImageIcon(imagePath);
+
+			addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub
+					if (information.IsStart) {
+
+						JButton btn = (JButton) e.getSource();
+						btn.setSelected(false);
+						x = e.getXOnScreen() - mainFrame.getX();
+						y = e.getYOnScreen() - mainFrame.getY() - 30;
+						System.out.println(x + "  " + y);
+						malIndex = getIndex(x, y);
+						System.out.println(malIndex[0] + "  " + malIndex[1]);
+						System.out
+								.println(janggiBoard[malIndextmp[0]][malIndextmp[1]]);
+						System.out.println(myTurn);
+						if (janggiBoard[malIndextmp[0]][malIndextmp[1]] / 8 == myTurn) {
+							if (malIndex[0] == malIndextmp[0]
+									&& malIndextmp[1] == malIndex[1])
+								;
+							else if (checkmove
+									.CheackMalMove(
+											janggiBoard,
+											janggiBoard[malIndextmp[0]][malIndextmp[1]],
+											malIndextmp, malIndex)) {
+								if (janggiBoard[malIndex[0]][malIndex[1]] == NULL) {
+									janggiBoard[malIndex[0]][malIndex[1]] = janggiBoard[malIndextmp[0]][malIndextmp[1]];
+									janggiBoard[malIndextmp[0]][malIndextmp[1]] = NULL;
+									//moveSound.wakeup();
+									checkJang();
+								} else if (janggiBoard[malIndex[0]][malIndex[1]] / 8 == janggiBoard[malIndextmp[0]][malIndextmp[1]] / 8)
+									;
+								else if (janggiBoard[malIndex[0]][malIndex[1]] % 7 == 3
+										&& janggiBoard[malIndextmp[0]][malIndextmp[1]] % 7 == 3)
+									;
+								else {
+
+									if (myTurn == 0
+											&& janggiBoard[malIndex[0]][malIndex[1]] == 8) {
+										janggiBoard[malIndex[0]][malIndex[1]] = janggiBoard[malIndextmp[0]][malIndextmp[1]];
+										janggiBoard[malIndextmp[0]][malIndextmp[1]] = NULL;
+										start = false;
+										//endSound.wakeup();
+										JOptionPane.showConfirmDialog(null,
+												"占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙.", "占쏙옙占쏙옙",
+												JOptionPane.WARNING_MESSAGE);
+										information.IsStart = false;
+										information.ResetTimer();
+										information.IsStart=false;
+										information.PlayerPanel[0].removeAll();
+										information.PlayerPanel[1].removeAll();	
+									} else if (myTurn == 1
+											&& janggiBoard[malIndex[0]][malIndex[1]] == 1) {
+										janggiBoard[malIndex[0]][malIndex[1]] = janggiBoard[malIndextmp[0]][malIndextmp[1]];
+										janggiBoard[malIndextmp[0]][malIndextmp[1]] = NULL;
+										start = false;
+										//endSound.wakeup();
+										JOptionPane.showConfirmDialog(null,
+												"占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙.", "占쏙옙占쏙옙",
+												JOptionPane.WARNING_MESSAGE);
+										information.IsStart = false;
+										information.ResetTimer();
+										information.IsStart=false;
+										information.PlayerPanel[0].removeAll();
+										information.PlayerPanel[1].removeAll();	
+									} else {
+										
+										information.setPlayerEatMal(janggiBoard[malIndex[0]][malIndex[1]]);
+										janggiBoard[malIndex[0]][malIndex[1]] = janggiBoard[malIndextmp[0]][malIndextmp[1]];
+										janggiBoard[malIndextmp[0]][malIndextmp[1]] = NULL;
+										//killSound.wakeup();
+										checkJang();
+									}
+								}
+							}
+						}
+
+						btn.setLocation(checkPlace(x, y));
+						gameZone.removeAll();
+						gameZone = Locate(janggiBoard, gameZone);
+						gameZone.repaint();
+						Rint(janggiBoard);
+						System.out.println("");
+					}
+
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub
+					JButton btn = (JButton) e.getSource();
+					btn.setSelected(false);
+					x = e.getXOnScreen() - mainFrame.getX();
+					y = e.getYOnScreen() - mainFrame.getY() - 30;
+					malIndextmp = getIndex(x, y);
+					System.out.println(malIndextmp[0] + "  " + malIndextmp[1]);
+
+				}
+
+				@Override
+				public void mouseExited(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// TODO Auto-generated method stub
+				}
+			});
+
+			addMouseMotionListener(new MouseMotionListener() {
+
+				@Override
+				public void mouseDragged(MouseEvent e) {
+					// TODO Auto-generated method stub
+					if (information.IsStart) {
+						JButton btn = (JButton) e.getSource();
+						x = e.getXOnScreen() - mainFrame.getX();
+						y = e.getYOnScreen() - mainFrame.getY();
+						if (x < 650 && x > 10 && y < 770 && y > 10)
+							btn.setLocation(x - 25, y - 60);
+					}
+
+				}
+
+				@Override
+				public void mouseMoved(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+
+				}
+			});
+		}
+
+		public void paintComponent(Graphics g) {
+			g.drawImage(icon.getImage(), 0, 0, 40, 40, null);
+			setOpaque(false);
+		}
+	}
+
+	public int[] getIndex(int ox, int oy) {
+		int[] Index = new int[2];
+		Point tmp = new Point();
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 10; j++) {
+				if ((tmp.x - ox) * (tmp.x - ox) + (tmp.y - oy) * (tmp.y - oy) > (((i + 1) * 72) - ox)
+						* (((i + 1) * 72) - ox)
+						+ (((j + 1) * 72) - oy)
+						* (((j + 1) * 72) - oy)) {
+					tmp.setLocation(i * 72 + 20, j * 72 + 20);
+					Index[0] = i;
+					Index[1] = j;
+				}
+			}
+		}
+
+		return Index;
+	}
+
+	public Point checkPlace(int ox, int oy) {
+		Point Place = new Point();
+		Point tmp = new Point();
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 10; j++) {
+				if ((tmp.x - ox) * (tmp.x - ox) + (tmp.y - oy) * (tmp.y - oy) > (((i + 1) * 72) - ox)
+						* (((i + 1) * 72) - ox)
+						+ (((j + 1) * 72) - oy)
+						* (((j + 1) * 72) - oy)) {
+					tmp.setLocation(i * 72 + 20, j * 72 + 20);
+				}
+			}
+		}
+		Place.setLocation(tmp.getLocation());
+
+		return Place;
+	}
+
+	public void Rint(int[][] janggiBoard) {
+
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 10; j++) {
+				System.out.print(" " + janggiBoard[i][j] + " ");
+			}
+			System.out.println("");
+		}
+	}
+
+	public int[][] init() {
+
+		int[][] Janggipan = {
+				{ cha, NULL, NULL, jol, NULL, NULL, Rjol, NULL, NULL, Rcha },
+				{ sang, NULL, pho, NULL, NULL, NULL, NULL, Rpho, NULL, Rma },
+				{ ma, NULL, NULL, jol, NULL, NULL, Rjol, NULL, NULL, Rsang },
+				{ sa, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, Rsa },
+				{ NULL, chang, NULL, jol, NULL, NULL, Rjol, NULL, Rchang, NULL },
+				{ sa, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, Rsa },
+				{ sang, NULL, NULL, jol, NULL, NULL, Rjol, NULL, NULL, Rsang },
+				{ ma, NULL, pho, NULL, NULL, NULL, NULL, Rpho, NULL, Rma },
+				{ cha, NULL, NULL, jol, NULL, NULL, Rjol, NULL, NULL, Rcha }
+
+		};
+
+		return Janggipan;
+	}
+
+	public JPanel Locate(int[][] board, JPanel Janggi) {
+
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (board[i][j] == chang) {
+					mal Pchang = new mal(i, j, "images/chang.jpg");
+					Pchang.setBackground(Color.GREEN);
+					Pchang.setName("images/chang.jpg");
+					Janggi.add(Pchang);
+				} else if (board[i][j] == cha) {
+					mal Pcha = new mal(i, j, "images/cha.jpg");
+					Pcha.setBackground(Color.GREEN);
+					Pcha.setName("images/cha.jpg");
+					Janggi.add(Pcha);
+				} else if (board[i][j] == pho) {
+					mal Ppho = new mal(i, j, "images/po.jpg");
+					Ppho.setBackground(Color.GREEN);
+					Ppho.setName("images/po.jpg");
+					Janggi.add(Ppho);
+				} else if (board[i][j] == ma) {
+					mal Pma = new mal(i, j, "images/ma.jpg");
+					Pma.setBackground(Color.GREEN);
+					Pma.setName("images/ma.jpg");
+					Janggi.add(Pma);
+				} else if (board[i][j] == sang) {
+					mal Psang = new mal(i, j, "images/sang.jpg");
+					Psang.setBackground(Color.GREEN);
+					Psang.setName("images/sang.jpg");
+					Janggi.add(Psang);
+				} else if (board[i][j] == sa) {
+					mal Psa = new mal(i, j, "images/sa.jpg");
+					Psa.setBackground(Color.GREEN);
+					Psa.setName("images/sa.jpg");
+					Janggi.add(Psa);
+				} else if (board[i][j] == jol) {
+					mal Pjol = new mal(i, j, "images/jol.jpg");
+					Pjol.setBackground(Color.GREEN);
+					Pjol.setName("images/jol.jpg");
+					Janggi.add(Pjol);
+				}
+
+				else if (board[i][j] == Rchang) {
+					mal Rchang = new mal(i, j, "images/rchang.jpg");
+					Rchang.setBackground(Color.RED);
+					Rchang.setName("images/rchang.jpg");
+					Janggi.add(Rchang);
+				} else if (board[i][j] == Rcha) {
+					mal Rcha = new mal(i, j, "images/rcha.jpg");
+					Rcha.setBackground(Color.RED);
+					Rcha.setName("images/rcha.jpg");
+					Janggi.add(Rcha);
+				} else if (board[i][j] == Rpho) {
+					mal Rpho = new mal(i, j, "images/rpo.jpg");
+					Rpho.setBackground(Color.RED);
+					Rpho.setName("占쏙옙占쏙옙");
+					Janggi.add(Rpho);
+				} else if (board[i][j] == Rma) {
+					mal Rma = new mal(i, j, "images/rma.jpg");
+					Rma.setBackground(Color.RED);
+					Rma.setName("images/rma.jpg");
+					Janggi.add(Rma);
+				} else if (board[i][j] == Rsang) {
+					mal Rsang = new mal(i, j, "images/rsang.jpg");
+					Rsang.setBackground(Color.RED);
+					Rsang.setName("images/rsang.jpg");
+					Janggi.add(Rsang);
+				} else if (board[i][j] == Rsa) {
+					mal Rsa = new mal(i, j, "images/rsa.jpg");
+					Rsa.setBackground(Color.RED);
+					Rsa.setName("images/rsa.jpg");
+					Janggi.add(Rsa);
+				} else if (board[i][j] == Rjol) {
+					mal Rjol = new mal(i, j, "images/rjol.jpg");
+					Rjol.setBackground(Color.RED);
+					Rjol.setName("images/rjol.jpg");
+					Janggi.add(Rjol);
+				}
+			}
+		}
+
+		return Janggi;
+	}
+
+	public void checkJang() {
+		
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (janggiBoard[i][j] == 8) {
+					malIndex[0] = i;
+					malIndex[1] = j;
+					janggun = true;
+				}
+				if (janggun)
+					break;
+			}
+			if (janggun)
+				break;
+		}
+		janggun = false;
+
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (janggiBoard[i][j] / 8 == 0 && janggiBoard[i][j] != 0) {
+					malIndextmp[0] = i;
+					malIndextmp[1] = j;
+					if (checkmove.CheackMalMove(janggiBoard,
+							janggiBoard[i][j], malIndextmp, malIndex)) {
+						JOptionPane.showConfirmDialog(null, "占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙.", "占쏙옙占쏙옙",
+								JOptionPane.WARNING_MESSAGE);
+						janggun = true;
+					}
+				}
+				if (janggun)
+					break;
+			}
+			if (janggun)
+				break;
+		}
+		janggun = false;
+		
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (janggiBoard[i][j] == 1) {
+					malIndex[0] = i;
+					malIndex[1] = j;
+					janggun = true;
+				}
+				if (janggun)
+					break;
+			}
+			if (janggun)
+				break;
+		}
+		janggun = false;
+
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (janggiBoard[i][j] / 8 == 1) {
+					malIndextmp[0] = i;
+					malIndextmp[1] = j;
+					if (checkmove.CheackMalMove(janggiBoard,
+							janggiBoard[i][j], malIndextmp, malIndex)) {
+						JOptionPane.showConfirmDialog(null, "占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙.", "占쏙옙占쏙옙",
+								JOptionPane.WARNING_MESSAGE);
+						janggun = true;
+					}
+				}
+				if (janggun)
+					break;
+			}
+			if (janggun)
+				break;
+		}
+		janggun = false;
+		
+		
+		if (myTurn == 0) {
+			myTurn = 1;
+			information.setTurnIsChangeToTrue();
+		} else {
+			myTurn = 0;
+			information.setTurnIsChangeToTrue();
+		}
+
+	}
+
+	public static void changeTurn() {
+		if (myTurn == 0) {
+			myTurn = 1;
+		} else {
+			myTurn = 0;
+		}
+	}
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new KoreaChess();
+	}
+}
+
+//Sound Class
+
+import java.applet.Applet;
+import java.applet.AudioClip;
+import java.net.URL;
+
+public class Sound implements Runnable{
+	private AudioClip clip = null;
+	private Thread th;
+	private boolean isLoop;
+	
+	public Sound(String file, boolean isLoop) {
+		URL audio = getClass().getResource(file);
+		clip = Applet.newAudioClip(audio);
+		this.isLoop = isLoop;
+		th = new Thread(this);
+		th.start();
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		if(!isLoop){
+			while(true){
+				synchronized(th){
+				try {
+					th.wait();
+				} catch(InterruptedException e){}
+				}
+				clip.play();
+			}
+		}
+		else
+			clip.loop();
+	}
+	public void wakeup(){
+		synchronized(th){
+			th.notify();
+		}
+	}
+}

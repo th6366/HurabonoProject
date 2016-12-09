@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+void add(int n) {
+	if (n == 101) {
+		return 0;
+	}
+	else {
+		printf("%d\n", n);
+		add(n + 1);
+	}
+
+}
+
+int main() {
+
+	int n;
+	scanf("%d", &n);
+	add(n);
+
+}

@@ -1,0 +1,28 @@
+package education;
+ 
+public class pyramid {
+    public static void main(String[] args){
+        new pyramid();
+    }
+    public pyramid(){
+        int max = 50;
+        for(int i=0;i<max;i++){
+            String print="";
+            for(int j=max;j>0;j--){
+                if(i>=j){
+                    print+="*";
+                }else{
+                    print+=" ";
+                }
+            }
+            for(int j=0;j<max;j++){
+                if(i<=j){
+                    print+=" ";
+                }else{
+                    print+="*";
+                }
+            }
+            System.out.println(print);
+        }
+    }
+}

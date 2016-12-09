@@ -1,0 +1,71 @@
+#include <stdio.h>
+
+......  void Q1_5();
+......  void Q2_15();
+......
+
+void main()
+{
+    ...... Q1_5();
+    ...... Q2_15();
+    ......
+}
+
+......
+
+void Q1_5()
+{
+    int i, j;
+    printf("Q1_5.\n");
+    for(i=1; i<10; i++)
+    {
+        for(j=2; j<10; j++)
+        {
+            printf("%d*%d=%2d ", j, i, i*j);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+void Q2_15()
+{
+    int i, j;
+    printf("Q2_15.\n");
+    for(i=0; i<9; i++)
+    {
+        if(i < 5)
+        {
+            for(j=0; j<5-i; j++)
+            {
+                printf("*");
+            }
+            for(j=0; j<i*2+1; j++)
+            {
+                printf(" ");
+            }  
+            for(j=0; j<5-i; j++)
+            {
+                printf("*");
+            }
+        }
+        else
+        {
+            for(j=0; j<i-3; j++)
+            {
+                printf("*");
+            }
+            for(j=0; j<10-((i-4)*2+1); j++)
+            {
+                printf(" ");
+            }
+            for(j=0; j<i-3; j++)
+            {
+                printf("*");
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+

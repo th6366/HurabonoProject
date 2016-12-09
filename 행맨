@@ -1,0 +1,163 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#include <conio.h>
+#include "getnum.h"
+
+void start(void);
+void add_word(void);
+void print_result(char *);
+
+void main()
+{
+	int no;
+	while(1)
+	{
+		printf("\t******** MENU ********\n");
+		printf("\t1. 게임 시작\n");
+		printf("\t2. 단어 추가\n");
+		printf("\t3. 종     료\n");
+		printf("\t선택 : ");
+		
+		no = getnum();
+		printf("\n\n");
+		switch(no)
+		{
+		case 1 : start(); break;
+		case 2 : add_word(); break;
+		case 3 : exit(0);
+		}
+		getch();
+		system("cls");
+	}
+}
+
+void start(void)
+{
+	char quiz[40], input[40], result[40];
+	FILE *fp;
+	int i, flag, cnt = 0, chance = 10;
+	char ch;
+
+	srand((unsigned)time(NULL));
+	fp = fopen("dic.dat", "r");
+	if(fp == NULL)
+	{
+		printf("단어가 없습니다. 단어를 추가하신 후에 사용해주세여.\n");
+		return;
+	}
+
+	while(fscanf(fp, "%s", quiz) != EOF)
+		cnt ++;
+	cnt = rand() % cnt;
+
+	rewind(fp);
+
+	for(i = 0; i <= cnt; i++)
+		fscanf(fp, "%s", quiz);
+
+	printf("quiz = %s\n", quiz);
+
+	fclose(fp);
+
+	////////////// 화면에 프린트...
+
+	for(i = 0; i < strlen(quiz); i++)
+		result[i] = '_';
+	result[i] = '\0';
+	print_result(result);
+
+	while(chance > 0)
+	{
+		printf("문자를 입력해봐 : ");
+		ch = getchar();
+		fflush(stdin);
+		
+		flag = 0;
+		for(i = 0; i < strlen(quiz); i++)
+		{
+			if(ch == quiz[i])
+			{
+				result[i] = ch;
+				flag = 1;
+			}
+		}
+		
+		if(flag == 1)
+		{
+			print_result(result);
+			printf("생각하는 단어가 있습니까? ");
+			ch = getchar();
+			fflush(stdin);
+			if(strchr("Yy", ch) != NULL)
+			{
+				printf("생각하는 단어를 입력하시오 : ");
+				gets(input);
+				if(strcmp(input, quiz) == 0)
+				{
+					printf("맞았습니다...\n");
+					return;
+				}
+				else
+				{
+					printf("그 단어가 아닙니다...\n");
+					printf("다시 시작하세여...");
+				}
+			}
+		}
+		else
+		{
+			printf("그 문자는 존재하지 않습니다...\n");
+			printf("기회는 %d번 남았습니다...\n", --chance);
+		}
+	}
+	printf("아쉽군여..... \n");
+	printf("답은 %s 입니다...\n", quiz);
+}
+
+void add_word(void)
+{
+	FILE *fp;
+	char word[40], str[40];
+	int flag = 0;
+
+	printf("추가할 단어를 입력 : ");
+	gets(word);
+
+	fp = fopen("dic.dat", "r");
+	if(fp != NULL)
+	{
+		while(fscanf(fp, "%s", str) != EOF)
+		{
+			if(strcmp(str, word) == 0)
+			{
+				flag = 1;			
+			}
+		}
+	
+		fclose(fp);
+		if(flag == 1)
+		{
+			printf("동일한 단어가 있습니다....\n");
+			printf("단어를 추가할 수 없습니다...\n");
+			printf("메뉴로 돌아갑니다...\n");
+			return;
+		}
+	}
+
+	fp = fopen("dic.dat", "a");
+	fprintf(fp, "%s\n", word);
+
+	printf("추가하였습니다..\n");
+	fclose(fp);
+//	system("type dic.dat");
+}
+
+void print_result(char *result)
+{
+	int i;
+	for(i = 0; i < strlen(result); i++)
+		printf("%c ", result[i]);
+	printf("\n");
+}

@@ -1,0 +1,228 @@
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+class SFrame extends JFrame implements ActionListener{
+	JButton button , but_input;
+	JTextArea ta;
+	JTextField tf; 
+	
+	//스태틱을 일단 많이 줬다...이래도 되는 걸까...흠..
+	static ServerSocket serverSocket = null;
+	static Socket clientSocket =null;
+	static PrintWriter out;
+	static BufferedReader in;
+	static String inputLine, outputLine;	
+		
+	public SFrame(){
+		setSize(500, 600);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("에코 서버");
+		
+		//패널1
+		JPanel panel = new JPanel();
+		button = new JButton("서버입니다!!");
+		button.addActionListener(this);
+		//패널2
+		JPanel panel2 = new JPanel();
+		ta = new JTextArea(30, 30);
+		tf = new JTextField(30);
+		but_input = new JButton("입력");
+		but_input.addActionListener(this);
+		
+		panel2.add(button);
+		panel.add(ta);
+		panel.add(tf);
+		panel.add(but_input);
+		add(panel2, BorderLayout.NORTH);
+		add(panel);
+		setVisible(true);
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		String s;
+		s="서버 : "+tf.getText(); 
+		if(arg0.getSource()==but_input){
+			ta.append(s+"\n");
+			out.println(s);
+			tf.setText("");
+		}
+		if(arg0.getSource()==button){
+			
+		}
+	}
+	
+	public  void serverStart() throws IOException{
+		System.out.println("서버 시작!haha");
+		
+		try{
+			serverSocket = new ServerSocket(5555);
+		}catch(IOException e){
+			System.out.println("다음의 포트 번호에 연결할 수 없습니다 : 5555");
+			System.exit(1);
+		}
+		
+		clientSocket = null;
+		try{
+			clientSocket = serverSocket.accept();
+		}catch(IOException e){
+			System.err.println("accept() 실패 ");
+			System.exit(1);
+		}
+		
+		out = new PrintWriter(clientSocket.getOutputStream(),true);
+		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		
+		outputLine = "서버 : 접속 환영합니다";
+		out.println(outputLine);
+		ta.append("서버 메시지 : 클라이언트가 접속되었습니다.\n");
+		
+		
+		while((inputLine = in.readLine())!=null){
+			String s =inputLine+"\n";
+			System.out.println(s);
+			ta.append(s);
+			//outputLine = inputLine;
+			//out.println(outputLine);
+			if(outputLine.equals("quit"))
+				break;
+		}
+	}
+}
+public class Gui_EchoServ {
+
+	public static void main(String[] args) throws IOException {
+		SFrame f = new SFrame();
+		f.serverStart();
+	}
+
+}
+
+
+
+
+밑에는 클라이언트 소스..
+
+package 챕25네트웤;
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+class ClientFrame extends JFrame implements ActionListener {
+	JButton button, but_input;
+	JTextArea ta;
+	JTextField tf;
+
+	// out , in 설정
+	static PrintWriter out = null;
+	static BufferedReader in = null;
+
+	public ClientFrame() {
+		setSize(500, 600);
+		setTitle("클라이언트 채팅");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		// 패널1
+		JPanel panel = new JPanel();
+		button = new JButton("클라이언트입니다!!");
+		button.addActionListener(this);
+		// 패널2
+		JPanel panel2 = new JPanel();
+		ta = new JTextArea(30, 30);
+		tf = new JTextField(30);
+		but_input = new JButton("입력");
+		but_input.addActionListener(this);
+
+		panel2.add(button);
+		panel.add(ta);
+		panel.add(tf);
+		panel.add(but_input);
+		add(panel2, BorderLayout.NORTH);
+		add(panel);
+		setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == but_input) {
+			String s = "클라이언트 : " + tf.getText();
+			ta.append(s+"\n");
+			out.println(s);
+			tf.setText("");
+		}
+	}
+
+	public void client() throws IOException {
+		Socket socket = null;
+
+		try {
+			socket = new Socket("localhost", 5555);
+			out = new PrintWriter(socket.getOutputStream(), true);
+			in = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
+
+		} catch (UnknownHostException e) {
+			System.err.println("localhost에 접근할 수 없습니다.");
+			System.exit(1);
+		} catch (IOException eg) {
+			System.err.println("입출력 오류11");
+			System.exit(1);
+		}
+		
+
+		String fromServer;
+		
+
+		while ((fromServer = in.readLine()) != null) {
+			
+			String s =fromServer+"\n";
+			//System.out.println(s);
+			ta.append(s);
+			System.out.println(fromServer);
+			if (fromServer.equals("quit"))
+				break;
+		}
+
+		out.close();
+		in.close();
+		socket.close();
+	}
+
+}
+
+public class Gui_EchoClient {
+
+	public static void main(String[] args) throws IOException {
+		ClientFrame f = new ClientFrame();
+		f.client();
+
+	}
+
+}

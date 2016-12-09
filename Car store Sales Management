@@ -1,0 +1,162 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef enum DATATYPE {
+    CUSTOMER,
+    CAR
+} datatype_t;
+
+struct customer
+{
+    int id;
+    char* name;
+};
+
+struct car
+{
+    int seq;
+    char* brand;
+    char* color;
+};
+
+struct node
+{
+    datatype_t nodeType; //Data type for runtime cast
+    void *data; //Universal data
+    
+    struct node *link;
+};
+
+
+typedef struct STACK {
+    struct node* elements;
+    unsigned int stackPointer;
+} Stack;
+
+Stack stack; //Stack
+
+
+// function prototypes
+void push();
+void pop();
+void checkType( int*, datatype_t, struct node* );
+void order();
+//----
+
+int main()
+{
+    stack.stackPointer = 0; // Can be a memset
+    
+    struct car* cc1 = (struct car*) malloc(sizeof(struct car));
+    
+    cc1->seq   = 1;
+    cc1->brand = "Ferrari";
+    cc1->color = "red";
+    
+    struct customer* c1 = (struct customer*) malloc(sizeof(struct customer));
+    
+    c1->id   = 5;
+    c1->name = "Gabriel";
+    
+    push( CAR, cc1 );
+    push( CUSTOMER, c1 );
+
+    order();
+    
+    pop();
+    pop();
+    
+    printf("SP : %d", stack.stackPointer);
+    
+}
+
+// Instance of?
+void checkType( int* index, datatype_t type, struct node* dataInst ) {
+    
+    if (type == CUSTOMER)
+        *index = ((struct customer*)dataInst->data)->id;
+    if (type == CAR)
+        *index = ((struct car*)dataInst->data)->seq;
+    
+}
+
+
+// Simple bubble sort to order
+void order()
+{
+    struct node *tmpPtr = stack.elements;
+    struct node *tmpNxt = stack.elements->link;
+    
+    datatype_t nodeType;
+    void* tmp;
+    
+    int index = 0;
+    int nextIndex = 0;
+    
+    checkType( &index, tmpPtr->nodeType, tmpPtr );
+    checkType( &nextIndex, tmpNxt->nodeType, tmpNxt );
+    
+    while(tmpNxt != NULL) {
+        while(tmpNxt != tmpPtr) {
+            
+            checkType( &index, tmpPtr->nodeType, tmpPtr );
+            checkType( &nextIndex, tmpNxt->nodeType, tmpNxt );
+            
+            if(nextIndex < index){
+                nodeType = tmpPtr->nodeType;
+                tmp      = tmpPtr->data;
+                
+                tmpPtr->data     = tmpNxt->data;
+                tmpPtr->nodeType = tmpNxt->nodeType;
+                
+                tmpNxt->data     = tmp;
+                tmpNxt->nodeType = nodeType;
+                
+            }
+            
+            tmpPtr = tmpPtr->link;
+        }
+        
+        tmpPtr = stack.elements;
+        tmpNxt = tmpNxt->link;
+    }
+}
+
+
+// to insert elements in stack
+void push( datatype_t type, void* data )
+{
+    struct node *temp;
+    temp = (struct node*)malloc(sizeof(struct node));
+    
+    temp->data = data;
+    temp->nodeType = type;
+    temp->link = stack.elements;
+    stack.elements = temp;
+    
+    stack.stackPointer++;
+}
+
+
+
+// to delete elements from stack
+void pop()
+{
+    struct node *temp;
+    
+    if (stack.elements == NULL)
+        printf("**Stack is empty**\n");
+    else
+    {
+        temp = stack.elements;
+        int universalIndex;
+        checkType( &universalIndex, temp->nodeType, temp );
+        
+        printf("Value popped out is %d \n",universalIndex);
+        stack.elements = stack.elements->link;
+        free(temp);
+        
+        stack.stackPointer--;
+    }
+}

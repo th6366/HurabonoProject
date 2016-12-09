@@ -1,0 +1,27 @@
+int my_atox(char *bis, char *sib) /* ascii to hex by HLIM */
+{
+    char *p, *b;
+    char a[1];
+    int i, sib_len, cnt;
+
+    p = sib;
+    b = bis;
+    sib_len = cnt = 0;
+    sib_len = strlen(sib);
+
+    for(i=0; i<sib_len; i++, p++) {
+        if(isalpha((int)*p))
+            a[0] = *p - 0x57;
+        else
+            a[0] = *p - 0x30;
+
+        if(!(i%2)) {
+            *(b+(i-cnt)) = a[0];
+            *(b+(i-cnt)) = (*(b+(i-cnt)))<<4;
+            cnt++;
+        }
+        else
+            *(b+(i-cnt)) |= a[0];
+    }
+    return 0;
+}

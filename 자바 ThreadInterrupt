@@ -1,0 +1,64 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class ThreadInterruptEx extends JFrame{
+    ThreadInterruptEx(){
+        this.setTitle("ThreadInterrupt 예제");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+        //타이머 값을 출력시킬 레이블 생성
+        JLabel la = new JLabel();
+        la.setFont(new Font("Gothic", Font.ITALIC, 80));
+        
+        //Runnable 객체 생성은 다음과 같이하며 적용시킬 레이블을 넘겨준다.
+        Thread th = new Thread(new TimerRunnable(la));
+        this.add(la);
+        
+        //버튼 생성과 리스너를 등록
+        JButton btn = new JButton("Kill Timer");
+        btn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                //버튼이 클릭이 되는 순간 스레드를 죽이고, 버튼을 비활성화 시킨다.
+                th.interrupt();
+                btn.setEnabled(false);
+            }
+        });
+        this.add(btn);
+        
+        this.setLocationRelativeTo(this.getParent());
+        this.setSize(300,150);
+        this.setVisible(true);
+        th.start();//스레드 시작
+    }
+}
+class TimerRunnable implements Runnable{
+    JLabel timerLabel;//타이머 값이 출력된 레이블
+    
+    public TimerRunnable(JLabel timerLabel){
+        this.timerLabel = timerLabel;
+    }
+    //스레드 코드
+    //run()이 종료하면 스레드 종료
+    public void run(){
+        int n=0;//타이머 카운트 값
+        while(true){
+            //타이머 값을 레이블에 출력하고 n을 증가 시킨다.
+            timerLabel.setText(Integer.toString(n++));
+            try{
+                Thread.sleep(1000);//1초동안 잠을 잔다
+            }
+            catch(Exception e){
+                return;//예외가 발생하면 스레드 종료
+            }
+        }
+    }
+}
+
+public class JavaApplication24 {
+    public static void main(String[] args) {
+        new ThreadInterruptEx();
+    }
+}

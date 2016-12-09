@@ -1,0 +1,48 @@
+#include <stdio.h>
+struct studentInfo
+{
+int studentNumber;
+double height;
+};
+void sortStudentInfo( struct studentInfo* p 
+,int size);
+void printStudentInfo( struct studentInfo* p 
+,int size);
+int main( )
+{
+struct studentInfo s[5]
+= { 1, 170.5, 2, 180.3,
+3, 172.3, 4, 150.3,
+5, 180.6};
+sortStudentInfo(s, 5);
+printStudentInfo(s, 5);
+return 0;
+}
+void sortStudentInfo( struct studentInfo* p 
+,int size)
+{
+int i, j;
+struct studentInfo temp;
+for( i = 0 ; i < size ; i++ )
+{
+for( j = 0 ; j < size ; j++ )
+{
+if( p[i].height > p[j].height )
+{
+temp = p[i];
+p[i] = p[j];
+p[j] = temp;
+}
+}
+}
+}
+void printStudentInfo( struct studentInfo* p 
+,int size)
+{
+int j;
+for( j = 0 ; j < size ; j++ )
+{
+printf("studentNumber %d height %lf\n",
+p[j].studentNumber , p[j].height);
+}
+}

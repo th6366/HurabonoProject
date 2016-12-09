@@ -1,0 +1,27 @@
+<table>
+    <caption>북서 태평양의 화산들의 최근 활동</caption>
+    <tr>
+        <th>화산 이름</th>
+        <th>위치</th>
+        <th>최근 분출</th>
+        <th>분출 종류</th>
+    </tr>
+    <tr>
+        <td>Mt. Lassen</td>
+        <td>California</td>
+        <td>1914-17</td>
+        <td>Explosive Eruption</td>
+    </tr>
+    <tr>
+        <td>Mt. Hood</td>
+        <td>Oregon</td>
+        <td>1790s</td>
+        <td>Pyroclastic flows and Mudflows</td>
+    </tr>
+    <tr>
+        <td>Mt. St. Helens</td>
+        <td>Washington</td>
+        <td>1980</td>
+        <td>Explosive Eruption</td>
+    </tr>
+</table>

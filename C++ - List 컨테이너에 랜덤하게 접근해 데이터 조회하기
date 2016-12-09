@@ -1,0 +1,18 @@
+std::list<Object> l;
+// add elements to list 'l'...
+ 
+unsigned N = /* index of the element you want to retrieve */;
+if (l.size() > N)
+{
+    std::list<Object>::iterator it = l.begin();
+    std::advance(it, N);
+    // 'it' points to the element at index 'N'
+}
+ 
+....
+....
+if (l.size() > N)
+{
+    std::list<Object>::iterator it = std::next(l.begin(), N);
+}
+

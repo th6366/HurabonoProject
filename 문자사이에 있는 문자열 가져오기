@@ -1,0 +1,24 @@
+int main()
+{
+    char data[] = "hello:world=ok";
+    char data2[] = "Subject:hello world\n";
+    char mydata[256];
+
+    getstr(':', '=', data, mydata);
+    printf("[%s]\n", mydata);
+
+    getstr(':', '\n', data2, mydata);
+    printf("[%s]\n", mydata);
+}
+char *getstr(char fc, char lc, char *orgstr, char *dststr)
+{
+    char *sp, *dp;
+    sp = index(orgstr, fc);
+    dp = rindex(orgstr, lc);
+    if ((sp == NULL) || (dp == NULL))
+        return NULL;
+
+    strncpy(dststr,sp+1, (dp-sp)-1);
+    strcat(dststr,"\0");
+    return orgstr;
+}

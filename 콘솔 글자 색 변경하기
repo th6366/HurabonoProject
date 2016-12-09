@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include <windows.h>
+ 
+enum FontColor{
+    BLACK, BLUE, GREEN, JADE, RED, PURPLE, YELLOW, WHITE, GRAY,
+    LIGHT_BLUE, LIGHT_GREEN, LIGHT_JADE, LIGHT_RED, LIGHT_PURPLE, LIGHT_YELLOW, LIGHT_WHITE
+};
+ 
+int main(int argc, char* argv[]){
+    int color = LIGHT_YELLOW;
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+    printf("폰트 변경\n");
+    return 0;
+}

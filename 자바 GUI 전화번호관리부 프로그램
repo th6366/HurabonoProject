@@ -1,0 +1,512 @@
+import java.awt.*;
+import java.util.HashSet;
+
+import javax.swing.*;
+
+public class java1 {
+ public static void main(String[] args)
+ {
+  JFrameMain frm=new JFrameMain();
+  PhoneManager manager=PhoneManager.createManagerInst();
+  //manager.loadObject();
+ }
+}
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.*;
+
+public class JFrameMain extends JFrame
+{
+ public JFrameMain()
+ {
+  //프레임 설정
+  super("Test");
+  setBounds(400,20, 500, 500);
+  setVisible(true);
+  
+  //메뉴바 설정
+  MenuBar menuSet=new MenuBar();
+  Menu file=new Menu("파일");
+  MenuItem file_new=new MenuItem("저장");
+  MenuItem file_open=new MenuItem("불러오기");
+  MenuItem file_close=new MenuItem("파일닫기");
+  file.add(file_new);
+  file.add(file_open);
+  file.add(file_close);
+  Menu edit=new Menu("편집");
+  MenuItem edit_cut=new MenuItem("오려두기");
+  MenuItem edit_paste=new MenuItem("붙이기");
+  edit.add(edit_cut); //메뉴 항목에 아이템 등록
+  edit.add(edit_paste);
+  Menu helpDesk=new Menu("도움말");
+  menuSet.add(file); //메뉴바에 메뉴 등록
+  menuSet.add(edit);
+  menuSet.add(helpDesk);
+  setMenuBar(menuSet); //프레임에 메뉴바 설정
+  
+  //저장 이벤트 등록
+  saveHandler saveHandler=new saveHandler();
+  file_new.addActionListener(saveHandler);
+  
+  //등록 라디오 버튼
+  JPanel radioPanel=new JPanel();
+  JPanel radioPanel1=new JPanel();
+  JPanel radioPanel2=new JPanel();
+  JPanel registerPanel=new JPanel();
+  
+  Border radioBorder=BorderFactory.createEtchedBorder();
+  radioBorder=BorderFactory.createTitledBorder(radioBorder, "사용자 등록");
+  Border border=BorderFactory.createEtchedBorder();//라인 둘레
+  JRadioButton radioButton1=new JRadioButton("일반",true);
+  JRadioButton radioButton2=new JRadioButton("회사");
+  JRadioButton radioButton3=new JRadioButton("대학교");
+  ButtonGroup bGroup=new ButtonGroup();
+  bGroup.add(radioButton1); //라디오버튼 그룹에 등록
+  bGroup.add(radioButton2);
+  bGroup.add(radioButton3);
+  
+  
+  radioPanel1.setLayout(new FlowLayout());  
+  radioPanel1.add(radioButton1); //패널에 라디오 버튼 등록
+  radioPanel1.add(radioButton2);
+  radioPanel1.add(radioButton3);
+  
+  JLabel nameLabel=new JLabel("이름", SwingConstants.LEFT);
+  JTextField nameText=new JTextField(10);
+  JLabel phoneLabel=new JLabel("전화번호", SwingConstants.LEFT);
+  JTextField phoneText=new JTextField(10);
+  JLabel companyLabel=new JLabel("회사", SwingConstants.LEFT);
+  JTextField companyText=new JTextField(10);
+  companyText.setEditable(false);
+  JLabel univLabel=new JLabel("학교", SwingConstants.LEFT);
+  JTextField univText=new JTextField(10);
+  univText.setEditable(false);
+  
+  radioPanel2.setLayout(new GridLayout(4,1));
+  radioPanel2.add(nameLabel); radioPanel2.add(nameText);
+  radioPanel2.add(phoneLabel); radioPanel2.add(phoneText);
+  radioPanel2.add(companyLabel); radioPanel2.add(companyText);
+  radioPanel2.add(univLabel); radioPanel2.add(univText);
+  
+  setLayout(new FlowLayout());
+  JButton registerButton=new JButton("등록");
+  registerPanel.add(radioPanel1); 
+  registerPanel.add(radioPanel2);
+  registerPanel.add(registerButton);
+  Border registerBorder=BorderFactory.createTitledBorder(border, "사용자등록");
+  registerPanel.setBorder(registerBorder);
+  add(registerPanel);
+  
+  //search 
+  JPanel intePanel=new JPanel();
+  JPanel searchPanel=new JPanel();
+  JTextField searchText=new JTextField(10);
+  JButton searchButton=new JButton("search");
+  Border searchBorder=BorderFactory.createTitledBorder(border, "이름검색");
+  searchPanel.setBorder(searchBorder);
+  searchPanel.setLayout(new FlowLayout());
+  searchPanel.add(searchText);
+  searchPanel.add(searchButton);
+  intePanel.add(searchPanel, BorderLayout.CENTER);
+  
+  //delete
+  JPanel deletePanel=new JPanel();
+  JTextField deleteText=new JTextField(10);
+  JButton deleteButton=new JButton("Delete");
+  Border deleteBorder=BorderFactory.createTitledBorder(border, "데이터삭제");
+  deletePanel.setBorder(deleteBorder);
+  deletePanel.setLayout(new FlowLayout());
+  deletePanel.add(deleteText);
+  deletePanel.add(deleteButton);
+  intePanel.add(deletePanel, BorderLayout.CENTER);
+  add(intePanel);
+  
+  //textArea
+  JTextArea textArea=new JTextArea(10,39);
+  JScrollPane simpleScroll=new JScrollPane(textArea);
+  Border textBorder=BorderFactory.createTitledBorder(border, "Information Board");
+  simpleScroll.setBorder(textBorder);
+  
+  textArea.setCaretPosition(textArea.getText().length());
+  textArea.setLineWrap(true);
+  textArea.setWrapStyleWord(true);
+  add(simpleScroll);
+  
+  //사용자 등록 버튼 이벤트 등록
+  registerHandler buttonHandler=new registerHandler(radioButton1, radioButton2, radioButton3,
+    nameText, phoneText, companyText, univText, textArea);
+  registerButton.addActionListener(buttonHandler);
+  //이벤트 등록
+  BoxHandler handler=new BoxHandler(radioButton1,radioButton2, radioButton3, companyText, univText);
+  radioButton1.addItemListener(handler);
+  radioButton2.addItemListener(handler);
+  radioButton3.addItemListener(handler);
+  //서치 이벤트 등록
+  SearchHandler sHandler=new SearchHandler(searchText, textArea);
+  searchButton.addActionListener(sHandler);
+  //삭제 이벤트 등록
+  DeleteHandler dHandler=new DeleteHandler(deleteText, textArea);
+  deleteButton.addActionListener(dHandler);
+  
+ }
+ 
+}
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+class BoxHandler implements ItemListener
+{
+ JTextField companyText;
+ JTextField univText;
+ JRadioButton companyRadio;
+ JRadioButton univRadio;
+ JRadioButton generalRadio;
+ 
+ public BoxHandler(JRadioButton radio1, JRadioButton radio2, JRadioButton radio3,
+   JTextField t1, JTextField t2)
+ {
+  generalRadio=radio1;
+  companyRadio=radio2;
+  univRadio=radio3;
+  companyText=t1;
+  univText=t2;
+  //text3=t3;
+ }
+ public void itemStateChanged(ItemEvent e)
+ {
+  if(e.getStateChange()==ItemEvent.SELECTED)
+  {
+   if(e.getSource() == generalRadio){
+    companyText.setEditable(false);
+    univText.setEditable(false);
+   }
+   else if(e.getSource() == companyRadio){
+    companyText.setEditable(true);
+    univText.setEditable(false);
+   }
+   else if(e.getSource() == univRadio){
+    companyText.setEditable(false);
+    univText.setEditable(true);
+   }
+  }
+ }
+ 
+}
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+public class DeleteHandler implements ActionListener
+{
+ JTextField t1;
+ JTextArea t2;
+ 
+ public DeleteHandler(JTextField t1, JTextArea t2)
+ {
+  this.t1=t1;
+  this.t2=t2;
+ }
+ public void actionPerformed(ActionEvent e)
+ {
+  PhoneManager manager=PhoneManager.createManagerInst();
+  String name=t1.getText();
+  boolean info=manager.delName(name);
+  
+  if(info==false){
+   t2.setText("");
+   t2.append("데이터가 존재하지 않습니다.");
+  }
+  else{
+   t2.setText("");
+   t2.append("데이터가 삭제되었습니다.");
+  }
+ }
+}
+
+import java.io.*;
+
+class phoneInfo implements Serializable
+{
+ String name;
+ String phone;
+ 
+ public phoneInfo(String name, String phone)
+ {
+  this.name=name;
+  this.phone=phone;
+ }
+ public String toString()
+ {
+  return "이름: " + name + '\n' + "전화번호: " + phone + '\n';
+ }
+ 
+ public int hashCode()
+ {
+  return name.hashCode();
+ }
+ 
+ public boolean equals(Object obj)
+ {
+  phoneInfo comp=(phoneInfo)obj;
+  if(comp.name.equals(name))
+   return true;
+  else 
+   return false;
+ }
+}
+
+class companyInfo extends phoneInfo
+{
+ String company;
+
+ public companyInfo(String name, String phone, String company)
+ {
+  super(name, phone);
+  this.company=company;
+ }
+ 
+ public String toString()
+ {
+  return super.toString()+ "회사: "+company;
+ }
+}
+
+class univInfo extends phoneInfo 
+{
+ String univName;
+ 
+ public univInfo(String name, String phone, String univName)
+ {
+  super(name, phone);
+  this.univName=univName;
+ }
+ 
+ public String toString()
+ {
+  return super.toString()+ "학교: "+univName;
+ }
+}
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.io.*;
+
+ public class PhoneManager {
+ HashSet<phoneInfo> personalData=new HashSet<phoneInfo>();
+ 
+ static PhoneManager inst=null;
+ 
+ public static PhoneManager createManagerInst()
+ {
+  if(inst==null)
+   inst=new PhoneManager();
+  
+  return inst;
+ }
+ 
+ public String searchName(String name)
+ {
+  phoneInfo info=search(name);
+  if(info==null)
+   return null;
+  else
+   return info.toString();
+ }
+ 
+ public phoneInfo search(String name)
+ {
+  PhoneManager manager=PhoneManager.createManagerInst();
+  Iterator<phoneInfo> itr=manager.personalData.iterator();
+  
+  while(itr.hasNext())
+  {
+   phoneInfo info=itr.next();
+   if(info.name.equals(name))
+    return info;
+  }
+
+   return null; 
+ }
+ public void saveObject()
+ {
+  PhoneManager manager=PhoneManager.createManagerInst();
+  Iterator<phoneInfo> itr=manager.personalData.iterator();
+  
+  try{
+   ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("object.ser"));
+   while(itr.hasNext())
+   {
+    phoneInfo info=itr.next();
+    out.writeObject(info);
+   }
+  }
+  catch(IOException io)
+  {
+   return;
+  }
+ }
+ 
+ public void loadObject()
+ {
+  PhoneManager manager=PhoneManager.createManagerInst();
+  Iterator<phoneInfo> itr=manager.personalData.iterator();
+  
+  try{
+   ObjectInputStream in=new ObjectInputStream(new FileInputStream("object.ser"));
+   while(true)
+   {
+    phoneInfo info=(phoneInfo)in.readObject();
+    if(info==null)
+     break;
+    manager.personalData.add(info);
+   }
+   in.close();
+  }
+  catch(IOException i1)
+  {
+   return;
+  }
+  catch(ClassNotFoundException i2)
+  {
+   return;
+  }
+ }
+ 
+ public boolean delName(String name)
+ {
+  PhoneManager manager=PhoneManager.createManagerInst();
+  Iterator<phoneInfo> itr=manager.personalData.iterator();
+ 
+  while(itr.hasNext())
+  {
+   phoneInfo info=itr.next();
+   if(info.name.equals(name)){
+    itr.remove();
+    return true;
+   }
+  }
+  return false;
+ }
+}
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Iterator;
+
+public class registerHandler implements ActionListener
+{
+ phoneInfo info=null;
+ JTextField name;
+ JTextField phone;
+ JTextField company;
+ JTextField univ;
+ JRadioButton b1;
+ JRadioButton b2;
+ JRadioButton b3;
+ JTextArea a1;
+ String iName;
+ String iPhone;
+ String iCompany;
+ String iUniv;
+ 
+ public registerHandler(JRadioButton b1, JRadioButton b2, JRadioButton b3, 
+   JTextField t1, JTextField t2, JTextField t3, JTextField t4, JTextArea a1)
+ {
+  this.b1=b1;
+  this.b2=b2;
+  this.b3=b3;
+  this.a1=a1;
+  name=t1;
+  phone=t2;
+  company=t3;
+  univ=t4;
+ }
+ 
+ public void actionPerformed(ActionEvent e)
+ {
+  PhoneManager manager=PhoneManager.createManagerInst();
+  boolean isAdded=false;
+  
+  if(b1.isSelected()){//일반버튼 선택되어졌을때
+   iName=name.getText();
+   iPhone=phone.getText();
+   //iUniv=univ.getText();
+   isAdded=manager.personalData.add(new phoneInfo(iName, iPhone));
+  }
+  else if(b2.isSelected()){ //회사버튼선택
+   iName=name.getText();
+   iPhone=phone.getText();
+   iCompany=company.getText();
+   isAdded=manager.personalData.add(new companyInfo(iName, iPhone, iCompany));
+  }
+  else if(b3.isSelected()){ //학교버튼선택
+   iName=name.getText();
+   iPhone=phone.getText();
+   iUniv=univ.getText();
+   isAdded=manager.personalData.add(new univInfo(iName, iPhone, iUniv));
+  }
+  
+  if(isAdded==true){
+   a1.setText("");
+   a1.append("데이터 입력이 완료되었습니다.");
+  }
+  else{
+   a1.setText("");
+   a1.append("이미 저장된 데이터 입니다.");
+  }
+  
+  //manager.saveObject();
+ }
+}
+
+ 
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+public class saveHandler implements ActionListener
+{
+ public void actionPerformed(ActionEvent e)
+ {
+  PhoneManager manager=PhoneManager.createManagerInst();
+  manager.saveObject(); //파일저장
+ }
+}
+
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+public class SearchHandler implements ActionListener
+{
+ JTextField t1;
+ JTextArea t2;
+ 
+ public SearchHandler(JTextField t1, JTextArea t2)
+ {
+  this.t1=t1;
+  this.t2=t2;
+ }
+ public void actionPerformed(ActionEvent e)
+ {
+  PhoneManager manager=PhoneManager.createManagerInst();
+  String name=t1.getText();
+  String info=manager.searchName(name);
+  
+  if(info==null){
+   t2.setText("");
+   t2.append("찾는 데이터 없음");
+  }
+  else{
+   t2.setText("");
+   t2.append(info);
+  }
+ }
+}

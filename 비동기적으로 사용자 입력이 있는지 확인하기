@@ -1,0 +1,11 @@
+#include <stdio.h>
+#include <conio.h>
+ 
+int main(int argc, char* argv[]){
+    printf("키를 누르면 종료됩니다.\n");
+    while (_kbhit() == 0){
+ 
+    }
+    printf("프로그램 종료\n");
+    return 0;
+}
