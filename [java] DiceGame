@@ -1,0 +1,46 @@
+package com.tansanc.tistory;
+ 
+import java.util.Random;
+import java.util.Scanner;
+ 
+class DiceGame
+{
+    int diceNumber;
+    void start() // 게임시작
+    {
+        diceRoll();
+        // diceNumber 를 랜덤으로 발생
+        checkDice();
+        // 사용자로부터 주사위 값을 입력 받아
+        // 맞았는지 틀렸는지를 출력
+    }
+    private void checkDice()
+    {
+        // TODO Auto-generated method stub
+        System.out.print("번호를 입력하세요");
+        Scanner sc = new Scanner(System.in);
+        int guessNumber = sc.nextInt();
+        if (guessNumber == diceNumber)
+        {
+            System.out.print("정답입니다.");
+        } else
+        {
+            System.out.print("오답입니다.");
+        }
+    }
+    private void diceRoll()
+    {
+        // TODO Auto-generated method stub
+        Random r = new Random();
+        diceNumber = r.nextInt(6) + 1;
+    }
+}
+ 
+public class Test
+{
+    public static void main(String[] args)
+    {
+        DiceGame dg = new DiceGame();
+        dg.start();
+    }
+}

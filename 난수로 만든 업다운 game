@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <time.h>
+
+
+int main() {
+
+	int secret;
+	int num;
+	int count = 0;
+	srand((unsigned int)time(NULL));
+
+	
+		secret = rand() % ((200 - 0) + 1) + 0;
+		
+		while (1) {
+		
+			scanf("%d", &num);
+			count++;
+			if (num == secret) {
+				printf("%d번만에 맞쳤습니다", count);
+				break;
+			}
+			if (num < secret) {
+				printf("%d보다 큽니다", num);
+			}
+			else
+				printf("%d보다 작습니다", num);
+
+		}
+
+
+	return 0;
+}

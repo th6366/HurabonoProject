@@ -1,0 +1,22 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+
+int main() { 
+   int n, i; 
+   double numerator[100]; // 분자 
+   double denominator[100]; //분모 
+   int cntn=0, cntd=1; // cntn = 분자 cntd = 분모 
+   double sum=0; //합계 
+   
+   printf("N = "); 
+   scanf("%d", &n); 
+   
+   for (i=1; i<=n; ++i) { 
+      numerator[i] = ++cntn; //분자 증가 
+      denominator[i] = ++cntd; //분모 증가 
+      sum = sum + (numerator[i] / denominator[i] ); 
+      // 분수 형태(나눗셈) 형태로 나누가다 더함 
+   } 
+   printf("result = %f\n", sum); // 출력 
+   return 0; 
+} 

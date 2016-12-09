@@ -1,0 +1,40 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class Ex7 extends JFrame{
+    Ex7(){
+        this.setTitle("JSlider Practice Frame");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        JLabel la = new JLabel("I Love Java");
+        la.setHorizontalAlignment(JLabel.CENTER);
+        la.setFont(new Font("궁서체",Font.ITALIC,50));
+        
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 100, 50);
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        slider.setPaintTrack(true);
+        slider.setMajorTickSpacing(20);
+        slider.setMinorTickSpacing(5);
+        slider.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider js=(JSlider)e.getSource();
+                la.setFont(new Font("궁서체",Font.ITALIC,js.getValue()));
+            }
+        });
+        
+        this.add(slider, BorderLayout.NORTH);
+        this.add(la, BorderLayout.CENTER);
+        
+        this.setSize(600,500);
+        this.setVisible(true);
+    }
+}
+public class JavaApplication53 {
+    public static void main(String[] args) {
+        new Ex7();
+    }
+}

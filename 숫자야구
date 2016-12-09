@@ -1,0 +1,84 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+ 
+ 
+void run_game(int baseball[])
+{
+    int ball[3];
+    int count = 1;
+    int result_strike; // 초반에 0으로 초기화를 않두고, 변수만 정의.
+    int result_ball;
+    int i, j;
+ 
+    while (1)
+    {
+        for (i = 0; i < 4; i++)  // 숫자야구 정답 (확인을 위해 보이게 함, 없애고 싶으면 이 for문 구문부분만 지우세요.)
+        {
+            printf("%d", baseball[i]);
+            if (i == 3)
+                break;            
+        }
+        printf(" : 숫자야구 정답임, 참고용");
+ 
+        printf("\n[%d회차 숫자야구] 숫자를 입력하세요 : ", count);
+        scanf("%d%d%d%d", &ball[0], &ball[1], &ball[2], &ball[3]);
+ 
+        result_ball = 0;
+        result_strike = 0; // 초반에 0을 내리지 않고 지금 이 자리에서 0으로 초기화 시킨 이유는 전의 스트라이크를 했을 시 그 기록이 0으로 리셋이 안되고 계속 쌓아져서.. (저도 이걸 어떻게 말해야할지 모르겠군요; 직접 해보심이 ㄷ;)
+        for (i = 0; i < 4; i++)
+        {
+            for (j = 0; j < 4; j++)
+            {
+                if (baseball[i] == ball[j]) // 배열이 다 맞는 경우 (숫자야구에서 제시된 숫자가 다 있는 경우)
+                {
+                    if (i == j)
+                    {
+                        result_strike++; // Strike 갯수 Count UP
+                        if (result_strike == 4)
+                        {
+                            printf("[최종 : %d회차 숫자야구] 4스트라이크, 게임 종료.\n", count);
+                            exit(1);
+                        }
+                    }
+                    else if (i != j) // 배열은 다 맞으나 (숫자야구에서 제시된 숫자는 다 있으나), 매치가 안맞는 경우
+                        result_ball++; // Ball 갯수 Count Up
+                }
+            }
+        }
+        printf("[결과]\n스트라이크 : %d, Ball : %d\n\n", result_strike, result_ball);
+        count++;
+    }
+}
+ 
+int main(void)
+{
+    int baseball[3];
+    int ball[3];
+    int i, j, temp;
+ 
+    // 랜덤함수 생성, 랜덤숫자 중 중복 체크
+    srand((unsigned)time(NULL));
+    for (i = 0; i < 4; i++)
+    {
+        temp = (rand() % 9) + 1;
+        for (j = 0; j < i; j++)
+        {
+            if (temp == baseball[j])
+                break;
+        }
+        if (i != j)
+        {
+            i--;
+        }
+        else
+        {
+            baseball[i] = temp;
+        }
+    }
+    run_game(baseball);
+}
+
+
+[출처] [C언어 게임] 숫자야구|작성자 Languid

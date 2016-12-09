@@ -1,0 +1,106 @@
+/*
+ Copyright (C) Information Equipment co.,LTD.
+ All rights reserved.
+ Code by JaeHyuk Cho <mailto:minzkn@infoeq.com>
+ CVSTAG="$Header: /usr/local/mutihost/joinc/modules/moniwiki/data/text/RCS/Code_2fC_2fbitblit,v 1.2 2010/02/06 08:59:07 root Exp root $"
+*/
+
+#include <stdio.h>
+#include <memory.h>
+
+#define __def_bitblit_fastcall__
+#define __bitblit_peek_vector__(m_cast,m_base,m_sign,m_offset) ((m_cast)(((unsigned char *)(m_base)) m_sign (size_t)(m_offset)))
+#define __bitblit_peek__(m_base,m_offset)                      __bitblit_peek_vector__(void *,m_base,+,m_offset)
+
+void (__def_bitblit_fastcall__ bitblit)(
+ void *s_map, int s_bpp, int s_resx, int s_resy, int s_line_length,
+ const void *s_data, int s_x, int s_y, int s_w, int s_h)
+{
+ int s_nbytes, s_tw;
+ void *s_ptr;
+ s_nbytes = s_bpp >> 3;
+ if(s_y < 0)
+ {
+  s_h += s_y;
+  s_data = __bitblit_peek__(s_data, (-s_y) * s_w * s_nbytes);
+  s_y = 0;
+ }
+ if((s_y + s_h) >= s_resy)s_h = s_resy - s_y;
+ if(s_h <= 0)return;
+ if(s_x < 0)
+ {
+  s_tw = s_w + s_x;
+  s_data = __bitblit_peek__(s_data, (-s_x) * s_nbytes);
+  s_x = 0;
+ }
+ else s_tw = s_w;
+ if((s_x + s_tw) >= s_resx)s_tw = s_resx - s_x;\
+ if(s_tw <= 0)return;
+ s_tw = s_tw * s_nbytes;
+ s_w = s_w * s_nbytes;
+ s_ptr = __bitblit_peek__(s_map, (s_y * s_line_length) + (s_x * s_nbytes));
+ while(s_h--)
+ {
+  (void)memcpy(s_ptr, s_data, (size_t)s_tw);
+  s_data = __bitblit_peek__(s_data, s_w);
+  s_ptr = __bitblit_peek__(s_ptr, s_line_length);
+ }
+}
+
+int main(void)
+{
+ unsigned char s_source_map[] = { /* 5x5 8bpp bitmap */
+  1, 1, 1, 1, 1,
+  1, 0, 0, 0, 1,
+  1, 0, 0, 0, 1,
+  1, 0, 0, 0, 1,
+  1, 1, 1, 1, 1,
+ };
+
+#define resx (40)   /* pixel */
+#define resy (25)   /* pixel */
+#define bpp  (8)    /* bit */
+#define shadow (4) /* pixel */
+#define line_length ((resx + shadow) * bpp)    /* bytes */
+ unsigned char s_fbmap[ line_length * resy ] = {0, };
+
+ bitblit((void *)(&s_fbmap[0]), bpp, resx, resy, line_length,
+  (void *)(&s_source_map[0]), -2, -2, 5, 5);
+
+ bitblit((void *)(&s_fbmap[0]), bpp, resx, resy, line_length,
+  (void *)(&s_source_map[0]), 10, 10, 5, 5);
+
+ bitblit((void *)(&s_fbmap[0]), bpp, resx, resy, line_length,
+  (void *)(&s_source_map[0]), 13, 13, 5, 5);
+
+ bitblit((void *)(&s_fbmap[0]), bpp, resx, resy, line_length,
+  (void *)(&s_source_map[0]), -2, resy - 3, 5, 5);
+ bitblit((void *)(&s_fbmap[0]), bpp, resx, resy, line_length,
+  (void *)(&s_source_map[0]), resx >> 1, resy - 3, 5, 5);
+ bitblit((void *)(&s_fbmap[0]), bpp, resx, resy, line_length,
+  (void *)(&s_source_map[0]), resx - 3, resy - 3, 5, 5);
+
+ do
+ { /* H/W refresh */
+  int s_cx, s_cy, s_offset;
+  s_offset = 0;
+  for(s_cy = 0;s_cy < resy;s_cy++, s_offset += line_length)
+  {
+   for(s_cx = 0;s_cx < resx;s_cx++)
+   { /* real view */
+    if(s_fbmap[s_offset + s_cx])(void)putchar('O');
+    else putchar('.');
+   }
+   for(;s_cx < resx + shadow;s_cx++)
+   { /* shadow */
+    (void)putchar('X');
+   }
+   (void)putchar('\n');
+  }
+  (void)fflush(stdout);
+ }while(0);
+
+ return(0);
+}
+
+/* End of source */

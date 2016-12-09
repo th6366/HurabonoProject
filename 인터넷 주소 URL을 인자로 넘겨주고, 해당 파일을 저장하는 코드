@@ -1,0 +1,24 @@
+'''import urllib
+url = "http://www.google.com/ig/api?hl=en&weather=seoul"
+web_page = urllib.urlopen(url)
+for line in web_page:
+	line = line.strip()
+	print line
+web_page.close()
+'''
+
+import urllib
+import sys
+
+def file_process(reader):
+	output_file = open('weather.xml', 'w')
+	for line in reader:
+		line = line.strip()
+		output_file.write(line)
+	output_file.close()
+		
+
+if __name__ == "__main__":
+	webpage = urllib.urlopen(sys.argv[1])
+	file_process(webpage)
+	webpage.close()

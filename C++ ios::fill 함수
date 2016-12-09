@@ -1,0 +1,27 @@
+/*
+
+채우기 문자를 'x' 로 설정하고 이를 사용한다. 
+
+이 예제는
+http://www.cplusplus.com/reference/iostream/ios/fill/
+에서 가져왔습니다
+
+*/
+#include <iostream>
+using namespace std;
+
+int main () 
+{
+    char prev;
+
+    cout.width (10);
+    cout << 40 << endl;
+
+    prev = cout.fill ('x');
+    cout.width (10);
+    cout << 40 << endl;
+
+    cout.fill(prev);
+
+    return 0;
+}

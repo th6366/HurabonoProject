@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+void AscOrder(int*ary,int size);
+int main()
+{
+    int *ary, n, i;
+    clock_t startTime, endTime;
+    printf("지정개수 입력 : ");
+    scanf("%d", &n);
+    ary = (int *)malloc(sizeof(int) * n);
+    srand((unsigned int)time(NULL));
+    for(i=0; i<n; i++)
+    {
+        ary[i] = rand() % 100 + 1;
+    }
+    startTime = clock();
+    AscOrder(ary, n);
+    endTime = clock();
+    printf("Time elapsed: %.1lfs", (endTime - startTime) / (double)CLOCKS_PER_SEC);
+    return 0;
+}
+void AscOrder(int*ary,int size)
+{
+    int j,k,l;
+    int temp;
+    for(j=0; j<size-1; j++)
+    {
+        for(k=0; k < size-1; k++)
+        {
+            if(ary[k] > ary[k+1])
+            {
+                temp = ary[k];
+                ary[k] = ary[k+1];
+                ary[k+1] = temp;
+            }
+        }
+        printf("Pass %3d :", j + 1);
+        for(k=0; k<size; k++)
+        {
+            printf(" %d", ary[k]);
+        }
+        printf("\n");
+    }
+}

@@ -1,0 +1,11 @@
+#include <stdio.h>
+#include <Windows.h>
+ 
+int main(int argc, char* argv[]){
+    int x = 10;
+    int y = 1;
+    COORD pos = {x, y};
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+    printf("#\n");
+    return 0;
+}

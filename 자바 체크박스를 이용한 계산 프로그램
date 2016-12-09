@@ -1,0 +1,61 @@
+class Check extends JFrame{
+    JLabel b;
+    JCheckBox[] c=new JCheckBox[3];
+    String[] names={"사과", "배", "체리"};
+    int sum;
+    Check(){
+        this.setTitle("사과 배 체리 계산");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new FlowLayout());
+        
+        JLabel a =new JLabel("사과:100원, 배 500원, 체리 20000원");
+        
+        b=new JLabel("현재 0원입니다.");
+        
+        this.add(a);
+        for(int i=0; i<c.length; i++){
+            c[i]=new JCheckBox(names[i]);
+            c[i].setBorderPainted(true);
+            c[i].addItemListener(new MyItemListener());
+            this.add(c[i]);
+        }
+        this.add(b);
+        
+        this.setSize(250,200);
+        this.setVisible(true);
+    }
+    class MyItemListener implements ItemListener{
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            int select=1;
+            
+            if(e.getStateChange()==ItemEvent.SELECTED){
+                select=1;
+            }
+            else{
+                select=-1;
+            }
+            
+            if(e.getItem()==c[0]){
+                sum+=select*100;
+            }
+            else if(e.getItem()==c[1]){
+                sum+=select*500;
+            }
+            else{
+                sum+=select*20000;
+            }
+            
+            b.setText("현재"+sum+"원입니다.");
+        }
+        
+    }
+}
+public class JavaApplication31 {
+
+    public static void main(String[] args) {
+        new Check();
+    }
+    
+}

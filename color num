@@ -1,0 +1,23 @@
+#include "stdlib.h"
+#include "windows.h"
+
+SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), 해당번호);
+
+
+//0 = 검정색
+1 = 파란색 
+ 2 = 초록색
+3 = 옥색 
+ 4 = 빨간색
+5 = 자주색 
+ 6 = 노란색
+7 = 흰색 
+ 8 = 회색
+9 = 연한 파란색 
+ 10 = 연한 초록색
+11 = 연한 옥색 
+ 12 = 연한 빨간색
+13 = 연한 자주색 
+ 14 = 연한 노란색
+//15 = 진한 흰색 
+[출처] C언어 콘솔에 글자색 넣기|작성자 Marbong

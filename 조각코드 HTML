@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <sys/types.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
+using namespace std;
+
+enum tag_token {TAG_LT = '<', TAG_GT='>'};
+int main(int argc, char **argv)
+{
+  int fd;
+  int readn;
+  int ridx;
+  int widx;
+  char rbuf[1024] = {0x00,};
+  char wbuf[1024] = {0x00,};
+  int lt_flag = 0;
+
+  // used tokenizing
+  char seps[] = "()|{}, \t.;&-[]\"\'";
+  char *tr;
+
+
+  int tag_status = 0;
+  int offset = 0;
+
+  if (argc != 2)
+  {
+    fprintf(stderr, "Usage : %s [file]\n", argv[0]);
+    return 1;
+  }
+  if ((fd = open(argv[1], O_RDONLY)) < 0)
+  {
+    return 1;
+  }
+
+  while ((readn = read(fd, rbuf+offset, 1023)) > 0)
+  {
+    ridx = 0;
+    widx = 0;
+    while(ridx < readn)
+    {
+      if (rbuf[ridx] == TAG_LT)
+      {
+        lt_flag++;
+      }
+      if (rbuf[ridx] == TAG_GT)
+      {
+        lt_flag--;
+        if (lt_flag == 0)
+        {
+          ridx++;
+          continue;
+        }
+      }
+
+      if (lt_flag == 1)
+      {
+        ridx++;
+        continue;
+      }
+
+      // Special Chracter 제거
+      if (rbuf[ridx] == '&')
+      {
+         int i =0;
+         char special[10] = {0x00,};
+         for(i = 0; i < 10; i++)
+         {
+           if (rbuf[ridx+i] == ';')
+           {
+             ridx = (ridx+i);
+             break;
+           }
+         }
+      }
+
+      if (rbuf[ridx] == '\n' || rbuf[ridx] == '\r')
+        wbuf[widx] = ' ';
+      else
+        wbuf[widx] = rbuf[ridx];
+
+      widx++;
+      ridx++;
+    }
+    tr = strtok(wbuf, seps);
+    while (tr != NULL)
+    {
+        printf("%s ", tr);
+        tr = strtok(NULL, seps);
+    }
+    memset(rbuf, 0x00, 1024);
+    memset(wbuf, 0x00, 1024);
+  }
+  return 0;
+}

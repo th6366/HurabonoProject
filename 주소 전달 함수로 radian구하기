@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+void get_radian(int degree, float *rad) {
+	float radian = ((float)degree / 180) * 3.14;
+	rad = &radian;
+	printf("%lf", *rad);
+}
+
+int main() {
+	
+	int degree;
+	float *rad;
+	printf("각을 입력하시오");
+	scanf("%d", &degree);
+
+	get_radian(degree, &rad);
+
+	return 0;
+}

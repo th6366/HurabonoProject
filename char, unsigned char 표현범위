@@ -1,0 +1,16 @@
+#include <stdio.h>
+int main()
+{
+    char c = 0;
+    unsigned char uc = 0;    
+    c = 0x7F; //최상위 비트가 0
+    uc = 0x7F;    
+    printf("%d %d\n",c,uc);
+    c = 0x80; //최상위 비트가 1
+    uc = 0x80;
+    printf("%d %d\n",c,uc);
+    c = 0xFF;
+    uc=0xFF;
+    printf("%d %d\n",c,uc);
+    return 0;
+}

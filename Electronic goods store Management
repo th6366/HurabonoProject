@@ -1,0 +1,352 @@
+#include<stdio.h>
+#include<conio.h>
+#include<dos.h>
+#include<string.h>
+char u_name[30];
+char u_pass[30];
+
+int i,user,password,total=0;
+int row1,row2,column;
+int k=0,l=0;
+char add_more;
+char c,choice,c1,more;
+float total_Rs;
+int pur_id;
+struct pro
+       {
+  char name[20];
+  float price;
+  int num_of_copy;
+
+       };
+       struct pro p[10];
+
+struct cust
+ {
+   char _name[30];
+   char address[50];
+   char email[30];
+   int dd,mm,yy;
+   long mobile;
+   char pay_mode[20];
+   char warrenty[20];
+
+  };
+      struct cust cu[10];
+
+int add_cust_details()
+ {
+ more1:
+ do{
+   printf("\n Enter PID TO Purchase :: ");
+   scanf("%d",&pur_id);
+   }while(pur_id>total);
+   total_Rs=total_Rs+p[pur_id].price ;
+   printf("\nProduct Name   :: %s",&p[pur_id].name);
+   printf("\nProduct Price(INR)  :: %.2f",p[pur_id].price);
+   printf("\n\nDo you want to purchase more...(Y/N): ");
+   more=getche();
+   if(more=='y' || more=='Y')
+     {
+        goto more1;
+     }
+   else
+   {
+     printf("\nThe Total Bill Amount is ::%.2f",total_Rs);
+     custmer();
+   }
+   return 0;
+ }
+
+
+
+
+/*Function Definitions*/
+void header()
+   {
+      clrscr();
+      textcolor(WHITE);
+      printf("\n\t\t");
+      gotoxy(18,7);
+      cprintf("***********************************************");
+      gotoxy(18,8);
+      printf("\n\t\t");
+      gotoxy(18,9);
+      cprintf("*          Electronics Goods Store            *");
+      gotoxy(18,10);
+      printf("\n\t\t");
+      gotoxy(18,11);
+      cprintf("*   Made By Abdul Yazdan & Sarfaraj Alam      *");
+      gotoxy(18,12);
+      printf("\n\t\t");
+      gotoxy(18,13);
+      cprintf("*        www.lovelycoding.blogspot.com        *");
+      gotoxy(18,14);
+      printf("\n\t\t");
+      gotoxy(18,15);
+      cprintf("***********************************************");
+      textcolor(BLUE+BLINK);
+      textbackground(WHITE);
+      gotoxy(25,18);
+      system("pause");
+    //  cprintf("Press Any Key To Continue........");
+    //  c1=getch();
+      for(i=26;i>0;i--)
+ {
+  delay(40);
+  gotoxy(1,i);
+  clreol();
+  textcolor(WHITE);
+  textbackground(BLACK);
+
+  }
+ }
+void master_password()
+  {
+
+    textcolor(GREEN);
+  printf("\n\n\n\n\n\n\t\t\t============================");
+   printf("\n\t\t\tEnter User Name::");
+   gets(u_name);
+   printf("\t\t\tEnter Password ::");
+   gets(u_pass);
+   printf("\t\t\t============================");
+   printf("\n\t\t");
+   textcolor(BLUE);
+   cprintf("Verifying...");
+   printf("\n\t\t");
+   for(i=0;i<47;i++)
+      {
+       textcolor(GREEN);
+       cprintf("%c",987);
+       delay(30);
+      }
+   user=strcmp(u_name,"user");
+   password=strcmp(u_pass,"user");
+   if(user==0 && password==0)
+       {
+  clrscr();
+
+   printf("\n\t\t");
+  textcolor(GREEN+BLINK);
+  printf("\n\t\t\t");
+  gotoxy(30,12);
+  cprintf("Successfully Logged in");
+  delay(1000);
+  clrscr();
+  main_menu();
+       }
+   else
+       {
+  clrscr();
+
+   printf("\n\t\t\t");
+
+  textcolor(RED);
+  gotoxy(28,12);
+  cprintf("Invalid Username or Password");
+  delay(1000);
+  clrscr();
+  textcolor(WHITE);
+  printf("\n\n\n\n\n\n\t\t\t");
+  printf("RE-");
+  master_password();
+      }
+      }
+
+int main_menu()
+      {
+
+       while(1)
+       {
+  textbackground(WHITE)  ;
+  textcolor(BLUE);
+  gotoxy(32,7) ;
+  cprintf("M A I N - M E N U");
+  gotoxy(32,10);
+  textcolor(YELLOW);
+  textbackground(BLACK);
+  cprintf("1.Add to Stock");
+  gotoxy(32,12);
+  cprintf("2.Stock and Sale");
+  gotoxy(32,14);
+  cprintf("3.Help");
+  gotoxy(32,16);
+  cprintf("4.EXIT");
+  gotoxy(32,19);
+  textbackground(WHITE)  ;
+  textcolor(BLUE);
+  cprintf("Enter Your Choice:");
+  choice=getche();
+  clrscr();
+  if(choice == 27)
+  break;
+
+   else if(choice=='1')
+      {
+        gotoxy(30,12);
+        store();
+        break;
+      }
+  else if (choice=='2')
+         {
+    show();
+    printf("\n\t\t");
+    system("pause");
+    clrscr();
+    main_menu();
+    break;
+         }
+  else if(choice=='3')
+        {
+    gotoxy(30,12);
+    printf("This project has been made by Abdul Yazdan");
+    break;
+        }
+        else if(choice=='4')
+        goto end;
+  break;
+     }
+    end:
+   for(i=26;i>0;i--)
+ {
+  delay(40);
+  gotoxy(1,i);
+  clreol();
+  textcolor(WHITE);
+  textbackground(BLACK);
+
+  }
+ exit();
+ return 0;
+
+  }
+
+int store()
+       {
+  clrscr();
+  while(k<20)  //Product Capacity
+ {
+  textcolor(k+1);
+  printf("\n\n\t\t");
+  cprintf("ADD PRODUCT DETAILS");
+  textcolor(WHITE);
+  textbackground(BLACK) ;
+  cprintf("");
+  printf("\n Enter Product Name  :: ");
+  scanf("%s",p[k].name);
+
+   printf("\n Enter Product Price(INR) :: ");
+  p[k].price=0;
+  scanf("%f",&p[k].price);
+  printf("\n Enter Number of Peices:: ");
+  scanf("%d",&p[k].num_of_copy);
+  printf("Add more Products? (Y/N):");
+  add_more=getche();
+   if(add_more=='y' || add_more=='Y')
+      {
+ clrscr();
+ k++ ;
+ l++;
+ total++; //to get store
+
+      }
+       else
+      {
+       clrscr();
+       main_menu();
+      }
+
+     }
+     return 0;
+     }
+
+
+  void linkfloat()
+  {
+  float a = 0, *b ;
+  b = &a ; /* cause emulator to be linked */
+  a = *b ; /* suppress the warning - variable not used */
+  }
+
+
+int show ()
+ {
+    if(l>=0)
+       {
+ textcolor(GREEN);
+  printf("\n");
+  cprintf("PID");
+  printf(" \t");
+  cprintf("Name");
+  printf(" \t\t");
+  cprintf("Price(PerPiece(INR))");
+  printf("\t    ");
+  cprintf("Stock Availible");
+
+       for(i=0;i<=l;i++)
+     {
+
+       printf("\n%d",i);
+       printf("\t%s",&p[i].name);
+       printf("\t\t%.2f",p[i].price);
+       printf("\t\t\t %d",p[i].num_of_copy);
+     }
+       add_cust_details();
+     }
+     else
+     {
+     clrscr();
+     gotoxy(32,12);
+     printf("No Product");
+     }
+     return 0;
+
+     }
+int custmer()
+  {
+    while(k<8)
+    {
+    printf("\n Date (dd-mm-yyyy      ::");
+    scanf("%d%d%d", &cu[k].dd,&cu[k].mm,&cu[k].yy);
+    printf("\n Enter Customer Name    ::");
+    scanf("%s",cu[k]._name);
+    printf("\n Enter Customer Address ::");
+    scanf("%s",cu[k].address);
+    printf("\n Enter Email Address    ::");
+    scanf("%s",cu[k].email);
+    printf("\n Enter Mobile Number    ::");
+    scanf("%ld",&cu[k].mobile);
+    printf("\n Enter Payment Mode     ::");
+    scanf("%s",cu[k].pay_mode);
+    printf("\n Warranty Due on        ::");
+    scanf("%s",cu[k].warrenty);
+
+     clrscr();
+    textcolor(WHITE);
+    textbackground(BLACK);
+    cprintf("");
+    printf("\n\t\t\t\tP R I N T - B I L L");
+    printf("\n Date (dd-mm-yyyy)  ::%d-%d-%d",cu[k].dd,cu[k].mm,cu[k].yy);
+    printf("\n Customer Name      ::");puts(cu[k]._name);
+    printf("\n Customer Address   ::");puts(cu[k].address);
+    printf("\n Email Address      ::");puts(cu[k].email);
+    printf("\n Mobile Number      ::%ld",cu[k].mobile);
+    printf("\n Payment Mode       ::");puts(cu[k].pay_mode);
+    printf("\n Warranty Due on    ::");puts(cu[k].warrenty);
+    k++;
+      printf("");
+      system("pause");
+      clrscr();
+      main_menu();
+   }
+     return 0;
+  }
+
+void main()
+       {
+   header();
+   master_password();
+   clrscr();
+   getch();
+       }

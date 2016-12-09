@@ -1,0 +1,16 @@
+#include<iostream>
+using namespace std;
+
+int GetIntMax(int a, int b) {
+    return a > b ? a : b;
+}
+char GetCharMax(char a, char b) {
+    return a > b ? a : b;
+}
+
+int main() {
+    cout << GetIntMax(10, 20) << endl;
+    cout << GetCharMax('a', 'b') << endl;
+    
+    return 0;
+}

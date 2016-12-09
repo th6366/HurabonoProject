@@ -1,0 +1,15 @@
+int main(void)
+{
+    int num = 0;
+    int i, j;
+    scanf_s("%d", &num);
+    for (i = 0; i < num; i++)
+    {
+        for (j = 0; j < num; j++)
+        {
+            printf("%d ",(i + j) % num + 1);
+        }
+        printf("\n");
+    }
+    return 0;
+}

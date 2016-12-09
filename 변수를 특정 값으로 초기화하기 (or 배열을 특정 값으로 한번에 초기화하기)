@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <memory.h> // or #include <string.h>
+ 
+#define ARR_SIZE 10
+ 
+int main(int argc, char* argv[]){
+    char c;
+    short s;
+    int i;
+    long l;
+    float f;
+    double d;
+    int arr[ARR_SIZE];
+    int j;
+    memset(&c, 0, sizeof(char));
+    memset(&s, 0, sizeof(short));
+    memset(&i, 0, sizeof(int));
+    memset(&l, 0, sizeof(long));
+    memset(&f, 0, sizeof(float));
+    memset(&d, 0, sizeof(double));
+    memset(arr, 0, sizeof(int) * ARR_SIZE); // or memset(arr, 0, sizeof(arr));
+    printf("c : %d\ns : %d\ni : %d\nl : %ld\nf : %f\nd : %f\n", c, s, i, l, f, d);
+    printf("arr : ");
+    for (j = 0; j < ARR_SIZE; j++){
+        printf("%d ", arr[j]);
+    }
+    printf("\n");
+    return 0;
+}
+
+2 라인

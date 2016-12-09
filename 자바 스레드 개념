@@ -1,0 +1,45 @@
+public class Toilet {
+	public synchronized void openDoor(String name){
+		System.out.println(name);
+		usingTime();
+		System.out.println("아~~시원해");
+	}
+	public void usingTime(){
+		for(int i=0; i<1000000; i++){
+			if(i==10000) System.out.println("끄으응~~");
+		}
+	}
+}
+
+class Familly extends Thread{
+	Toilet toilet;
+	String who;
+	
+	Familly(String name, Toilet t){
+		who = name;
+		toilet = t;
+	}
+	public void run(){
+		toilet.openDoor(who);
+	}
+}
+class ToiletTest{
+	public static void main(String[] args) {
+		Toilet t = new Toilet();
+		
+		Familly father = new Familly("아버지", t);
+		Familly mother = new Familly("어머니", t);
+		Familly sister = new Familly("누나", t);
+		Familly brother = new Familly("형", t);
+		Familly me = new Familly("나", t);
+		
+		father.start();
+		mother.start();
+		sister.start();
+		brother.start();
+		me.start();
+	
+	
+	}
+}
+

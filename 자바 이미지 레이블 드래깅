@@ -1,0 +1,64 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class Ex3 extends JFrame{
+    ImageIcon i =new ImageIcon("apple.jpg");
+    Image im = i.getImage();
+    Point sp;
+    Ex3(){
+        this.setTitle("이미지 레이블 드래깅 연습");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JLabel la= new JLabel(i);
+        this.setLayout(null);
+        la.setLocation(50,50);
+        la.setSize(i.getIconHeight(), i.getIconWidth());
+        
+        la.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                sp=e.getPoint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+            
+        });
+        la.addMouseMotionListener(new MouseMotionListener(){
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                Point ep = e.getPoint();
+                Component la1=(JComponent)(e.getSource());
+                Point p = la1.getLocation();
+                la1.setLocation(p.x + ep.x - sp.x, p.y + ep.y - sp.y);
+            }
+            @Override
+            public void mouseMoved(MouseEvent e) {
+            }
+        });
+        this.add(la);
+        this.setSize(400,400);
+        this.setVisible(true);
+    }
+}
+public class JavaApplication40 {
+
+    public static void main(String[] args) {
+        new Ex3();
+    }
+    
+}

@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <math.h>
+ 
+int main()
+{
+    printf("%f \n" , sin(30.f) );
+    printf("%f \n" , cos(30.f) );
+    printf("%f \n" , tan(30.f) );
+    printf("%f \n" , atan(30.f) );
+ 
+    return 0;
+}

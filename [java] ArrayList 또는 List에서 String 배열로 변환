@@ -1,0 +1,21 @@
+import java.util.List;
+import java.util.ArrayList;
+ 
+public class ToArrayTester
+{
+   public static void main(String[] args)
+   {
+      List<String> lines = new ArrayList<String>();
+ 
+      lines.add("Once upon a midnight dreary");
+      lines.add("While I pondered weak and weary");
+      lines.add("Over many a quaint and curious volume of forgotten lore");
+ 
+      String[] linesArr = lines.toArray(new String[lines.size()]);
+ 
+      for (String line : linesArr)
+      {
+         System.out.println(line);
+      }
+   }
+}

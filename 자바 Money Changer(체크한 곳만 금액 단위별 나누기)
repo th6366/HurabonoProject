@@ -1,0 +1,108 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class Ex4 extends JFrame 
+{
+    int[] moneyc = {50000, 10000, 1000, 500, 100, 50, 10, 1};
+    String[] str = {"금액", "오만원", "만원", "천원", "500원", "100원", "50원", "10원", "1원"};
+    JLabel la = new JLabel();
+    JTextField[] tf = new JTextField[str.length];
+    JButton btn = new JButton("계산");
+    JCheckBox[] box = new JCheckBox[moneyc.length-1];
+    boolean b=true;
+    boolean[] jcb=new boolean[moneyc.length];
+    Ex4() 
+    {
+        this.setTitle("Money Changer");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.getContentPane().setBackground(Color.PINK);
+        this.setLayout(null);
+        
+        la = new JLabel(str[0]);
+        la.setSize(40, 20);
+        la.setLocation(20, 20);
+        this.add(la);
+        
+        tf[0] = new JTextField(30);
+        tf[0].setSize(100, 20);
+        tf[0].setLocation(100, 20);
+        this.add(tf[0]);
+        
+        btn.setSize(70, 20);
+        btn.setLocation(210, 20);
+        btn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String mon = tf[0].getText();
+            if(mon.length() == 0) 
+                return;
+            
+            int money = Integer.parseInt(mon);
+            int m;
+            
+            for(int i=0; i<moneyc.length; i++) 
+            {
+                if(jcb[i]==true){
+                m = money/moneyc[i];
+                tf[i + 1].setText(Integer.toString(m));
+                if(m > 0) 
+                    money = money % moneyc[i];
+                }
+                else if(jcb[i]==false){
+                    tf[i+1].setText("0");
+                }
+            }
+            }
+        });
+        this.add(btn);
+        for(int i = 1; i < str.length; i++)
+        {
+            la = new JLabel(str[i]);
+            la.setHorizontalAlignment(JLabel.RIGHT);
+            la.setSize(50, 20);
+            la.setLocation(50, 50+(i*20));
+            
+            tf[i] = new JTextField(30);
+            tf[i].setHorizontalAlignment(JTextField.CENTER);
+            tf[i].setSize(70, 20);
+            tf[i].setLocation(120, 50+(i*20));
+            
+            if(i<str.length-1){
+                box[i-1] = new JCheckBox();
+                box[i-1].setBackground(Color.PINK);
+                box[i-1].addItemListener(new MyItemListener());
+                box[i-1].setHorizontalAlignment(JCheckBox.CENTER);
+                box[i-1].setSize(20, 20);
+                box[i-1].setLocation(210, 50+(i*20));
+                this.add(box[i-1]);
+            }
+            this.add(la);
+            this.add(tf[i]);
+        }
+        setSize(300, 300);
+        setVisible(true);
+    }
+    class MyItemListener implements ItemListener{
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if(e.getStateChange()==ItemEvent.SELECTED)
+                b=true;
+            else
+                b=false;
+            
+            for(int i=0; i<jcb.length; i++){
+                if(i==jcb.length-1)
+                    jcb[i]=true;
+                else if(e.getItem()==box[i])
+                    jcb[i]=b;
+            }
+        }
+    }
+}
+public class JavaApplication50 {
+    public static void main(String[] args) {
+        new Ex4();
+    }
+}

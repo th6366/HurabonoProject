@@ -1,0 +1,103 @@
+/* 
+ Copyright (C) Information Equipment co.,LTD. 
+ All rights reserved. 
+ Code by JaeHyuk Cho <mailto:minzkn@infoeq.com> 
+ CVSTAG="$Header: /usr/local/mutihost/joinc/modules/moniwiki/data/text/RCS/Code_2fC_2fGCM,v 1.1 2007/01/09 02:46:10 root Exp root $" 
+*/ 
+
+#include <stdio.h> 
+
+#if 0 
+typedef unsigned int t_gcm_value; 
+#else 
+typedef int t_gcm_value; 
+#endif 
+
+static t_gcm_value _gcm_to_abs(t_gcm_value s_value) 
+{ 
+ static t_gcm_value sg_msb = (((t_gcm_value)1) << ((sizeof(t_gcm_value) << 3) - 1)); 
+ t_gcm_value s_temp; 
+ s_temp = sg_msb >> ((sizeof(t_gcm_value) << 3) - 1); 
+ if(s_temp != ((t_gcm_value)1)) 
+ { /* t_gcm_value is signed type */ 
+  if((s_value & sg_msb) == sg_msb) 
+  { /* s_value < 0 */ 
+   s_value = -s_value; 
+  } 
+ } 
+ return(s_value); 
+} 
+
+static t_gcm_value _gcm(t_gcm_value s_value1, t_gcm_value s_value2) 
+{ 
+ t_gcm_value s_temp; 
+ if(s_value1 < s_value2) 
+ { /* swap */ 
+  s_temp = s_value1; 
+  s_value1 = s_value2; 
+  s_value2 = s_temp; 
+ } 
+ do 
+ { 
+  s_temp = s_value1 % s_value2; 
+  if(s_temp == ((t_gcm_value)0))break; 
+  s_value1 = s_value2; 
+  s_value2 = s_temp; 
+ }while(1); 
+ return(_gcm_to_abs(s_value2)); 
+} 
+
+void gcm(t_gcm_value s_value1, t_gcm_value s_value2) 
+{ 
+ t_gcm_value s_value; 
+ s_value = _gcm(s_value1, s_value2); 
+ (void)fprintf(stdout, "gcm(%ld, %ld) = %ld\n", 
+  (long)s_value1, (long)s_value2, (long)s_value); 
+} 
+
+int main(void) 
+{ 
+ /* test suite */ 
+    
+ gcm(8, 12); 
+ gcm(12, 8); 
+ gcm(12, 18); 
+ gcm(3, 2); 
+ gcm(100, 200); 
+ gcm(300, 124); 
+
+ (void)fprintf(stdout, "\n"); 
+  
+ gcm(-8, -12); 
+ gcm(-12, -8); 
+ gcm(-12, -18); 
+ gcm(-3, -2); 
+ gcm(-100, -200); 
+ gcm(-300, -124); 
+  
+ (void)fprintf(stdout, "\n"); 
+  
+ gcm(-8, 12); 
+ gcm(-12, 8); 
+ gcm(-12, 18); 
+ gcm(-3, 2); 
+ gcm(-100, 200); 
+ gcm(-300, 124); 
+  
+ (void)fprintf(stdout, "\n"); 
+  
+ gcm(8, -12); 
+ gcm(12, -8); 
+ gcm(12, -18); 
+ gcm(3, -2); 
+ gcm(100, -200); 
+ gcm(300, -124); 
+  
+ (void)fprintf(stdout, "\n"); 
+  
+ gcm(0xffffffff, 0xffffffff); 
+
+ return(0); 
+} 
+
+/* End of source */

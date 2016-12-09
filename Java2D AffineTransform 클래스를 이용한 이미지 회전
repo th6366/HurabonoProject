@@ -1,0 +1,7 @@
+BufferedImage awtImage = transcoder.getBufferedImage();
+
+AffineTransform tx = new AffineTransform();
+tx.rotate(Math.toRadians(this.getDegree()), awtImage.getWidth() / 2, awtImage.getHeight() / 2);
+AffineTransformOp op = new AffineTransformOp(tx,
+AffineTransformOp.TYPE_BILINEAR);
+awtImage = op.filter(awtImage, null);

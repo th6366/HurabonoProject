@@ -1,0 +1,59 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+class Ex8 extends JFrame{
+    JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
+    
+    Ex8(){
+        this.setTitle("TextArea Practice Frame");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        slider.setPaintTrack(true);
+        slider.setMajorTickSpacing(20);
+        slider.setMinorTickSpacing(5);
+        
+        this.add(slider, BorderLayout.CENTER);
+        this.add(new MyPanel(), BorderLayout.NORTH);
+        
+        this.setSize(400,300);
+        this.setVisible(true);
+    }
+    class MyPanel extends JPanel{
+        MyPanel(){
+            JTextArea jta = new JTextArea(null, 7, 30);
+            
+            jta.setText("");
+            jta.addKeyListener(new KeyListener(){
+                @Override
+                public void keyTyped(KeyEvent e) 
+                {  
+                    String str = jta.getText();
+                    int c = str.length();
+                    if ( c > 100 && e.getKeyChar() == 8)
+                        jta.setEditable(true);
+                    else if(c > 100)
+                        jta.setEditable(false);
+                    else{
+                        slider.setValue(c);
+                    }
+                }
+                @Override
+                public void keyPressed(KeyEvent ke) {
+                }
+                @Override
+                public void keyReleased(KeyEvent ke) {
+                }
+            });
+            this.add(new JScrollPane(jta)); 
+        }
+    }
+}
+public class JavaApplication54 {
+    public static void main(String[] args) {
+        new Ex8();
+    }
+}

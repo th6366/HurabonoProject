@@ -1,0 +1,110 @@
+#include <stdlib.h>
+#include <netdb.h> 
+#include <string.h>
+#include <netinet/ip_icmp.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <time.h>
+#include <sys/types.h>
+
+// IP CheckSum 생성 
+int in_cksum(u_short *p, int n)
+{
+    register u_short answer;
+    register long sum = 0;
+    u_short odd_byte = 0;
+
+    while(n > 1)
+    {
+        sum += *p++;
+        n -= 2;
+    }
+
+    if (n == 1)
+    {
+        *(u_char *)(&odd_byte) = *(u_char *)p;
+        sum += odd_byte;    
+    }
+
+    sum = (sum >> 16) + (sum & 0xffff);
+    sum += (sum >> 16);
+    answer = ~sum;
+
+    return (answer);
+}
+
+// ICMP 프로토콜을 지원하는 RAW소켓 생성
+int IcmpInit()
+{
+    int icmp_socket;
+    icmp_socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    return icmp_socket;
+}
+
+int CheckIcmp(int sockfd, 
+			char *dstaddr, 
+			struct timeval *atime, 
+			struct sockaddr_in *ipaddr)
+{
+    struct icmp *p, *rp;
+    char buffer[1024];
+    int sl, ret, hlen;
+	int diff;
+    struct sockaddr_in addr, sin, from;
+	struct ip *ip;
+	struct timeval ltime;
+	struct hostent *hentry;
+
+    // 호스트 이름으로 부터 주소갑을 얻어온다.
+	if ((hentry = gethostbyname(dstaddr)) == NULL)
+	{
+		return -1;
+	}
+
+	gettimeofday(&ltime, NULL);
+    memset(buffer, 0x00, 1024);
+    p = (struct icmp *)buffer;
+    p->icmp_type = ICMP_ECHO;
+    p->icmp_code = 0;
+    p->icmp_cksum = 0;
+    p->icmp_seq = 15; 
+    p->icmp_id = getpid();
+	p->icmp_dun.id_ts.its_otime = ((ltime.tv_sec%100)*10000)+(ltime.tv_usec / 100); 
+    p->icmp_cksum = in_cksum((u_short *)p, 1000);
+	memcpy(buffer+sizeof(*p), (void *)&time, 4);
+
+    memset(&addr, 0, sizeof(0));
+	memcpy(&addr.sin_addr, hentry->h_addr, hentry->h_length);
+    addr.sin_family = AF_INET;
+
+    ret = sendto(sockfd, p, sizeof(*p), MSG_DONTWAIT, 
+                    (struct sockaddr *)&addr, sizeof(addr)); 
+    if (ret < 0)
+	{
+		exit(0);
+        return -1;
+	}
+    sl = sizeof(from);
+    ret = recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr *)&from, &sl); 
+
+    if (ret < 0)
+        return -1;
+    ip = (struct ip *)buffer;
+    hlen = ip->ip_hl*4;
+    rp = (struct icmp *)(buffer+hlen);
+	gettimeofday(&ltime, NULL);
+	diff = (((ltime.tv_sec%100)*10000)+ltime.tv_usec/100) - rp->icmp_dun.id_ts.its_otime;
+	atime->tv_sec = diff/1000; 
+	atime->tv_usec = diff/10; 
+	*ipaddr = addr;
+    return sin.sin_addr.s_addr;
+}
+
+int IcmpClear(int sockfd)
+{
+	close(sockfd);
+	return 1;
+}

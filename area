@@ -1,0 +1,40 @@
+#include "stdafx.h"
+#include "stdlib.h"
+
+void main()
+{
+	double rectangle, circle, triangle; //정사각형 넓이, 원의 넓이, 직각삼각형의 넓이.
+	double side, r, width, height; //정사각형의 변, 원의 반지름, 직각삼각형의 가로 세로.
+	double result; //결과값.
+	char choice; //선택할 변수.
+
+	printf("r(정사각형의 넓이), c(원의 넓이), t(직각삼각형의 넓이) 중 계산할 단어를 선택하세요 : ");
+	scanf("%c", &choice);
+
+	switch (choice) {
+	case 'r':
+		printf("변의 값을 입력하세요 : ");
+		scanf("%lf", &side);
+		result = side * side;
+		printf("정사각형의 넓이는 %.2lf입니다\n", result);
+		break;
+	case 'c':
+		printf("반지름의 값을 입력하세요 : ");
+		scanf("%lf", &r);
+		result = 3.14 * r * r;
+		printf("원의 넓이는 %.2lf입니다.\n", result);
+		break;
+	case 't':
+		printf("가로, 세로의 값을 입력하세요 : ");
+		scanf("%lf%lf", &width, &height);
+		result = ((double)1/2) * width * height;
+		printf("직각삼각형의 넓이는 %.2lf입니다.\n", result);
+		break;
+	default :
+		printf("입력을 잘못 하셨습니다. 프로그램을 종료합니다.\n");
+		system("pause");
+		exit(-1);
+	}
+
+	system("pause");
+}
