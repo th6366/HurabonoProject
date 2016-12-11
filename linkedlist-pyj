@@ -1,0 +1,114 @@
+#include "linkedList.h"
+#include "words.h"
+
+void swap(void**, void**);
+
+LinkedList * linkedList(){
+	LinkedList* ll_ptr = (LinkedList*)malloc(sizeof(LinkedList));
+	ll_ptr->head = (Node*)malloc(sizeof(Node));
+	ll_ptr->head->next = ll_ptr->head;
+	ll_ptr->head->prev = ll_ptr->head;
+	ll_ptr->size = 0;
+	
+	return ll_ptr;
+}//end linked list 
+
+void printList(const LinkedList * theList, void (*printData)(void *)){
+	Node* cur = theList->head;
+	if(theList->head->next == theList->head){
+		printf("Empty List");
+	}//end if
+	else{
+		cur = cur->next;
+		while(cur != theList->head){
+			printData(cur->data);
+			cur = cur->next;
+		}//end while
+	}//endelse
+
+}//end printList
+
+void addLast(LinkedList * theList, Node * nn){
+	Node* cur = theList->head;
+	while(cur->next != theList->head){
+		cur = cur->next;
+	}//endwhile
+	
+	nn->prev = cur;
+	nn->next = cur->next;
+	cur->next = nn;
+	theList->size++;
+}//end addLast
+
+void addFirst(LinkedList * theList, Node * nn){
+	Node* head = theList->head;
+	nn->next = head->next;
+	nn->prev = head;
+	head->next = nn;
+	theList->size++;
+}//end addfirst
+
+void removeItem(LinkedList * theList, Node * nn, void (*removeData)(void *), int (*compare)(const void *, const void *)){
+	Node* cur = theList->head->next;
+	Node* prev = theList->head;
+
+	while(cur != theList->head){
+		if(compare(nn->data, cur->data) == 0){			
+			removeData(cur->data);			
+			cur->prev->next = cur->next;
+			cur->next->prev = cur->prev;
+			free(cur);
+			theList->size--;
+		}//end if
+		else{
+			prev = cur;
+			cur=cur->next;
+		}//end else
+
+	}//end while
+}//end removeItem
+
+void clearList(LinkedList * theList, void (*removeData)(void *)){
+	Node* cur = theList->head->prev;
+	Node* head = theList->head;
+	
+	while(cur != head){
+		removeData(cur->data);
+		cur = cur->prev;
+		free(cur->next);
+	}//end while
+
+	free(head);
+}//end clearList
+
+void sort(LinkedList * theList, int (*compare)(const void * ptr1, const void * ptr2)){
+	if(theList->size >= 2){
+		Node* head = theList->head;
+		Node* pos = head->next;
+
+		while(pos != head){
+			Node* min = pos;
+			Node* cur = pos->next;
+			while(cur != head){
+				if(compare(cur->data, pos->data) < 0){
+					min = cur;
+				}//end if
+				cur = cur->next;
+			}//end while
+			
+			swap(&(min->data), &(pos->data));
+			
+			pos = pos->next;
+		}//end for
+	}//end if	
+		
+	
+}//end sort
+
+
+void swap(void** min, void** pos){
+	void * tmp = *min;
+	*pos = *min;
+	*min = tmp;
+	
+}//end swap
