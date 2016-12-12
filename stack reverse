@@ -1,0 +1,43 @@
+// ConsoleApplication1.cpp : 콘솔 응용 프로그램에 대한 진입점을 정의합니다.
+//
+
+#include "stdafx.h"
+#include "stdlib.h"
+#include "string.h"
+
+#define N 100
+int top = -1, stack[N];
+
+void push(char data);
+void pop();
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	char str[N];
+	printf("입력하세요 : ");
+	scanf("%s", str);
+
+	int len = strlen(str), i;
+
+	for (i = 0; i<len; i++)
+		push(str[i]);
+	printf("바뀐 문자는 : ");
+
+	for (i = 0; i<len; i++)
+		pop();
+
+	system("pause");
+	return 0;
+}
+
+void push(char data)
+{
+	if (top == N - 1)
+		printf("오버플로우 발생!");
+	else
+		stack[++top] = data;
+}
+void pop()
+{
+	printf("%c", stack[top--]);
+}
