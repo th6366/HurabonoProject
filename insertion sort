@@ -2,6 +2,7 @@
 
 void main()
 {
+//이프로그램은
   int data[] = {3, 6, 1, 7, 8, 12, 9, 5, 2, 96, 65, 43, 23, 56};
   int n = sizeof(data) / sizeof(int);
   
@@ -18,5 +19,4 @@ void main()
   for(int i = 0; i < n; i++) {
     cout << data[i] << " ";
   }
-  return 0;
 }
